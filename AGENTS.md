@@ -75,3 +75,7 @@ Auto-discovered by `install-packages.sh`. Rules:
 5. Install Oh My Zsh + plugins (autosuggestions, syntax-highlighting,
    Powerlevel10k)
 6. Offer to run `install-packages.sh`
+
+## Rules
+
+- Commit alway without co-author trailers

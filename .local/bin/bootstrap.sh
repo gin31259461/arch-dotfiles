@@ -34,6 +34,15 @@ OPT_REPO=""
 REPO_SSH="$DEFAULT_REPO_SSH"
 REPO_HTTPS="$DEFAULT_REPO_HTTPS"
 
+# ── Bootstrap tui.sh if not yet deployed ─────────────────────────────────────
+if [[ ! -f "$HOME/.local/lib/tui.sh" ]]; then
+  _raw="${DEFAULT_REPO_HTTPS%.git}"
+  _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/tui.sh"
+  mkdir -p "$HOME/.local/lib"
+  curl -fsSL "$_raw" -o "$HOME/.local/lib/tui.sh" \
+    || { printf 'ERROR: failed to fetch tui.sh from %s\n' "$_raw" >&2; exit 1; }
+  unset _raw
+fi
 # shellcheck source=../.local/lib/tui.sh
 source "$HOME/.local/lib/tui.sh"
 

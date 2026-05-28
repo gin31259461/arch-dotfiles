@@ -64,8 +64,9 @@ dot add \
   .gitattributes \
   .gitmodules \
   .gitignore \
-  .github \
-  .editorconfig
+  .editorconfig \
+  AGENTS.md \
+  CLAUDE.md
 
 # zsh
 dot add \

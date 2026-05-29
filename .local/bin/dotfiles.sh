@@ -65,6 +65,8 @@ dot add \
   .gitmodules \
   .gitignore \
   .editorconfig \
+  .agents \
+  .claude/skills \
   AGENTS.md \
   CLAUDE.md
 

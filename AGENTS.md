@@ -11,8 +11,8 @@ files by design.
 
 ## Scripts (`~/.local/bin/`)
 
-| Script                                | Purpose                                                        |
-| ------------------------------------- | -------------------------------------------------------------- |
+| Script | Purpose |
+| ------ | ------- |
 | `dotfiles.sh [-m "msg"]`              | Stage all tracked files, commit, push to `origin main`         |
 | `bootstrap.sh [--yes] [--repo <url>]` | Fresh-machine setup: prereqs → clone → OMZ → packages          |
 | `install-packages.sh [-y]`            | fzf group-select installer; calls `setup_<pkg>()` post-install |
@@ -25,8 +25,8 @@ To track a new file: add it to the `dot add` block in `dotfiles.sh`.
 Source in every new script. Sets Noctalia/Tokyo Night theme for gum + fzf and
 exports:
 
-| Helper                  | Behavior                                 |
-| ----------------------- | ---------------------------------------- |
+| Helper | Behavior |
+| ------ | -------- |
 | `die MSG`               | stderr, red ✗, exit 1                    |
 | `ok MSG`                | green ✔                                  |
 | `warn MSG`              | yellow !                                 |

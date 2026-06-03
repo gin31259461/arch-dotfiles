@@ -1,6 +1,6 @@
 # Database Reference
 
-All five databases live under the **Personal Finance** page. Discover their IDs dynamically via the Pre-flight workflow.
+All five databases live under the **Financer/Database** page. Discover their IDs dynamically via the Pre-flight workflow.
 
 ## Transactions DB — Writable Properties
 
@@ -51,7 +51,7 @@ All five databases live under the **Personal Finance** page. Discover their IDs 
 | `Monthly Report` | relation | JSON array of Monthly Report page URL (links to monthly reports) |
 | `Monthly Amortization` | formula | **read-only** — `Amount` (Monthly) or `round(Amount / 12)` (Annually); indefinite when `Total Months` is null or -1 |
 
-## Monthly Ledger — Writable Properties
+## Monthly Report — Writable Properties
 
 | Property | Type | Notes |
 |---|---|---|

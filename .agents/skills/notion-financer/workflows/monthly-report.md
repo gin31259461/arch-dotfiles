@@ -1,28 +1,10 @@
-# Workflow F: Create a Monthly Report (Auto-Linking)
+# Workflow F: Create a Monthly Report
 
 One row per month. All fixed expenses and month transactions are auto-linked dynamically — no manual relation setup.
 
-**Pre-requisite**: Pre-flight completed (`$monthlyReportDS`, `$fixedExpensesDS`, `$transactionsDS`, `$templateId` resolved).
+**Pre-requisite**: Pre-flight completed (`$monthlyReportDS`, `$fixedExpensesDS`, `$transactionsDS` resolved).
 
-## Step 1 — Discover and apply the template
-
-Create the report row using the dynamically discovered template:
-
-```
-notion_notion-create-pages(
-  parent = { data_source_id: $monthlyReportDS },
-  pages = [{
-    template_id: $templateId,
-    properties: {
-      "Month": "2026-06",
-      "date:Period Start:start": "2026-06-01",
-      "date:Period Start:is_datetime": 0
-    }
-  }]
-)
-```
-
-## Step 2 — Auto-link ALL Fixed Expenses (Monthly Amortization > 0)
+## Step 1 — Link All Fixed Expenses (Monthly Amortization > 0)
 
 **Do not** rely solely on `data_source_url` in `notion_notion-search` — use a two-pass approach:
 
@@ -30,7 +12,7 @@ notion_notion-create-pages(
 
 ```
 notion_notion-search(
-  query = "a",
+  query = "",
   data_source_url = $fixedExpensesDS,
   page_size = 25
 )
@@ -69,36 +51,46 @@ notion_notion-update-page(
 )
 ```
 
-## Step 3 — Auto-link ALL month Transactions
+## Step 2 — Link All Month Transactions
 
-**Pass 1** — Try scoped search (fast path):
+**Pass 1 — Initial Database Query (Fast Path):**
+
+Instead of a full-text search, query the database directly using a date filter to ensure exact matches and avoid missing properties.
 
 ```
-notion_notion-search(
-  query = "YYYY-MM",
-  data_source_url = $transactionsDS,
-  page_size = 25
+notion_notion-database-query(
+    database_id = $transactionsDS,
+    filter = {
+        "property": "Date",
+        "date": {
+        "on_or_after": "YYYY-MM-01",
+        "before": "YYYY-MM+1-01" // e.g., if target is 2026-06, use 2026-07-01 here
+    }
+    },
+    page_size = 100
 )
 ```
 
-If it returns pages with `type: "page"`, verify each via ancestor-path check, then collect and skip to linking.
+Collect all returned pages. If `has_more` is `false`, skip to the linking phase. If `has_more` is `true`, proceed to Pass 2.
 
-**Pass 2** — Fall back to workspace search + verification:
+**Pass 2 — Handle Pagination Loop (Fallback/Completion):**
 
-Search the workspace broadly. Try multiple queries:
+If the transaction count exceeds 100, the API will return `has_more: true` and a `next_cursor`. You MUST use this cursor to fetch the remaining data.
 
-- The month label: `notion_notion-search(query = "YYYY-MM")`
-- Known transaction item names
-- Recent pages by scanning various terms
+Initialize a list with the results from Pass 1, then execute the following loop until `has_more` is `false`:
 
-For each candidate result, fetch the page and inspect its `<ancestor-path>`. Only include pages whose ancestor chain matches `$transactionsDS` AND whose `date:Date:start` value starts with the target month:
+notion_notion-database-query(
+database_id = $transactionsDS,
+filter = { /*Use the exact same date filter as Pass 1*/ },
+page_size = 100,
+start_cursor = "<next_cursor from the previous API response>"
+)
 
-```
-notion_notion-fetch(id = "<candidate page url>")
-# Check if response contains:
-# <parent-data-source url="collection://<matches $transactionsDS>" name="Transactions DB"/>
-# AND properties.date:Date:start starts with "YYYY-MM"
-```
+1. Append the newly fetched pages to your main list.
+2. Update your current `next_cursor` with the one from the new response.
+3. If `has_more` is still `true`, repeat this step.
+
+**Final Step — Link to Report:**
 
 Collect all verified transaction page URLs and link them to the report:
 
@@ -112,9 +104,9 @@ notion_notion-update-page(
 )
 ```
 
-If no transactions exist yet for the month, skip linking.
+If the fetched transaction list is completely empty for the target month, simply skip the linking process.
 
-## Step 4 — Computed properties auto-update
+## Step 3 — Computed Properties Auto-update
 
 Once relations are set, all aggregates update automatically:
 
@@ -124,6 +116,6 @@ Once relations are set, all aggregates update automatically:
 - `Total Spending` = Variable Spending + Fixed Burden
 - `Net` = Total Income − Total Spending
 
-## Step 5 — Confirm
+## Step 4 — Confirm
 
 Reply with the month, Total Income, Total Spending, Net, the full Fixed Burden breakdown (each expense + amount), and the Notion URL of the report page.

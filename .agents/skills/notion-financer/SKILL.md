@@ -1,11 +1,11 @@
 ---
 name: notion-personal-finance
-description: Manages the Personal Finance Notion workspace — recording transactions, managing fixed expenses, querying spending summaries, and maintaining categories and accounts. Use when the user wants to log income or expenses, add/update recurring bills, check balances, or report on spending.
+description: Manages the Financer Notion workspace — recording transactions, managing fixed expenses, querying spending summaries, and maintaining categories and accounts. Use when the user wants to log income or expenses, add/update recurring bills, check balances, or report on spending.
 ---
 
-# Notion Personal Finance
+# Notion Financer
 
-Provides a complete workflow for interacting with the Personal Finance Notion workspace. Five linked databases — Transactions, Categories, Accounts, Fixed Expenses, Monthly Ledger.
+Provides a complete workflow for interacting with the Financer Notion workspace. Five linked databases — Transactions, Categories, Accounts, Fixed Expenses, Monthly Report.
 
 **Critical**: Do NOT hardcode any IDs (data source, template, or page). Always discover them dynamically via the Pre-flight workflow.
 
@@ -59,7 +59,7 @@ Provides a complete workflow for interacting with the Personal Finance Notion wo
 - Category/Account relations are JSON arrays of page URLs, not IDs or names
 - Fixed Expenses has one entry per recurring item (not one per billing period)
 - `Total Months` is `null` or `-1` for indefinite recurring expenses
-- Monthly Ledger has one row per month; reuse existing row rather than duplicating
+- Monthly Report has one row per month; reuse existing row rather than duplicating
 - Read-only formula/rollup properties must never be written to
 - `notion_notion-search` with `data_source_url` scoped search is unreliable — always use the two-pass fallback (workspace search + ancestor-path verification). Applies to ALL database searches.
 
@@ -70,5 +70,5 @@ Provides a complete workflow for interacting with the Personal Finance Notion wo
 - [ ] `Amount` always positive
 - [ ] Datetime values include `+08:00`; date-only values do not
 - [ ] Fixed Expenses have one entry per recurring item
-- [ ] Monthly Ledger has one row per month; reused existing if found
+- [ ] Monthly Report has one row per month; reused existing if found
 - [ ] Read-only properties never written to

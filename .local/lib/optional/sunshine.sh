@@ -17,6 +17,11 @@ grant_sunshine_cap_sys_admin() {
         return
       }
       ok "cap_sys_admin granted to Sunshine"
+      systemctl --user enable sunshine.service || {
+        warn "Failed to enable sunshine.service. You may need to run 'systemctl --user enable sunshine.service' manually."
+        return
+      }
+      ok "sunshine.service enabled"
     fi
   fi
 }

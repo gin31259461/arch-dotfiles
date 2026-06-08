@@ -107,6 +107,10 @@ dot add \
   .config/noctalia \
   .config/sunshine/sunshine.conf
 
+# systemd user services
+dot add \
+  .config/systemd/user/sunshine.service.d
+
 # OneDrive
 dot add \
   .config/onedrive/config \

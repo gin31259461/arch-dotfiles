@@ -21,7 +21,6 @@ local variables = {
   MOZ_ENABLE_WAYLAND = "1",
   ELECTRON_OZONE_PLATFORM_HINT = "auto",
   __GLX_VENDOR_LIBRARY_NAME = "mesa",
-  GBM_BACKEND = "drm",
   QT_IM_MODULE = "fcitx",
   XMODIFIERS = "@im=fcitx",
   GLFW_IM_MODULE = "ibus",

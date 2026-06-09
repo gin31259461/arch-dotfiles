@@ -5,7 +5,7 @@ local M = {}
 
 local function fallback()
   hl.monitor({
-    output = "",
+    output = "eDP-1",
     mode = "preferred",
     position = "auto",
     scale = "auto",

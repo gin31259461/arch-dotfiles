@@ -13,7 +13,7 @@ set -euo pipefail
 
 # If QS isn't running, but the CLI exists, try starting it and retry once
 if command -v qs >/dev/null 2>&1; then
-  qs -c overview >/dev/null 2>&1 &
+  env -u GBM_BACKEND qs -c overview >/dev/null 2>&1 &
   # sleep 0.6
   if qs ipc -c overview call overview toggle >/dev/null 2>&1; then
     exit 0

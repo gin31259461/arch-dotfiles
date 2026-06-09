@@ -108,6 +108,7 @@
                 {
                     "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "none",
+                    "colorizeSystemText": "none",
                     "customIconPath": "",
                     "enableColorization": false,
                     "icon": "noctalia",
@@ -211,10 +212,11 @@
                 },
                 {
                     "colorizeSystemIcon": "primary",
-                    "enableColorization": true,
+                    "colorizeSystemText": "none",
                     "generalTooltipText": "",
                     "hideMode": "alwaysExpanded",
                     "icon": "hyprland",
+                    "iconPosition": "left",
                     "id": "CustomButton",
                     "ipcIdentifier": "",
                     "leftClickExec": "qs -c noctalia-shell ipc call launcher toggle",

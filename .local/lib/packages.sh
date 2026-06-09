@@ -79,9 +79,9 @@ qalculate-gtk nvtop yt-dlp baobab inxi power-profiles-daemon\
   "neovim|Neovim Editor\
 |lazygit\
 |neovim-nightly-bin"
-  "noctalia|Noctalia Shell\
+  "noctalia|Noctalia Shell|Quickshell\
 |\
-|noctalia-shell noctalia-qs"
+|noctalia-shell noctalia-qs quickshell-overview-git"
   "razer|Razer Devices\
 |openrazer-daemon openrazer-driver-dkms\
 |polychromatic"

@@ -32,7 +32,7 @@ M.setup = function()
   })
 
   do
-    local user_monitors = ctx.config_dir .. "/lua/hyprconf/monitors.lua"
+    local user_monitors = ctx.config_dir .. "/lua/user/monitors.lua"
     local ok, err = pcall(dofile, user_monitors)
     if
       not ok

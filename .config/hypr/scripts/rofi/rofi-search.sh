@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 # Provides web search functionality via Rofi interface
 
-config_file="$HOME/.config/hypr/conf.d/env.conf"
+Search_Engine="${SEARCH_ENGINE:-https://www.google.com/search?q=}"
 
 if ! command -v jq >/dev/null 2>&1; then
   notify-send -u low "Rofi Search" "jq is required for URL encoding. Please install jq."
   exit 1
 fi
 
-if [[ ! -f "$config_file" ]]; then
-  echo "Error: Configuration file not found!"
-  exit 1
-fi
-
-Search_Engine=$(grep '^\$Search_Engine' "$config_file" | sed 's/\$Search_Engine *= *//; s/"//g')
-
 if [[ -z "$Search_Engine" ]]; then
-  echo "Error: \$Search_Engine is not set in the configuration file!"
+  echo "Error: SEARCH_ENGINE is empty!"
   exit 1
 fi
 

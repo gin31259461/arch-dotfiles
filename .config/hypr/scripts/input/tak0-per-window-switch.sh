@@ -2,17 +2,18 @@
 # Switches keyboard layout per-window, restoring each window's last-used layout on focus
 
 MAP_FILE="$HOME/.cache/kb_layout_per_window"
-CFG_FILE="$HOME/.config/hypr/conf.d/input.conf"
+OPTIONS_FILE="$HOME/.config/hypr/lua/hyprconf/options.lua"
 ICON="$HOME/.config/swaync/images/ja.png"
 SCRIPT_NAME="$(basename "$0")"
 
 touch "$MAP_FILE"
 
-if ! grep -q 'kb_layout' "$CFG_FILE"; then
-  echo "Error: cannot find kb_layout in $CFG_FILE" >&2
+kb_source="$OPTIONS_FILE"
+if ! grep -q 'kb_layout' "$kb_source"; then
+  echo "Error: cannot find kb_layout in $kb_source" >&2
   exit 1
 fi
-kb_layouts=($(grep 'kb_layout' "$CFG_FILE" | cut -d '=' -f2 | tr -d '[:space:]' | tr ',' ' '))
+kb_layouts=($(grep -m1 'kb_layout' "$kb_source" | cut -d '=' -f2 | tr -d '[:space:]",' | tr ',' ' '))
 count=${#kb_layouts[@]}
 
 get_win() {

@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # Quick Settings menu — config editor, rainbow borders, and utilities (SUPER SHIFT E)
 
-# Source env to get $term and $edit variables
-confd="$HOME/.config/hypr/conf.d"
-config_file="$confd/env.conf"
-tmp_config_file=$(mktemp)
-sed 's/^\$//g; s/ = /=/g' "$config_file" > "$tmp_config_file"
-source "$tmp_config_file"
-rm -f "$tmp_config_file"
+lua_conf="$HOME/.config/hypr/lua/hyprconf"
+term="${TERMINAL:-kitty}"
+edit="${EDITOR:-nvim}"
 
 scriptsDir="$HOME/.config/hypr/scripts"
 rofi_theme="$HOME/.config/rofi/config-edit.rasi"
@@ -152,14 +148,14 @@ main() {
     choice=$(menu | rofi -i -dmenu -config "$rofi_theme" -mesg "$msg")
 
     case "$choice" in
-        "Edit Environment & Defaults")  file="$confd/env.conf" ;;
-        "Edit Keybinds")                file="$confd/keybinds.conf" ;;
-        "Edit Autostart Apps")          file="$confd/autostart.conf" ;;
-        "Edit Window Rules")            file="$confd/window-rules.conf" ;;
-        "Edit Appearance")              file="$confd/appearance.conf" ;;
-        "Edit Animations")              file="$confd/animations.conf" ;;
-        "Edit Input Settings")          file="$confd/input.conf" ;;
-        "Edit Laptop Settings")         file="$confd/laptops.conf" ;;
+        "Edit Environment & Defaults")  file="$lua_conf/context.lua" ;;
+        "Edit Keybinds")                file="$lua_conf/binds.lua" ;;
+        "Edit Autostart Apps")          file="$lua_conf/autostart.lua" ;;
+        "Edit Window Rules")            file="$lua_conf/rules.lua" ;;
+        "Edit Appearance")              file="$lua_conf/options.lua" ;;
+        "Edit Animations")              file="$lua_conf/animations.lua" ;;
+        "Edit Input Settings")          file="$lua_conf/options.lua" ;;
+        "Edit Laptop Settings")         file="$lua_conf/context.lua" ;;
         "Choose Kitty Terminal Theme")  "$scriptsDir/display/kitty-themes.sh" ;;
         "Configure Monitors (nwg-displays)")
             command -v nwg-displays &>/dev/null || { notify-send "Error" "Install nwg-displays first"; exit 1; }

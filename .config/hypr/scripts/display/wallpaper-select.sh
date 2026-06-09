@@ -80,17 +80,7 @@ menu() {
 }
 
 modify_startup_config() {
-  local selected_file="$1"
-  local startup_config="$HOME/.config/hypr/conf.d/autostart.conf"
-  if [[ "$selected_file" =~ \.(mp4|mkv|mov|webm)$ ]]; then
-    sed -i '/^\s*exec-once\s*=\s*swww-daemon\s*--format\s*xrgb\s*$/s/^/# /' "$startup_config"
-    sed -i '/^\s*#\s*exec-once\s*=\s*mpvpaper/s/^#\s*//' "$startup_config"
-    local escaped="${selected_file/#$HOME/\$HOME}"
-    sed -i "s|^\$livewallpaper=.*|\$livewallpaper=\"$escaped\"|" "$startup_config"
-  else
-    sed -i '/^\s*#\s*exec-once\s*=\s*swww-daemon\s*--format\s*xrgb/s/^#\s*//' "$startup_config"
-    sed -i '/^\s*exec-once\s*=\s*mpvpaper/s/^/# /' "$startup_config"
-  fi
+  :
 }
 
 apply_image_wallpaper() {

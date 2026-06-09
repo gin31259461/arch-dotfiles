@@ -1,193 +1,56 @@
 # Hyprland Config
 
-Personal Hyprland configuration. Themed around [noctalia-shell](https://github.com/noctalia-dev/noctalia-shell) with Material Design colors via noctalia.
+Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 
 ## Structure
 
-```
+```text
 ~/.config/hypr/
-├── conf.d/                  # Modular config (loaded by hyprland.conf)
-│   ├── animations.conf      # Animation presets (managed by scripts/display/animations.sh)
-│   ├── appearance.conf      # Decoration, blur, shadow, rounding
-│   ├── autostart.conf       # Exec-once entries
-│   ├── env.conf             # Environment variables ($term, $files, $edit, etc.)
-│   ├── input.conf           # Keyboard, touchpad, mouse settings
-│   ├── keybinds.conf        # All keybindings
-│   ├── laptops.conf         # Laptop-specific overrides (ASUS ROG)
-│   ├── layout.conf          # Dwindle / Master layout settings
-│   ├── misc.conf            # Misc Hyprland options
-│   └── window-rules.conf    # Window rules and workspace assignments
-│
-├── scripts/
-│   ├── display/
-│   │   ├── animations.sh           # Animation preset picker (rofi)
-│   │   ├── brightness.sh           # Brightness control
-│   │   ├── brightness-kbd.sh       # Keyboard brightness control
-│   │   ├── change-blur.sh          # Toggle blur
-│   │   ├── dark-light.sh           # Dark/light theme toggle
-│   │   ├── hyprsunset.sh           # Blue light filter
-│   │   ├── kitty-themes.sh         # Kitty theme picker (rofi)
-│   │   ├── monitor-profiles.sh     # Monitor profile switcher (rofi)
-│   │   ├── noctalia-theme.sh       # Sync noctalia Material colors to rofi, quickshell, hyprlock
-│   │   ├── theme-changer.sh        # Global wallust theme switcher (rofi)
-│   │   ├── wallpaper-select.sh     # Wallpaper picker — images + videos (rofi + swww/mpvpaper)
-│   │   ├── wallpaper-effects.sh    # ImageMagick wallpaper effects picker (rofi)
-│   │   ├── wallpaper-random.sh     # Apply random wallpaper from wallDIR
-│   │   ├── wallpaper-auto.sh       # Daemon: auto-cycle wallpapers every 30 min
-│   │   ├── wallust-swww.sh         # Sync wallust colors after wallpaper change
-│   │   ├── waybar-layout.sh        # Waybar layout picker (rofi)
-│   │   ├── waybar-style.sh         # Waybar CSS style picker (rofi)
-│   │   └── zsh-change-theme.sh     # oh-my-zsh theme picker (rofi)
-│   │
-│   ├── input/
-│   │   ├── change-layout.sh        # Toggle Dwindle/Master layout
-│   │   ├── key-hints.sh            # Keybind cheat sheet (yad)
-│   │   ├── keyboard-layout.sh      # Global keyboard layout switch
-│   │   ├── keybinds.sh             # Searchable keybinds (rofi)
-│   │   ├── keybinds-layout-init.sh # Layout-aware keybinds initialiser
-│   │   ├── keybinds-parser.py      # Keybind parser for rofi search
-│   │   ├── tak0-autodispatch.sh    # Workspace auto-dispatcher
-│   │   └── tak0-per-window-switch.sh # Per-window keyboard layout switch
-│   │
-│   ├── media/
-│   │   ├── media-ctrl.sh           # Media player controls (play/pause/next/prev)
-│   │   ├── rofi-beats.sh           # Online music player (mpv + rofi)
-│   │   ├── sounds.sh               # UI sound effects
-│   │   ├── volume.sh               # Volume control
-│   │   └── waybar-cava.sh          # Cava bar-glyph streamer for waybar modules
-│   │
-│   ├── rofi/
-│   │   ├── app-launcher.sh         # Rofi app launcher (drun + filebrowser + run + window)
-│   │   ├── clip-manager.sh         # Clipboard manager (cliphist + rofi)
-│   │   ├── quick-settings.sh       # Quick settings menu
-│   │   ├── rofi-calc.sh            # Calculator (qalc + rofi)
-│   │   ├── rofi-emoji.sh           # Emoji picker
-│   │   ├── rofi-search.sh          # Web search
-│   │   ├── rofi-theme-selector.sh  # Rofi theme picker
-│   │   └── rofi-theme-selector-modified.sh
-│   │
-│   ├── services/
-│   │   ├── battery.sh              # Battery status notifications
-│   │   ├── distro-update.sh        # Package update notifier
-│   │   ├── dropterminal.sh         # Dropdown terminal (scratchpad)
-│   │   ├── hypridle.sh             # Hypridle daemon launcher
-│   │   ├── polkit.sh               # Polkit agent launcher
-│   │   ├── portal-hyprland.sh      # XDG desktop portal launcher
-│   │   ├── refresh.sh              # Reload ags / qs / swaync / waybar
-│   │   ├── refresh-theme.sh        # Reload theme targets after changes
-│   │   ├── touchpad.sh             # Touchpad toggle
-│   │   ├── waybar-scripts.sh       # Waybar click-handler (btop/nvtop/nmtui/files)
-│   │   ├── weather.sh              # Weather fetch
-│   │   ├── weather-wrap.sh         # Weather wrapper (used by lock screen)
-│   │   └── weather.py              # Weather data formatter
-│   │
-│   └── session/
-│       ├── airplane-mode.sh        # Airplane mode toggle
-│       ├── game-mode.sh            # Game mode (disables animations)
-│       ├── kill-active-process.sh  # Kill active window process
-│       ├── lock-screen.sh          # Lock screen launcher
-│       ├── overview-toggle.sh      # Desktop overview toggle
-│       ├── screenshot.sh           # Screenshots (grim / slurp / swappy)
-│       └── wlogout.sh              # Session menu (logout/lock/reboot/shutdown)
-│
-├── monitor-profiles/        # Monitor config presets
-├── wallpaper-effects/       # Wallpaper cache for hyprlock
-│   ├── .wallpaper_current   # Raw copy of active wallpaper
-│   └── .wallpaper_modified  # Blurred + tinted version (used by hyprlock)
-├── wallust/                 # Wallust color theme integration
-├── animations/              # Animation preset files
-├── monitors.conf            # Active monitor config
-├── workspaces.conf          # Workspace rules
-├── hyprlock.conf            # Lock screen config
-├── hyprlock-2k.conf         # Lock screen config (2K variant)
-├── hypridle.conf            # Idle / auto-lock config
-└── initial-boot.sh          # First-login setup script
+├── hyprland.lua              # Minimal Lua entrypoint
+├── lua/hyprconf/             # Hyprland Lua modules
+│   ├── init.lua              # Module load order
+│   ├── context.lua           # Paths, defaults, devices
+│   ├── env.lua               # Environment variables
+│   ├── autostart.lua         # Startup commands
+│   ├── monitors.lua          # monitors.conf loader
+│   ├── options.lua           # General/input/layout/misc options
+│   ├── animations.lua        # Curves and animations
+│   ├── gestures.lua          # Touchpad gestures
+│   ├── binds.lua             # Keybinds
+│   ├── rules.lua             # Window and layer rules
+│   ├── colors.lua            # Wallust/Noctalia color loader
+│   └── util.lua              # Shared Lua helpers
+├── monitors.conf             # Dynamic monitor profile data
+├── wallust/                  # Generated color data
+├── scripts/                  # Helper scripts and menus
+├── monitor-profiles/         # Monitor profile presets
+├── hyprlock.conf
+├── hyprlock-2k.conf
+├── hyprlock-1080.conf
+├── hypridle.conf
+└── initial-boot.sh
 ```
 
-## Theming
+## Editing
 
-Colors are driven by **noctalia** (Material Design). Two workflows:
+- Defaults, paths, and device names: `lua/hyprconf/context.lua`
+- Keybinds: `lua/hyprconf/binds.lua`
+- Autostart: `lua/hyprconf/autostart.lua`
+- Appearance/input/layout/misc: `lua/hyprconf/options.lua`
+- Window and layer rules: `lua/hyprconf/rules.lua`
+- Animations: `lua/hyprconf/animations.lua`
+- Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua`
 
-| Trigger | What happens |
-|---|---|
-| Change wallpaper/theme in noctalia | Colors auto-update via wallust |
-| `SUPER SHIFT T` | Manually sync noctalia colors to rofi, noctalia-shell, wallpaper-effects |
+Run validation with:
 
-Color targets: `~/.config/rofi/wallust/colors-rofi.rasi`, `~/.config/quickshell/qml_color.json`, `wallpaper-effects/`
+```sh
+Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
+```
 
-## Key Keybinds
+## Notes
 
-| Key | Action |
-|---|---|
-| `SUPER D` | Application launcher |
-| `SUPER Return` | Terminal |
-| `SUPER SHIFT Return` | Dropdown terminal |
-| `SUPER H` | Keybind cheat sheet |
-| `SUPER SHIFT K` | Search all keybinds |
-| `SUPER SHIFT E` | Quick settings menu |
-| `SUPER T` | Global theme switcher |
-| `SUPER SHIFT T` | Apply noctalia Material Design colors |
-| `SUPER S` | Web search |
-| `SUPER ALT V` | Clipboard manager |
-| `SUPER Print` | Screenshot |
-| `CTRL ALT L` | Session menu (lock / logout / reboot) |
+`monitors.conf` is intentionally still data-oriented so tools such as `nwg-displays` and monitor profile scripts can update it. Generated color files under `wallust/` and `noctalia/` are also kept as data inputs; the Lua config reads them at startup.
 
-Full list: `SUPER H` or `SUPER SHIFT K`
+## References
 
-## Monitor Profiles
-
-Add `.conf` files to `monitor-profiles/` — one profile per file (e.g. `home.conf`, `office.conf`).
-Switch via `SUPER SHIFT E -> Monitor Profiles`. The active profile is written to `monitors.conf`.
-
-Tip: generate a profile with `nwg-displays`, then copy `monitors.conf` into `monitor-profiles/` with a descriptive name.
-
-## Rofi App Launcher (optional)
-
-The default launcher is **noctalia-shell** (`SUPER D`). Rofi `drun` is available as a drop-in alternative — useful if noctalia-shell is not running or you prefer a classic rofi launcher.
-
-**To enable:** in `conf.d/keybinds.conf`, comment out the noctalia-shell launcher line and uncomment the rofi alternative directly below it.
-
-The launcher uses `~/.config/rofi/config.rasi` (inherits the active rofi theme). Change the theme with `SUPER CTRL R` or `SUPER CTRL SHIFT R`.
-
-**Modes available:** `drun` (installed apps) · `filebrowser` · `run` (commands) · `window` (open windows)
-
-## Wallpaper (optional)
-
-Wallpaper management is **disabled by default**. noctalia handles wallpaper via its own workflow. Enable swww for full wallpaper management with effects and auto-cycling.
-
-**To enable:**
-1. Uncomment `exec-once = swww-daemon --format xrgb` in `conf.d/autostart.conf`
-2. Uncomment the wallpaper keybinds in `conf.d/keybinds.conf`
-
-**Wallpaper keybinds (when enabled):**
-
-| Key | Action |
-|---|---|
-| `SUPER W` | Wallpaper picker — browse images and videos |
-| `SUPER SHIFT W` | Wallpaper effects — apply ImageMagick filter to current wallpaper |
-| `CTRL ALT W` | Random wallpaper from `~/Pictures/wallpapers` |
-
-**Wallpaper directory:** `~/Pictures/wallpapers` (configurable in each script)
-
-**Video wallpapers:** requires `mpvpaper`. Uncomment the `$livewallpaper` lines in `conf.d/autostart.conf` and set the video path.
-
-**Auto-cycling:** uncomment `wallpaper-auto.sh` in `conf.d/autostart.conf` to cycle wallpapers every 30 minutes.
-
-## Waybar (optional)
-
-Waybar is supported but **disabled by default**. noctalia-shell is the primary bar.
-
-**To enable:**
-1. Uncomment `exec-once = waybar` in `conf.d/autostart.conf`
-2. Uncomment the 3 waybar keybinds in `conf.d/keybinds.conf`
-
-**Waybar keybinds (when enabled):**
-
-| Key | Action |
-|---|---|
-| `SUPER CTRL B` | Waybar style picker |
-| `SUPER ALT B` | Waybar layout picker |
-| `SUPER CTRL ALT B` | Toggle waybar visibility |
-
-Style/layout pickers are also accessible from `SUPER SHIFT E -> Waybar`.
-Waybar reloads automatically on theme changes if it is running.
+- [Hyprland-Dots](https://github.com/LinuxBeginnings/Hyprland-Dots/tree/main/config/hypr)

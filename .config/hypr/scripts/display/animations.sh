@@ -6,20 +6,14 @@ if pidof rofi > /dev/null; then
 fi
 
 iDIR="$HOME/.config/swaync/images"
-scriptsDir="$HOME/.config/hypr/scripts"
-animations_dir="$HOME/.config/hypr/animations"
-confd="$HOME/.config/hypr/conf.d"
+animations_lua="$HOME/.config/hypr/lua/hyprconf/animations.lua"
 rofi_theme="$HOME/.config/rofi/config-Animations.rasi"
-msg='❗NOTE:❗ This will copy the selected preset into conf.d/animations.conf'
-animations_list=$(find -L "$animations_dir" -maxdepth 1 -type f | sed 's/.*\///' | sed 's/\.conf$//' | sort -V)
+msg='Lua config is active. Edit lua/hyprconf/animations.lua to change animation presets.'
+animations_list="Open animations.lua"
 
 chosen_file=$(echo "$animations_list" | rofi -i -dmenu -config "$rofi_theme" -mesg "$msg")
 
-if [[ -n "$chosen_file" ]]; then
-  full_path="$animations_dir/$chosen_file.conf"
-  cp "$full_path" "$confd/animations.conf"
-  notify-send -u low -i "$iDIR/ja.png" "$chosen_file" "Hyprland Animation Loaded"
+if [[ "$chosen_file" == "Open animations.lua" ]]; then
+  "${TERMINAL:-kitty}" -e "${EDITOR:-nvim}" "$animations_lua"
+  notify-send -u low -i "$iDIR/ja.png" "Hyprland Animations" "Opened Lua animation config"
 fi
-
-sleep 1
-"$scriptsDir/services/refresh-theme.sh"

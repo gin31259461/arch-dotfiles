@@ -2,15 +2,8 @@
 # Waybar click-handler helper — launches terminal apps from waybar modules
 # Usage: waybar-scripts.sh [--btop|--nvtop|--nmtui|--term|--files]
 
-# Read $term and $files from env.conf
-env_conf="$HOME/.config/hypr/conf.d/env.conf"
-term=$(grep -m1 '^\$term\s*=' "$env_conf" | sed 's/.*=\s*//')
-files=$(grep -m1 '^\$files\s*=' "$env_conf" | sed 's/.*=\s*//')
-
-if [[ -z "$term" ]]; then
-    notify-send -u critical "waybar-scripts" "\$term not set in conf.d/env.conf"
-    exit 1
-fi
+term="${TERMINAL:-kitty}"
+files="${FILE_MANAGER:-thunar}"
 
 case "$1" in
     --btop)   exec $term --title btop  -e btop ;;
@@ -19,7 +12,7 @@ case "$1" in
     --term)   exec $term ;;
     --files)
         if [[ -z "$files" ]]; then
-            notify-send -u low "waybar-scripts" "\$files not set in conf.d/env.conf"
+            notify-send -u low "waybar-scripts" "FILE_MANAGER is empty"
             exit 1
         fi
         exec $files

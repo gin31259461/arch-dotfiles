@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 # Manages touchpad settings and controls
 # For disabling touchpad.
-# Edit $Touchpad_Device in conf.d/laptops.conf (use hyprctl devices to find your device name)
+# Edit touchpad_device in lua/hyprconf/context.lua (use hyprctl devices to find your device name)
 # use hyprctl devices to get your system touchpad device name
 # source https://github.com/hyprwm/Hyprland/discussions/4283?sort=new#discussioncomment-8648109
 
 set -euo pipefail
 
 notif="$HOME/.config/swaync/images/ja.png"
-laptops_conf="$HOME/.config/hypr/conf.d/laptops.conf"
+context_lua="$HOME/.config/hypr/lua/hyprconf/context.lua"
 
 touchpad_device="${TOUCHPAD_DEVICE:-}"
-if [[ -z "$touchpad_device" && -f "$laptops_conf" ]]; then
+if [[ -z "$touchpad_device" && -f "$context_lua" ]]; then
     touchpad_device="$(
-        awk -F= '/^\$Touchpad_Device/ {
+        awk -F= '/touchpad_device/ {
             gsub(/[[:space:]]*/, "", $1);
             gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2);
+            gsub(/[\"'\'']/, "", $2);
             print $2;
             exit
-        }' "$laptops_conf"
+        }' "$context_lua"
     )"
 fi
 
 if [[ -z "$touchpad_device" ]]; then
-    notify-send -u low -i "$notif" " Touchpad" " Device name not set (check Laptops.conf)"
+    notify-send -u low -i "$notif" " Touchpad" " Device name not set (check lua/hyprconf/context.lua)"
     exit 1
 fi
 

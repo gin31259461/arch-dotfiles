@@ -1,66 +1,48 @@
-local ctx = require("hyprconf.context")
-local util = require("hyprconf.util")
-
 local M = {}
 
-local function is_internal_panel(output)
-  return output:match("^eDP%-")
-    or output:match("^LVDS%-")
-    or output:match("^DSI%-")
-end
-
-local function fallback()
+M.setup = function()
   hl.monitor({
     output = "",
     mode = "preferred",
     position = "auto",
-    scale = "auto",
+    scale = "1",
   })
-end
 
-function M.setup()
-  local path = ctx.config_dir .. "/monitors.conf"
-  if not util.file_exists(path) then
-    fallback()
-    return
-  end
+  hl.monitor({
+    output = "",
+    mode = "highrr",
+    position = "auto",
+    scale = "1",
+  })
 
-  local loaded = false
+  hl.monitor({
+    output = "",
+    mode = "highres",
+    position = "auto",
+    scale = "1",
+  })
 
-  for line in io.lines(path) do
-    local body = line:match("^%s*monitor%s*=%s*(.+)$")
-    if body then
-      local parts = util.split_csv(body)
-      if parts[1] and parts[2] then
-        local spec = {
-          output = parts[1],
-          mode = parts[2],
-          position = parts[3] or "auto",
-          scale = tonumber(parts[4]) or parts[4] or "auto",
-        }
+  hl.monitor({
+    output = "Virtual-1",
+    mode = "1920x1080@60",
+    position = "auto",
+    scale = "1",
+  })
 
-        if parts[5] == "mirror" and parts[6] then
-          if is_internal_panel(parts[1]) then
-            spec = {
-              output = parts[1],
-              mode = "preferred",
-              position = "auto",
-              scale = tonumber(parts[4]) or parts[4] or "auto",
-            }
-          else
-            spec.mirror = parts[6]
-          end
-        end
+  hl.monitor({
+    output = "HDMI-A-1",
+    mode = "1920x1080@100",
+    position = "0x0",
+    scale = 1,
+  })
 
-        hl.monitor(spec)
-        loaded = true
-      end
-    end
-  end
-
-  if not loaded then
-    fallback()
-  end
+  hl.monitor({
+    output = "eDP-1",
+    mode = "1920x1080@144",
+    position = "0x0",
+    scale = 1,
+    mirror = "HDMI-A-1",
+  })
 end
 
 return M

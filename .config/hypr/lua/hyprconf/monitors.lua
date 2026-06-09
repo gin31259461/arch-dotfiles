@@ -3,9 +3,15 @@ local util = require("hyprconf.util")
 
 local M = {}
 
+local function is_internal_panel(output)
+  return output:match("^eDP%-")
+    or output:match("^LVDS%-")
+    or output:match("^DSI%-")
+end
+
 local function fallback()
   hl.monitor({
-    output = "eDP-1",
+    output = "",
     mode = "preferred",
     position = "auto",
     scale = "auto",
@@ -20,6 +26,7 @@ function M.setup()
   end
 
   local loaded = false
+
   for line in io.lines(path) do
     local body = line:match("^%s*monitor%s*=%s*(.+)$")
     if body then
@@ -33,7 +40,16 @@ function M.setup()
         }
 
         if parts[5] == "mirror" and parts[6] then
-          spec.mirror = parts[6]
+          if is_internal_panel(parts[1]) then
+            spec = {
+              output = parts[1],
+              mode = "preferred",
+              position = "auto",
+              scale = tonumber(parts[4]) or parts[4] or "auto",
+            }
+          else
+            spec.mirror = parts[6]
+          end
         end
 
         hl.monitor(spec)

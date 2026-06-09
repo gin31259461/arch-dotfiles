@@ -2,11 +2,15 @@
 # Toggles between dark and light theme for system and applications
 # Note: Scripts look for keywords Light or Dark; wallpapers are in separate directories
 
-hypr_config_path="$HOME/.config/hypr"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+hypr_config_path="$HYPR_CONFIG_DIR"
 swaync_style="$HOME/.config/swaync/style.css"
 ags_style="$HOME/.config/ags/user/style.css"
-scriptsDir="$HOME/.config/hypr/scripts"
-notif="$HOME/.config/swaync/images/bell.png"
+scriptsDir="$SCRIPT_DIR"
+notif="$(icon_img bell.png)"
 wallust_rofi="$HOME/.config/wallust/templates/colors-rofi.rasi"
 
 kitty_conf="$HOME/.config/kitty/kitty.conf"
@@ -34,11 +38,11 @@ else
 fi
 
 update_theme_mode() {
-  echo "$next_mode" > "$HOME/.cache/.theme_mode"
+  echo "$next_mode" >"$HOME/.cache/.theme_mode"
 }
 
 notify_user() {
-  notify-send -u low -i "$notif" " Switching to" " $1 mode"
+  notify_info "Theme" "Switching to $1 mode" "$notif" "theme-mode"
 }
 
 if [[ "$next_mode" == "Dark" ]]; then
@@ -167,12 +171,12 @@ set_custom_gtk_theme "$next_mode"
 update_theme_mode
 
 sleep 2
-for proc in rofi swaync ags swaybg; do pkill -x "$proc" 2>/dev/null || true; done
+kill_by_name rofi swaync ags swaybg
 
 sleep 1
 "${scriptsDir}/services/refresh.sh"
 
 sleep 0.5
-notify-send -u low -i "$notif" " Themes switched to:" " $next_mode Mode"
+notify_success "Theme" "$next_mode mode applied" "$notif" "theme-mode"
 
 exit 0

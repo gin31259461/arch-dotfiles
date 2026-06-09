@@ -14,16 +14,16 @@ fi
 export SWWW_TRANSITION_FPS=60
 export SWWW_TRANSITION_TYPE=simple
 
-INTERVAL=1800  # seconds between wallpaper changes
+INTERVAL=1800 # seconds between wallpaper changes
 
 while true; do
   find "$1" \
     | while read -r img; do echo "$((RANDOM % 1000)):$img"; done \
     | sort -n | cut -d':' -f2- \
     | while read -r img; do
-        swww img -o "$focused_monitor" "$img"
-        "$SCRIPTSDIR/display/wallust-swww.sh" "$img"
-        "$SCRIPTSDIR/services/refresh.sh"
-        sleep $INTERVAL
-      done
+      swww img -o "$focused_monitor" "$img"
+      "$SCRIPTSDIR/display/wallust-swww.sh" "$img"
+      "$SCRIPTSDIR/services/refresh.sh"
+      sleep $INTERVAL
+    done
 done

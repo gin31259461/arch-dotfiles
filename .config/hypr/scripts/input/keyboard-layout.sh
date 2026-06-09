@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Manages keyboard layout switching across configured layouts
 
-notif_icon="$HOME/.config/swaync/images/ja.png"
-scriptsDir="$HOME/.config/hypr/scripts"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+notif_icon="$(icon_img ja.png)"
+scriptsDir="$SCRIPT_DIR"
 
 ignore_patterns=(
   "--(avrcp)"
@@ -30,20 +34,20 @@ get_current_layout_info() {
     if ! is_ignored "$name"; then
       found_kb=true
       local layout_mapping_str
-      layout_mapping_str=$(hyprctl devices -j |
-        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).layout')
+      layout_mapping_str=$(hyprctl devices -j \
+        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).layout')
       IFS="," read -r -a layout_mapping <<<"$layout_mapping_str"
 
       local variant_mapping_str
-      variant_mapping_str=$(hyprctl devices -j |
-        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).variant')
+      variant_mapping_str=$(hyprctl devices -j \
+        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).variant')
       IFS="," read -r -a variant_mapping <<<"$variant_mapping_str"
 
-      layout_index=$(hyprctl devices -j |
-        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).active_layout_index')
+      layout_index=$(hyprctl devices -j \
+        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).active_layout_index')
       break
     fi
-  done <<< "$(get_keyboard_names)"
+  done <<<"$(get_keyboard_names)"
 
   $found_kb && return 0
   return 1
@@ -73,7 +77,7 @@ if ! get_current_layout_info; then
   echo "Could not get current layout information." >&2
   echo "There might not be any keyboards available, \
     or some were unnecessarily set as ignored." >&2
-  notify-send -u low -t 2000 'kb_layout' " Error:" " Layout change failed"
+  notify_error "Keyboard Layout" "Layout change failed" "" "keyboard-layout" 2000
   echo "Exiting $0 $@" >&2
   exit 1
 fi
@@ -89,17 +93,17 @@ elif [[ "$1" == "switch" ]]; then
   layout_count=${#layout_mapping[@]}
   echo "Number of layouts: $layout_count"
 
-  next_index=$(( (layout_index + 1) % layout_count ))
+  next_index=$(((layout_index + 1) % layout_count))
   new_layout="${layout_mapping[$next_index]}"
   new_variant="${variant_mapping[$next_index]}"
   echo "Next layout: $new_layout"
 
   if ! change_layout; then
-    notify-send -u low -t 2000 'kb_layout' " Error:" " Layout change failed"
+    notify_error "Keyboard Layout" "Layout change failed" "" "keyboard-layout" 2000
     echo "Layout change failed." >&2
     exit 1
   else
-    notify-send -u low -i "$notif_icon" " kb_layout: $new_layout${new_variant:+($new_variant)}"
+    notify_success "Keyboard Layout" "$new_layout${new_variant:+($new_variant)}" "$notif_icon" "keyboard-layout"
     echo "Layout change notification sent."
   fi
 else

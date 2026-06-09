@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
 # Provides web search functionality via Rofi interface
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 Search_Engine="${SEARCH_ENGINE:-https://www.google.com/search?q=}"
 
-if ! command -v jq >/dev/null 2>&1; then
-  notify-send -u low "Rofi Search" "jq is required for URL encoding. Please install jq."
-  exit 1
-fi
+require_command jq "jq is required for URL encoding. Please install jq." || exit 1
 
 if [[ -z "$Search_Engine" ]]; then
   echo "Error: SEARCH_ENGINE is empty!"
   exit 1
 fi
 
-rofi_theme="$HOME/.config/rofi/config-search.rasi"
-msg='‼️ **note** ‼️ search via default web browser'
+rofi_theme="$ROFI_CONFIG_DIR/config-search.rasi"
+msg='Search with your default browser'
 
-if pgrep -x "rofi" >/dev/null; then
-  pkill rofi
-fi
+rofi_close_existing
 
-query=$(printf '' | rofi -dmenu -config "$rofi_theme" -mesg "$msg")
+query=$(printf '' | rofi_dmenu "$rofi_theme" "$msg")
 
 if [[ -z "$query" ]]; then
   exit 0

@@ -4,9 +4,13 @@
 
 PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
 wallDIR="$PICTURES_DIR/wallpapers"
-SCRIPTSDIR="$HOME/.config/hypr/scripts"
-wallpaper_current="$HOME/.config/hypr/wallpaper-effects/.wallpaper_current"
-iDIR="$HOME/.config/swaync/images"
+SCRIPTSDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPTSDIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPTSDIR/lib/rofi.sh"
+
+wallpaper_current="$HYPR_CONFIG_DIR/wallpaper-effects/.wallpaper_current"
 
 FPS=60
 TYPE="any"
@@ -15,15 +19,15 @@ BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 if ! command -v bc &>/dev/null; then
-  notify-send "bc missing" "Install package bc first"
+  notify_error "Missing Dependency" "Install package bc first."
   exit 1
 fi
 
-rofi_theme="$HOME/.config/rofi/config-wallpaper.rasi"
+rofi_theme="$ROFI_CONFIG_DIR/config-wallpaper.rasi"
 focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
 
 if [[ -z "$focused_monitor" ]]; then
-  notify-send "Error" "Could not detect focused monitor"
+  notify_error "Wallpaper" "Could not detect focused monitor."
   exit 1
 fi
 
@@ -35,15 +39,11 @@ rofi_override="element-icon{size:${adjusted_icon_size}%;}"
 
 kill_for_video() {
   swww kill 2>/dev/null || true
-  pgrep -x mpvpaper | xargs -r kill 2>/dev/null || true
-  pgrep -x swaybg   | xargs -r kill 2>/dev/null || true
-  pgrep -x hyprpaper | xargs -r kill 2>/dev/null || true
+  kill_by_name mpvpaper swaybg hyprpaper
 }
 
 kill_for_image() {
-  pgrep -x mpvpaper | xargs -r kill 2>/dev/null || true
-  pgrep -x swaybg   | xargs -r kill 2>/dev/null || true
-  pgrep -x hyprpaper | xargs -r kill 2>/dev/null || true
+  kill_by_name mpvpaper swaybg hyprpaper
 }
 
 mapfile -d '' PICS < <(find -L "${wallDIR}" -type f \( \
@@ -98,7 +98,7 @@ apply_image_wallpaper() {
 apply_video_wallpaper() {
   local video_path="$1"
   if ! command -v mpvpaper &>/dev/null; then
-    notify-send "Error" "mpvpaper not found"
+    notify_error "Wallpaper" "mpvpaper not found."
     return 1
   fi
   kill_for_video
@@ -106,7 +106,7 @@ apply_video_wallpaper() {
 }
 
 main() {
-  choice=$(menu | rofi -i -show -dmenu -config "$rofi_theme" -theme-str "$rofi_override")
+  choice=$(menu | rofi_dmenu "$rofi_theme" "" -show -theme-str "$rofi_override")
   choice=$(echo "$choice" | xargs)
   RANDOM_PIC_NAME=$(echo "$RANDOM_PIC_NAME" | xargs)
 
@@ -118,7 +118,7 @@ main() {
   selected_file=$(find "$wallDIR" -iname "$choice_basename.*" -print -quit)
 
   if [[ -z "$selected_file" ]]; then
-    notify-send "Error" "Wallpaper not found: $choice"
+    notify_error "Wallpaper" "Not found: $choice"
     exit 1
   fi
 
@@ -131,5 +131,5 @@ main() {
   fi
 }
 
-pgrep -x rofi | xargs -r kill 2>/dev/null || true
+rofi_close_existing
 main

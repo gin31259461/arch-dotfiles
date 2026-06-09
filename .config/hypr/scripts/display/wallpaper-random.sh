@@ -13,7 +13,10 @@ mapfile -t PICS < <(find -L "${wallDIR}" -type f \( \
 
 RANDOMPIC="${PICS[$((RANDOM % ${#PICS[@]}))]}"
 
-FPS=30; TYPE="random"; DURATION=1; BEZIER=".43,1.19,1,.4"
+FPS=30
+TYPE="random"
+DURATION=1
+BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 swww query || swww-daemon --format xrgb

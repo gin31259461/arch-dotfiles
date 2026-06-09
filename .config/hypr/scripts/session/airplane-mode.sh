@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 # Controls airplane mode by toggling wifi on/off
 
-notif="$HOME/.config/swaync/images/ja.png"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+notif="$(icon_img ja.png)"
 
 # Check if any wireless device is blocked
 wifi_blocked=$(rfkill list wifi | grep -o "Soft blocked: yes")
 
 if [[ -n "$wifi_blocked" ]]; then
   rfkill unblock wifi
-  notify-send -u low -i "$notif" " Airplane" " mode: OFF"
+  notify_success "Airplane Mode" "Off" "$notif" "airplane-mode"
 else
   rfkill block wifi
-  notify-send -u low -i "$notif" " Airplane" " mode: ON"
+  notify_warn "Airplane Mode" "On" "$notif" "airplane-mode"
 fi

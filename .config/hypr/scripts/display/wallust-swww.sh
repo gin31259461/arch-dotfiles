@@ -64,14 +64,22 @@ cp -f "$wallpaper_path" "$wallpaper_current" || true
 mkdir -p "$HOME/.config/ghostty" || true
 
 wait_for_templates() {
-  local start_ts="$1"; shift
+  local start_ts="$1"
+  shift
   local files=("$@")
   for _ in {1..50}; do
     local ready=true
     for file in "${files[@]}"; do
-      if [[ ! -s "$file" ]]; then ready=false; break; fi
-      local mtime; mtime=$(stat -c %Y "$file" 2>/dev/null || echo 0)
-      (( mtime < start_ts )) && { ready=false; break; }
+      if [[ ! -s "$file" ]]; then
+        ready=false
+        break
+      fi
+      local mtime
+      mtime=$(stat -c %Y "$file" 2>/dev/null || echo 0)
+      ((mtime < start_ts)) && {
+        ready=false
+        break
+      }
     done
     $ready && return 0
     sleep 0.1

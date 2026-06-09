@@ -68,7 +68,7 @@ echo "Root PID: $ROOT_PID" >>"$LOGFILE"
 APP_NAME=""
 for _ in {1..20}; do
   if [[ -r "/proc/$ROOT_PID/comm" ]]; then
-    APP_NAME="$(tr -d '\0' < "/proc/$ROOT_PID/comm" 2>/dev/null || true)"
+    APP_NAME="$(tr -d '\0' <"/proc/$ROOT_PID/comm" 2>/dev/null || true)"
     break
   fi
   sleep 0.05

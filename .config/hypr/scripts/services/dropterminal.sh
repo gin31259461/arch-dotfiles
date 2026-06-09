@@ -270,8 +270,8 @@ spawn_terminal() {
     # Find the new window by comparing before/after lists
     new_addr=$(comm -13 \
       <(echo "$windows_before" | jq -r '.[].address' | sort) \
-      <(echo "$windows_after" | jq -r '.[].address' | sort) |
-      head -1)
+      <(echo "$windows_after" | jq -r '.[].address' | sort) \
+      | head -1)
   fi
 
   # Fallback: try to find by the most recently mapped window

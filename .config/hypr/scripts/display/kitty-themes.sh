@@ -2,15 +2,19 @@
 # Manages Kitty terminal theme switching
 # Kitty Themes Source https://github.com/dexpota/kitty-themes #
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
 # Define directories and variables
 kitty_themes_DiR="$HOME/.config/kitty/kitty-themes" # Kitty Themes Directory
 kitty_config="$HOME/.config/kitty/kitty.conf"
-iDIR="$HOME/.config/swaync/images" # For notifications
-rofi_theme_for_this_script="$HOME/.config/rofi/config-kitty-theme.rasi"
+iDIR="$SWAYNC_IMAGE_DIR" # For notifications
+rofi_theme_for_this_script="$ROFI_CONFIG_DIR/config-kitty-theme.rasi"
 
 # --- Helper Functions ---
 notify_user() {
-  notify-send -u low -i "$1" "$2" "$3"
+  notify_message "$2" "$3" "$1" low "kitty-theme"
 }
 
 # Function to apply the selected kitty theme
@@ -100,8 +104,8 @@ while true; do
   done
   rofi_input_list_trimmed="${rofi_input_list%\\n}"
 
-  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" |
-    rofi -dmenu -i \
+  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" \
+    | rofi -dmenu -i \
       -format 'i' \
       -p "Kitty Theme" \
       -mesg "Preview: ${theme_to_preview_now} | Enter: Preview | Ctrl+S: Apply & Exit | Esc: Cancel" \

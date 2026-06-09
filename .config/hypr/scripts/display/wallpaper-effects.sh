@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
 # Wallpaper effects: apply ImageMagick filter to current wallpaper (SUPER SHIFT W).
 
-SCRIPTSDIR="$HOME/.config/hypr/scripts"
-wallpaper_current="$HOME/.config/hypr/wallpaper-effects/.wallpaper_current"
-wallpaper_output="$HOME/.config/hypr/wallpaper-effects/.wallpaper_modified"
-focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
-rofi_theme="$HOME/.config/rofi/config-wallpaper-effect.rasi"
+SCRIPTSDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPTSDIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPTSDIR/lib/rofi.sh"
 
-FPS=60; TYPE="wipe"; DURATION=2; BEZIER=".43,1.19,1,.4"
+wallpaper_current="$HYPR_CONFIG_DIR/wallpaper-effects/.wallpaper_current"
+wallpaper_output="$HYPR_CONFIG_DIR/wallpaper-effects/.wallpaper_modified"
+focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+rofi_theme="$ROFI_CONFIG_DIR/config-wallpaper-effect.rasi"
+
+FPS=60
+TYPE="wipe"
+DURATION=2
+BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 declare -A effects=(
@@ -38,7 +46,7 @@ no-effects() {
   wait $!
   sleep 2
   "$SCRIPTSDIR/services/refresh.sh"
-  notify-send -u low "Wallpaper" "No effects applied"
+  notify_info "Wallpaper" "No effects applied" "$(icon_img note.png)" "wallpaper-effects"
   cp "$wallpaper_current" "$wallpaper_output"
 }
 
@@ -49,17 +57,17 @@ main() {
   done
 
   local choice
-  choice=$(printf "%s\n" "${options[@]}" | LC_COLLATE=C sort | rofi -dmenu -i -config "$rofi_theme")
+  choice=$(printf "%s\n" "${options[@]}" | LC_COLLATE=C sort | rofi_dmenu "$rofi_theme" "")
 
   if [[ -n "$choice" ]]; then
     if [[ "$choice" == "No Effects" ]]; then
       no-effects
     elif [[ "${effects[$choice]+exists}" ]]; then
-      notify-send -u normal "Applying" "$choice effect"
+      notify_info "Wallpaper" "Applying $choice effect" "$(icon_img info.png)" "wallpaper-effects"
       eval "${effects[$choice]}"
 
       for pid_name in swaybg mpvpaper; do
-        pgrep -x "$pid_name" | xargs -r -I{} kill -SIGUSR1 {} 2>/dev/null || true
+        signal_by_name SIGUSR1 "$pid_name"
       done
 
       sleep 1
@@ -68,11 +76,11 @@ main() {
       wallust run "$wallpaper_output" -s &
       sleep 1
       "$SCRIPTSDIR/services/refresh.sh"
-      notify-send -u low "Wallpaper" "$choice effect applied"
+      notify_success "Wallpaper" "$choice effect applied" "$(icon_img ja.png)" "wallpaper-effects"
     fi
   fi
 }
 
-pgrep -x rofi | xargs -r kill 2>/dev/null || true
+rofi_close_existing
 main
 sleep 1

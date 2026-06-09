@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
 # Music player interface via Rofi
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 mDIR="$HOME/Music/"
-iDIR="$HOME/.config/swaync/icons"
-rofi_theme="$HOME/.config/rofi/config-rofi-Beats.rasi"
-rofi_theme_menu="$HOME/.config/rofi/config-rofi-Beats-menu.rasi"
-music_list="$HOME/.config/rofi/online_music.list"
+iDIR="$SWAYNC_ICON_DIR"
+rofi_theme="$ROFI_CONFIG_DIR/config-rofi-Beats.rasi"
+rofi_theme_menu="$ROFI_CONFIG_DIR/config-rofi-Beats-menu.rasi"
+music_list="$ROFI_CONFIG_DIR/online_music.list"
 
 mkdir -p "$(dirname "$music_list")"
 [[ -f "$music_list" ]] || touch "$music_list"
 
 # Send notification
 notification() {
-  notify-send -u normal -i "$iDIR/music.png" "$@"
+  notify_info "${1:-Rofi Beats}" "${2:-}" "$iDIR/music.png" "rofi-beats"
 }
 
 # Check if mpv is currently playing
@@ -67,7 +73,7 @@ shuffle_local_music() {
 # Play selected online music
 play_online_music() {
   if [[ ! -s "$music_list" ]]; then
-    notify-send -u low -i "$iDIR/music.png" "No online music found" "Add some with Manage Music"
+    notify_warn "Rofi Beats" "No online music found. Add some with Manage Music." "$iDIR/music.png" "rofi-beats"
     exit 0
   fi
   choice=$(awk -F'|' '{print $1}' "$music_list" | sort | rofi -i -dmenu -config "$rofi_theme" \
@@ -75,7 +81,7 @@ play_online_music() {
   [[ -z "$choice" ]] && exit 1
   link=$(awk -F'|' -v name="$choice" '$1 == name {print $2; exit}' "$music_list")
   [[ -z "$link" ]] && {
-    notify-send -u low -i "$iDIR/music.png" "URL not found for" "$choice"
+    notify_error "Rofi Beats" "URL not found for $choice." "$iDIR/music.png" "rofi-beats"
     exit 1
   }
   music_playing && stop_music
@@ -90,28 +96,28 @@ manage_music() {
     -theme-str 'entry { placeholder: "🛠️ Manage Music List"; }')
 
   case "$sub_choice" in
-  "Add Music")
-    name=$(rofi -dmenu -lines 0 -config "$rofi_theme_menu" \
-      -theme-str 'entry { placeholder: "🎼 Enter Music Title"; }')
-    [[ -z "$name" ]] && return
-    url=$(rofi -dmenu -lines 0 -config "$rofi_theme_menu" \
-      -theme-str 'entry { placeholder: "🔗 Enter Music URL"; }')
-    [[ -z "$url" ]] && return
-    echo "$name|$url" >>"$music_list"
-    notification "Added" "$name"
-    ;;
-  "Remove Music")
-    entry=$(awk -F'|' '{print $1}' "$music_list" | rofi -dmenu -config "$rofi_theme_menu" \
-      -theme-str 'entry { placeholder: "🗑️ Select Music to Remove"; }')
-    [[ -z "$entry" ]] && return
-    grep -vF "$entry" "$music_list" >"$music_list.tmp" && mv "$music_list.tmp" "$music_list"
-    notification "Removed" "$entry"
-    ;;
-  "View List")
-    # Show only titles, not URLs
-    awk -F'|' '{print $1}' "$music_list" | rofi -dmenu -config "$rofi_theme_menu" \
-      -theme-str 'entry { placeholder: "📜 Online Music List"; }' >/dev/null
-    ;;
+    "Add Music")
+      name=$(rofi -dmenu -lines 0 -config "$rofi_theme_menu" \
+        -theme-str 'entry { placeholder: "🎼 Enter Music Title"; }')
+      [[ -z "$name" ]] && return
+      url=$(rofi -dmenu -lines 0 -config "$rofi_theme_menu" \
+        -theme-str 'entry { placeholder: "🔗 Enter Music URL"; }')
+      [[ -z "$url" ]] && return
+      echo "$name|$url" >>"$music_list"
+      notification "Added" "$name"
+      ;;
+    "Remove Music")
+      entry=$(awk -F'|' '{print $1}' "$music_list" | rofi -dmenu -config "$rofi_theme_menu" \
+        -theme-str 'entry { placeholder: "🗑️ Select Music to Remove"; }')
+      [[ -z "$entry" ]] && return
+      grep -vF "$entry" "$music_list" >"$music_list.tmp" && mv "$music_list.tmp" "$music_list"
+      notification "Removed" "$entry"
+      ;;
+    "View List")
+      # Show only titles, not URLs
+      awk -F'|' '{print $1}' "$music_list" | rofi -dmenu -config "$rofi_theme_menu" \
+        -theme-str 'entry { placeholder: "📜 Online Music List"; }' >/dev/null
+      ;;
   esac
 }
 
@@ -121,14 +127,14 @@ user_choice=$(printf "%s\n" \
   "Play from Music directory" \
   "Shuffle Play from Music directory" \
   "Stop RofiBeats" \
-  "Manage Music List" |
-  rofi -dmenu -config "$rofi_theme_menu" \
+  "Manage Music List" \
+  | rofi -dmenu -config "$rofi_theme_menu" \
     -theme-str 'entry { placeholder: "🎧 RofiBeats Menu"; }')
 
 case "$user_choice" in
-"Play from Online Stations") play_online_music ;;
-"Play from Music directory") play_local_music ;;
-"Shuffle Play from Music directory") shuffle_local_music ;;
-"Stop RofiBeats") music_playing && stop_music ;;
-"Manage Music List") manage_music ;;
+  "Play from Online Stations") play_online_music ;;
+  "Play from Music directory") play_local_music ;;
+  "Shuffle Play from Music directory") shuffle_local_music ;;
+  "Stop RofiBeats") music_playing && stop_music ;;
+  "Manage Music List") manage_music ;;
 esac

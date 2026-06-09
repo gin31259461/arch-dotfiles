@@ -2,18 +2,22 @@
 # Rofi interface for selecting themes
 # Rofi Themes - Script to preview and apply themes by live-reloading the config.
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
 # --- Configuration ---
-ROFI_THEMES_DIR_CONFIG="$HOME/.config/rofi/themes"
+ROFI_THEMES_DIR_CONFIG="$ROFI_CONFIG_DIR/themes"
 ROFI_THEMES_DIR_LOCAL="$HOME/.local/share/rofi/themes"
-ROFI_CONFIG_FILE="$HOME/.config/rofi/config.rasi"
-ROFI_THEME_FOR_THIS_SCRIPT="$HOME/.config/rofi/config-rofi-theme.rasi" # A separate rofi theme for the picker itself
-IDIR="$HOME/.config/swaync/images"                                     # For notifications
+ROFI_CONFIG_FILE="$ROFI_CONFIG_DIR/config.rasi"
+ROFI_THEME_FOR_THIS_SCRIPT="$ROFI_CONFIG_DIR/config-rofi-theme.rasi" # A separate rofi theme for the picker itself
+IDIR="$SWAYNC_IMAGE_DIR"                                             # For notifications
 
 # --- Helper Functions ---
 
 # Function to send a notification
 notify_user() {
-  notify-send -u low -i "$1" "$2" "$3"
+  notify_message "$2" "$3" "$1" low "rofi-theme"
 }
 
 # Function to apply the selected rofi theme to the main config file
@@ -121,8 +125,8 @@ while true; do
   rofi_input_list_trimmed="${rofi_input_list%\\n}"
 
   # Launch Rofi and get user's choice
-  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" |
-    rofi -dmenu -i \
+  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" \
+    | rofi -dmenu -i \
       -format 'i' \
       -p "Rofi Theme" \
       -mesg "‼️ **note** ‼️ Enter: Preview || Ctrl+S: Apply &amp; Exit || Esc: Cancel" \

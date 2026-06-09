@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Calculator interface via Rofi
 
-rofi_theme="$HOME/.config/rofi/config-calc.rasi"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
 
-command -v qalc >/dev/null 2>&1 || { notify-send "qalc not found"; exit 1; }
+rofi_theme="$ROFI_CONFIG_DIR/config-calc.rasi"
 
-# Kill Rofi if already running before execution
-if pgrep -x "rofi" >/dev/null; then
-  pkill rofi
-fi
+require_command qalc "Install qalc first." || exit 1
+
+rofi_close_existing
 
 while true; do
   result=$(
-    rofi -i -dmenu \
-      -config "$rofi_theme" \
-      -mesg "$result      =    $calc_result"
+    rofi_dmenu "$rofi_theme" "${result:-}      =    ${calc_result:-}"
   ) || exit 0
 
   if [[ -n "$result" ]]; then

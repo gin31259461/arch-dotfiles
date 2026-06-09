@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Toggles game mode with optimized settings
 
-notif="$HOME/.config/swaync/images/ja.png"
-scriptsDir="$HOME/.config/hypr/scripts"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+notif="$(icon_img ja.png)"
+scriptsDir="$SCRIPT_DIR"
 
 HYPRGAMEMODE=$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')
 if [[ "$HYPRGAMEMODE" == 1 ]]; then
@@ -15,13 +19,13 @@ if [[ "$HYPRGAMEMODE" == 1 ]]; then
     keyword general:border_size 1;\
     keyword decoration:rounding 0"
   hyprctl keyword "windowrule opacity 1 override 1 override 1 override, ^(.*)$"
-  notify-send -e -u low -i "$notif" " Gamemode:" " enabled"
+  notify_success "Game Mode" "Enabled" "$notif" "game-mode"
   sleep 0.1
   exit
 else
   sleep 0.6
   hyprctl reload
   "${scriptsDir}/services/refresh.sh"
-  notify-send -e -u normal -i "$notif" " Gamemode:" " disabled"
+  notify_info "Game Mode" "Disabled" "$notif" "game-mode"
   exit
 fi

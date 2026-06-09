@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # Controls media playback and player functions
 
-music_icon="$HOME/.config/swaync/icons/music.png"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+music_icon="$(icon_symbol music.png)"
 
 # Play the next track
 play_next() {
@@ -25,7 +29,7 @@ toggle_play_pause() {
 # Stop playback
 stop_playback() {
   playerctl stop
-  notify-send -e -u low -i "$music_icon" " Playback:" " Stopped"
+  notify_info "Playback" "Stopped" "$music_icon" "media-playback"
 }
 
 # Display notification with song information
@@ -34,28 +38,28 @@ show_music_notification() {
   if [[ "$status" == "Playing" ]]; then
     song_title=$(playerctl metadata title)
     song_artist=$(playerctl metadata artist)
-    notify-send -e -u low -i "$music_icon" "Now Playing:" "$song_title by $song_artist"
+    notify_success "Now Playing" "$song_title by $song_artist" "$music_icon" "media-playback"
   elif [[ "$status" == "Paused" ]]; then
-    notify-send -e -u low -i "$music_icon" " Playback:" " Paused"
+    notify_info "Playback" "Paused" "$music_icon" "media-playback"
   fi
 }
 
 # Get media control action from command line argument
 case "$1" in
-"--nxt")
-  play_next
-  ;;
-"--prv")
-  play_previous
-  ;;
-"--pause")
-  toggle_play_pause
-  ;;
-"--stop")
-  stop_playback
-  ;;
-*)
-  echo "Usage: $0 [--nxt|--prv|--pause|--stop]"
-  exit 1
-  ;;
+  "--nxt")
+    play_next
+    ;;
+  "--prv")
+    play_previous
+    ;;
+  "--pause")
+    toggle_play_pause
+    ;;
+  "--stop")
+    stop_playback
+    ;;
+  *)
+    echo "Usage: $0 [--nxt|--prv|--pause|--stop]"
+    exit 1
+    ;;
 esac

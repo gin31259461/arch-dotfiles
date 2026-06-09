@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # Configures idle state management for Hyprland
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
 PROCESS="hypridle"
 
-command -v "$PROCESS" >/dev/null 2>&1 || { notify-send "hypridle not found"; exit 1; }
+require_command "$PROCESS" "Install hypridle first." || exit 1
 
 if [[ "$1" == "status" ]]; then
   if pgrep -x "$PROCESS" >/dev/null; then
@@ -15,7 +19,8 @@ elif [[ "$1" == "toggle" ]]; then
   if pgrep -x "$PROCESS" >/dev/null; then
     pkill "$PROCESS"
   else
-    "$PROCESS" >/dev/null 2>&1 & disown
+    "$PROCESS" >/dev/null 2>&1 &
+    disown
   fi
 else
   echo "Usage: $0 {status|toggle}"

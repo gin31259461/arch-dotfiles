@@ -11,12 +11,16 @@ set -euo pipefail
 #   HYPRSUNSET_TEMP   default 4500 (K)
 #   HYPRSUNSET_ICON_MODE  sunset|blue  (default: sunset)
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
 STATE_FILE="$HOME/.cache/.hyprsunset_state"
 TARGET_TEMP="${HYPRSUNSET_TEMP:-4500}"
 ICON_MODE="${HYPRSUNSET_ICON_MODE:-sunset}"
 
 ensure_state() {
-  [[ -f "$STATE_FILE" ]] || echo "off" > "$STATE_FILE"
+  [[ -f "$STATE_FILE" ]] || echo "off" >"$STATE_FILE"
 }
 
 # Render icons using pango markup to allow colorization
@@ -52,22 +56,22 @@ cmd_toggle() {
     sleep 0.2
   fi
 
-if [[ "$state" == "on" ]]; then
+  if [[ "$state" == "on" ]]; then
     # Turning OFF: set identity and exit
     if command -v hyprsunset >/dev/null 2>&1; then
       nohup hyprsunset -i >/dev/null 2>&1 &
       # if hyprsunset persists, stop it shortly after applying identity
       sleep 0.3 && pkill -x hyprsunset || true
     fi
-    echo off > "$STATE_FILE"
-    notify-send -u low "Hyprsunset: Disabled" || true
+    echo off >"$STATE_FILE"
+    notify_info "Hyprsunset" "Disabled" "$(icon_img note.png)" "hyprsunset"
   else
     # Turning ON: start hyprsunset at target temp in background
     if command -v hyprsunset >/dev/null 2>&1; then
       nohup hyprsunset -t "$TARGET_TEMP" >/dev/null 2>&1 &
     fi
-    echo on > "$STATE_FILE"
-    notify-send -u low "Hyprsunset: Enabled" "${TARGET_TEMP}K" || true
+    echo on >"$STATE_FILE"
+    notify_success "Hyprsunset" "Enabled at ${TARGET_TEMP}K" "$(icon_img ja.png)" "hyprsunset"
   fi
 }
 
@@ -107,5 +111,8 @@ case "${1:-}" in
   toggle) cmd_toggle ;;
   status) cmd_status ;;
   init) cmd_init ;;
-  *) echo "usage: $0 [toggle|status|init]" >&2; exit 2 ;;
- esac
+  *)
+    echo "usage: $0 [toggle|status|init]" >&2
+    exit 2
+    ;;
+esac

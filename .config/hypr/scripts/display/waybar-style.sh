@@ -3,45 +3,34 @@
 
 IFS=$'\n\t'
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 waybar_styles="$HOME/.config/waybar/style"
 waybar_style="$HOME/.config/waybar/style.css"
-scriptsDir="$HOME/.config/hypr/scripts"
-rofi_config="$HOME/.config/rofi/config-waybar-style.rasi"
+scriptsDir="$SCRIPT_DIR"
+rofi_config="$ROFI_CONFIG_DIR/config-waybar-style.rasi"
 msg='Choose a Waybar style'
 
 apply_style() {
-    ln -sf "$waybar_styles/$1.css" "$waybar_style"
-    pgrep -x waybar >/dev/null && pkill -SIGUSR2 waybar || true
+  ln -sf "$waybar_styles/$1.css" "$waybar_style"
+  reload_waybar
 }
 
 main() {
-    current_name=$(basename "$(readlink -f "$waybar_style")" .css)
+  current_name=$(basename "$(readlink -f "$waybar_style")" .css)
 
-    mapfile -t options < <(
-        find -L "$waybar_styles" -maxdepth 1 -type f -name '*.css' \
-            -exec basename {} .css \; | sort
-    )
+  mapfile -t options < <(
+    find -L "$waybar_styles" -maxdepth 1 -type f -name '*.css' \
+      -exec basename {} .css \; | sort
+  )
 
-    MARKER="›"
-    default_row=0
-    for i in "${!options[@]}"; do
-        if [[ "${options[i]}" == "$current_name" ]]; then
-            options[i]="$MARKER ${options[i]}"
-            default_row=$i
-            break
-        fi
-    done
+  choice=$(rofi_select_marked "$rofi_config" "$msg" "$current_name" "›" "${options[@]}")
 
-    choice=$(printf '%s\n' "${options[@]}" \
-        | rofi -i -dmenu \
-               -config "$rofi_config" \
-               -mesg "$msg" \
-               -selected-row "$default_row")
-
-    [[ -z "$choice" ]] && exit 0
-    choice="${choice#"$MARKER "}"
-    apply_style "$choice"
+  [[ -z "$choice" ]] && exit 0
+  apply_style "$choice"
 }
 
-pgrep -x rofi | xargs -r kill
+rofi_close_existing
 main

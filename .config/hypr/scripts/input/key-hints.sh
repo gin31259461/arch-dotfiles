@@ -4,9 +4,13 @@
 # GDK BACKEND. Change to either wayland or x11 if having issues
 BACKEND=wayland
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 # Close any existing instance before opening a new one
-pgrep -x rofi | xargs -r kill
-pgrep -x yad | xargs -r kill
+rofi_close_existing
+kill_by_name yad
 
 GDK_BACKEND=$BACKEND yad \
   --center \

@@ -12,7 +12,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── context.lua           # Paths, defaults, devices
 │   ├── env.lua               # Environment variables
 │   ├── autostart.lua         # Startup commands
-│   ├── monitors.lua          # monitors.conf loader
+│   ├── monitors.lua          # lua/user monitor profile loader
 │   ├── options.lua           # General/input/layout/misc options
 │   ├── animations.lua        # Curves and animations
 │   ├── gestures.lua          # Touchpad gestures
@@ -20,7 +20,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── rules.lua             # Window and layer rules
 │   ├── colors.lua            # Wallust/Noctalia color loader
 │   └── util.lua              # Shared Lua helpers
-├── monitors.conf             # Dynamic monitor profile data
+├── lua/user/monitors.lua     # Active user monitor profile
 ├── wallust/                  # Generated color data
 ├── scripts/                  # Helper scripts and menus
 ├── monitor-profiles/         # Monitor profile presets
@@ -49,7 +49,7 @@ Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 
 ## Notes
 
-`monitors.conf` is intentionally still data-oriented so tools such as `nwg-displays` and monitor profile scripts can update it. Generated color files under `wallust/` and `noctalia/` are also kept as data inputs; the Lua config reads them at startup.
+Monitor presets live in `monitor-profiles/*.lua`. The monitor profile picker copies the selected preset to `lua/user/monitors.lua`, and `lua/hyprconf/monitors.lua` loads that file at startup. Generated color files under `wallust/` and `noctalia/` are also kept as data inputs; the Lua config reads them at startup.
 
 ## References
 

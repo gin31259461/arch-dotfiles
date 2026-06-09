@@ -2,7 +2,7 @@
 # Provides logout and power management menu
 
 # Check if wlogout is already running
-if pgrep -x "wlogout" > /dev/null; then
+if pgrep -x "wlogout" >/dev/null; then
   pkill -x "wlogout"
   exit 0
 fi
@@ -17,14 +17,14 @@ declare -A buttons=([2160]=6 [1600]=6 [1440]=6 [1080]=6 [720]=3)
 base=0
 btn=6
 for threshold in 2160 1600 1440 1080 720; do
-  if (( resolution >= threshold )); then
+  if ((resolution >= threshold)); then
     base=${margins[$threshold]}
     btn=${buttons[$threshold]}
     break
   fi
 done
 
-if (( base > 0 )); then
+if ((base > 0)); then
   T_val=$(awk "BEGIN {printf \"%.0f\", $base * $threshold * $hypr_scale / $resolution}")
   B_val=$T_val
   wlogout --protocol layer-shell -b "$btn" -T "$T_val" -B "$B_val" &

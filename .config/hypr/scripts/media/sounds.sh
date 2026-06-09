@@ -10,28 +10,28 @@ muteVolume=false
 
 # Exit if the system sounds are muted.
 if [[ "$mute" = true ]]; then
-    exit 0
+  exit 0
 fi
 
 # Choose the sound to play.
 if [[ "$1" == "--screenshot" ]]; then
-    if [[ "$muteScreenshots" = true ]]; then
-        exit 0
-    fi
-    soundoption="screen-capture.*"
-elif [[ "$1" == "--volume" ]]; then
-    if [[ "$muteVolume" = true ]]; then
-        exit 0
-    fi
-    soundoption="audio-volume-change.*"
-elif [[ "$1" == "--error" ]]; then
-    if [[ "$muteScreenshots" = true ]]; then
-        exit 0
-    fi
-    soundoption="dialog-error.*"
-else
-    echo -e "Available sounds: --screenshot, --volume, --error"
+  if [[ "$muteScreenshots" = true ]]; then
     exit 0
+  fi
+  soundoption="screen-capture.*"
+elif [[ "$1" == "--volume" ]]; then
+  if [[ "$muteVolume" = true ]]; then
+    exit 0
+  fi
+  soundoption="audio-volume-change.*"
+elif [[ "$1" == "--error" ]]; then
+  if [[ "$muteScreenshots" = true ]]; then
+    exit 0
+  fi
+  soundoption="dialog-error.*"
+else
+  echo -e "Available sounds: --screenshot, --volume, --error"
+  exit 0
 fi
 
 # Set the directory defaults for system sounds.
@@ -69,15 +69,15 @@ fi
 
 # Play the sound: prefer PipeWire, then PulseAudio, then ALSA
 if command -v pw-play >/dev/null 2>&1; then
-    pw-play "$sound_file" && exit 0
+  pw-play "$sound_file" && exit 0
 fi
 
 if command -v paplay >/dev/null 2>&1; then
-    paplay "$sound_file" && exit 0
+  paplay "$sound_file" && exit 0
 fi
 
 if command -v aplay >/dev/null 2>&1; then
-    aplay "$sound_file" && exit 0
+  aplay "$sound_file" && exit 0
 fi
 
 echo "Error: No suitable audio player (pw-play/paplay/aplay) found."

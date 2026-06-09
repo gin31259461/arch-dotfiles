@@ -3,49 +3,38 @@
 
 IFS=$'\n\t'
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 waybar_layouts="$HOME/.config/waybar/configs"
 waybar_config="$HOME/.config/waybar/config"
-scriptsDir="$HOME/.config/hypr/scripts"
-rofi_config="$HOME/.config/rofi/config-waybar-layout.rasi"
+scriptsDir="$SCRIPT_DIR"
+rofi_config="$ROFI_CONFIG_DIR/config-waybar-layout.rasi"
 msg='Choose a Waybar layout'
 
 apply_layout() {
-    ln -sf "$waybar_layouts/$1" "$waybar_config"
-    pgrep -x waybar >/dev/null && pkill -SIGUSR2 waybar || true
+  ln -sf "$waybar_layouts/$1" "$waybar_config"
+  reload_waybar
 }
 
 main() {
-    current_name=$(basename "$(readlink -f "$waybar_config")")
+  current_name=$(basename "$(readlink -f "$waybar_config")")
 
-    mapfile -t options < <(
-        find -L "$waybar_layouts" -maxdepth 1 -type f -printf '%f\n' | sort
-    )
+  mapfile -t options < <(
+    find -L "$waybar_layouts" -maxdepth 1 -type f -printf '%f\n' | sort
+  )
 
-    MARKER="›"
-    default_row=0
-    for i in "${!options[@]}"; do
-        if [[ "${options[i]}" == "$current_name" ]]; then
-            options[i]="$MARKER ${options[i]}"
-            default_row=$i
-            break
-        fi
-    done
+  choice=$(rofi_select_marked "$rofi_config" "$msg" "$current_name" "›" "${options[@]}")
 
-    choice=$(printf '%s\n' "${options[@]}" \
-        | rofi -i -dmenu \
-               -config "$rofi_config" \
-               -mesg "$msg" \
-               -selected-row "$default_row")
+  [[ -z "$choice" ]] && exit 0
 
-    [[ -z "$choice" ]] && exit 0
-    choice="${choice#"$MARKER "}"
-
-    if [[ "$choice" == "no panel" ]]; then
-        pgrep -x waybar | xargs -r kill
-    else
-        apply_layout "$choice"
-    fi
+  if [[ "$choice" == "no panel" ]]; then
+    kill_by_name waybar
+  else
+    apply_layout "$choice"
+  fi
 }
 
-pgrep -x rofi | xargs -r kill
+rofi_close_existing
 main

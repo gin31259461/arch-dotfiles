@@ -2,8 +2,12 @@
 # Switches keyboard layout per-window, restoring each window's last-used layout on focus
 
 MAP_FILE="$HOME/.cache/kb_layout_per_window"
-OPTIONS_FILE="$HOME/.config/hypr/lua/hyprconf/options.lua"
-ICON="$HOME/.config/swaync/images/ja.png"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+OPTIONS_FILE="$HYPR_CONFIG_DIR/lua/hyprconf/options.lua"
+ICON="$(icon_img ja.png)"
 SCRIPT_NAME="$(basename "$0")"
 
 touch "$MAP_FILE"
@@ -26,8 +30,8 @@ get_keyboards() {
 
 save_map() {
   local win="$1" layout="$2"
-  grep -v "^${win}:" "$MAP_FILE" > "$MAP_FILE.tmp"
-  echo "${win}:${layout}" >> "$MAP_FILE.tmp"
+  grep -v "^${win}:" "$MAP_FILE" >"$MAP_FILE.tmp"
+  echo "${win}:${layout}" >>"$MAP_FILE.tmp"
   mv "$MAP_FILE.tmp" "$MAP_FILE"
 }
 
@@ -58,10 +62,10 @@ cmd_toggle() {
       break
     fi
   done
-  next_idx=$(( (i + 1) % count ))
+  next_idx=$(((i + 1) % count))
   do_switch "$next_idx"
   save_map "$win" "${kb_layouts[next_idx]}"
-  notify-send -u low -i "$ICON" "kb_layout: ${kb_layouts[next_idx]}"
+  notify_success "Keyboard Layout" "${kb_layouts[next_idx]}" "$ICON" "keyboard-layout"
 }
 
 cmd_restore() {
@@ -80,7 +84,10 @@ cmd_restore() {
 
 subscribe() {
   local socket2="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
-  [[ -S "$socket2" ]] || { echo "Error: Hyprland socket not found." >&2; exit 1; }
+  [[ -S "$socket2" ]] || {
+    echo "Error: Hyprland socket not found." >&2
+    exit 1
+  }
   socat -u UNIX-CONNECT:"$socket2" - | while read -r line; do
     [[ "$line" =~ ^activewindow ]] && cmd_restore
   done
@@ -91,6 +98,9 @@ if ! pgrep -f "$SCRIPT_NAME.*--listener" >/dev/null; then
 fi
 
 case "$1" in
-  toggle|"") cmd_toggle ;;
-  *) echo "Usage: $SCRIPT_NAME [toggle]" >&2; exit 1 ;;
+  toggle | "") cmd_toggle ;;
+  *)
+    echo "Usage: $SCRIPT_NAME [toggle]" >&2
+    exit 1
+    ;;
 esac

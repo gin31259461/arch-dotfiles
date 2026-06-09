@@ -37,7 +37,7 @@ local function applications()
   bind_exec(
     mod .. " + SHIFT + T",
     "apply noctalia material theme",
-    "$scriptsDir/display/noctalia-theme.lua"
+    "$scriptsDir/display/noctalia-theme.sh"
   )
   bind_exec(mod .. " + H", "cheat sheet", "$scriptsDir/input/key-hints.sh")
   bind_exec(

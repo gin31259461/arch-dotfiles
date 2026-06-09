@@ -4,6 +4,12 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
 # 1) Try Quickshell via IPC (works if QS is running and listening)
 # if pgrep -x quickshell >/dev/null 2>&1; then
 #   if qs ipc -c overview call overview toggle >/dev/null 2>&1; then
@@ -22,7 +28,7 @@ fi
 
 # 2) Fall back to AGS template
 if command -v ags >/dev/null 2>&1; then
-  pkill rofi || true
+  rofi_close_existing
   if ags -t 'overview' >/dev/null 2>&1; then
     exit 0
   fi
@@ -35,5 +41,5 @@ if command -v ags >/dev/null 2>&1; then
 fi
 
 # If we get here, neither worked
-notify-send "Overview" "Neither Quickshell nor AGS is available" -u low 2>/dev/null || true
+notify_error "Overview" "Neither Quickshell nor AGS is available." "" "overview"
 exit 1

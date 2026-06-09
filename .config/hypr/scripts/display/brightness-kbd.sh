@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # Controls keyboard backlight brightness
 
-iDIR="$HOME/.config/swaync/icons"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
+iDIR="$SWAYNC_ICON_DIR"
 
 # Get keyboard brightness
 get_kbd_backlight() {
@@ -26,11 +30,7 @@ get_icon() {
 
 # Notify user of current brightness
 notify_user() {
-  notify-send -e \
-    -h string:x-canonical-private-synchronous:brightness_notif \
-    -h "int:value:$current" \
-    -h boolean:SWAYNC_BYPASS_DND:true \
-    -u low -i "$icon" "Keyboard" "Brightness:${current}%"
+  notify_progress "Keyboard Brightness" "${current}%" "$current" "$icon" "keyboard_brightness_notif"
 }
 
 # Change brightness and notify

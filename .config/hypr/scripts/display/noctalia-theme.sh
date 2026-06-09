@@ -1,2 +1,3 @@
 #!/usr/bin/env sh
-exec "$HOME/.config/hypr/scripts/display/noctalia-theme.lua" "$@"
+
+exec "$HOME/.config/hypr/scripts/display/generate-noctalia-theme.lua" "$@"

@@ -7,6 +7,10 @@ set -euo pipefail
 
 # Repository url : https://github.com/TheAhumMaitra/cautious-waddle
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+
 require() {
   command -v "$1" >/dev/null 2>&1 || {
     printf '%s\n' "Missing dependency: $1" >&2
@@ -17,9 +21,6 @@ require() {
 require wallust
 require rofi
 
-# notify-send is optional
-have_notify() { command -v notify-send >/dev/null 2>&1; }
-
 # Prompt for theme; guard -e on cancel
 set +e
 choice="$(wallust theme list \
@@ -29,7 +30,7 @@ prompt_status=$?
 set -e
 
 # Exit cleanly on cancel or empty selection
-if (( prompt_status != 0 )) || [[ -z "${choice}" ]]; then
+if ((prompt_status != 0)) || [[ -z "${choice}" ]]; then
   exit 0
 fi
 
@@ -38,9 +39,7 @@ start_ts=$(date +%s)
 
 # Apply the theme and report result
 if wallust theme -- "${choice}"; then
-  have_notify && notify-send -a ThemeChanger \
-    -h string:x-dunst-stack-tag:themechanger \
-    "Global theme changed" "Selected: ${choice}"
+  notify_success "Global Theme" "Selected: ${choice}" "$(icon_img ja.png)" "themechanger"
 
   # Ensure Ghostty directory exists so Wallust can write target even if Ghostty isn't installed
   mkdir -p "$HOME/.config/ghostty" || true
@@ -63,9 +62,15 @@ if wallust theme -- "${choice}"; then
   for _ in $(seq 1 100); do
     ok=1
     for f in "${targets[@]}"; do
-      [[ -s "$f" ]] || { ok=0; break; }
+      [[ -s "$f" ]] || {
+        ok=0
+        break
+      }
       mtime=$(stat -c %Y "$f" 2>/dev/null || echo 0)
-      [[ "$mtime" -ge "$start_ts" ]] || { ok=0; break; }
+      [[ "$mtime" -ge "$start_ts" ]] || {
+        ok=0
+        break
+      }
     done
     [[ $ok -eq 1 ]] && break
     sleep 0.1
@@ -74,13 +79,15 @@ if wallust theme -- "${choice}"; then
   # Phase 2: stability check (avoid reading half-written files)
   if [[ $ok -eq 1 ]]; then
     for _ in 1 2 3; do
-      sizes_a=(); mtimes_a=()
+      sizes_a=()
+      mtimes_a=()
       for f in "${targets[@]}"; do
         sizes_a+=("$(stat -c %s "$f" 2>/dev/null || echo 0)")
         mtimes_a+=("$(stat -c %Y "$f" 2>/dev/null || echo 0)")
       done
       sleep 0.15
-      sizes_b=(); mtimes_b=()
+      sizes_b=()
+      mtimes_b=()
       for f in "${targets[@]}"; do
         sizes_b+=("$(stat -c %s "$f" 2>/dev/null || echo 0)")
         mtimes_b+=("$(stat -c %Y "$f" 2>/dev/null || echo 0)")
@@ -131,8 +138,6 @@ if wallust theme -- "${choice}"; then
   fi
 
 else
-  have_notify && notify-send -u critical -a ThemeChanger \
-    -h string:x-dunst-stack-tag:themechanger \
-    "Failed to apply theme" "${choice}"
+  notify_error "Global Theme" "Failed to apply ${choice}."
   exit 1
 fi

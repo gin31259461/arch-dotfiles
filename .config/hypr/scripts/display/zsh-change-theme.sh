@@ -4,8 +4,13 @@
 # preview of theme can be view here: https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # after choosing theme, TTY need to be closed and re-open
 
-iDIR="$HOME/.config/swaync/images"
-rofi_theme="$HOME/.config/rofi/config-zsh-theme.rasi"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/notify.sh
+source "$SCRIPT_DIR/lib/notify.sh"
+# shellcheck source=../lib/rofi.sh
+source "$SCRIPT_DIR/lib/rofi.sh"
+
+rofi_theme="$ROFI_CONFIG_DIR/config-zsh-theme.rasi"
 
 themes_dir="$HOME/.oh-my-zsh/themes"
 file_extension=".zsh-theme"
@@ -13,10 +18,8 @@ file_extension=".zsh-theme"
 mapfile -t themes_array < <(find -L "$themes_dir" -type f -name "*${file_extension}" -printf "%f\n" | sed "s/${file_extension}//")
 themes_array=("Random" "${themes_array[@]}")
 
-rofi_command=(rofi -i -dmenu -config "$rofi_theme")
-
 main() {
-  choice=$(printf '%s\n' "${themes_array[@]}" | "${rofi_command[@]}")
+  choice=$(printf '%s\n' "${themes_array[@]}" | rofi_dmenu "$rofi_theme" "")
   [[ -z "$choice" ]] && exit 0
 
   zsh_path="$HOME/.zshrc"
@@ -25,24 +28,21 @@ main() {
     themes_only=("${themes_array[@]:1}")
     random_theme="${themes_only[$((RANDOM % ${#themes_only[@]}))]}"
     theme_to_set="$random_theme"
-    notify-send -i "$iDIR/ja.png" "Random theme:" "selected: $random_theme"
+    notify_info "Zsh Theme" "Random: $random_theme" "$(icon_img ja.png)" "zsh-theme"
   else
     theme_to_set="$choice"
-    notify-send -i "$iDIR/ja.png" "Theme selected:" "$choice"
+    notify_info "Zsh Theme" "Selected: $choice" "$(icon_img ja.png)" "zsh-theme"
   fi
 
   if [[ -f "$zsh_path" ]]; then
     safe_theme=$(printf '%s' "$theme_to_set" | sed 's/[\/&]/\\&/g')
     sed -i "s/^ZSH_THEME=.*/ZSH_THEME=\"${safe_theme}\"/" "$zsh_path"
-    notify-send -i "$iDIR/ja.png" "OMZ theme" "applied. restart your terminal"
+    notify_success "OMZ Theme" "Applied. Restart your terminal." "$(icon_img ja.png)" "zsh-theme"
   else
-    notify-send -i "$iDIR/error.png" "E-R-R-O-R" "~.zshrc file not found!"
+    notify_error "OMZ Theme" "~/.zshrc file not found." "" "zsh-theme"
   fi
 }
 
-# Check if rofi is already running
-if pgrep -x rofi >/dev/null; then
-  pkill rofi
-fi
+rofi_close_existing
 
 main

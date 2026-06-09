@@ -47,10 +47,6 @@ Run validation with:
 Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 ```
 
-## Notes
-
-Monitor presets live in `monitor-profiles/*.lua`. The monitor profile picker copies the selected preset to `lua/user/monitors.lua`, and `lua/hyprconf/monitors.lua` loads that file at startup. Generated color files under `wallust/` and `noctalia/` are also kept as data inputs; the Lua config reads them at startup.
-
 ## References
 
-- [Hyprland-Dots](https://github.com/LinuxBeginnings/Hyprland-Dots/tree/main/config/hypr)
+this config if based on the work of [Hyprland-Dots](https://github.com/LinuxBeginnings/Hyprland-Dots/tree/main/config/hypr)

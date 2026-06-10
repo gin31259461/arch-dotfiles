@@ -86,15 +86,11 @@ function M.material(values)
   local result = {}
 
   result.surface = M.normalize(values.mSurface, "#000000")
-  result.surface_variant = M.normalize(
-    values.mSurfaceVariant,
-    M.lighten(result.surface, 0.1)
-  )
+  result.surface_variant =
+    M.normalize(values.mSurfaceVariant, M.lighten(result.surface, 0.1))
   result.shadow = M.normalize(values.mShadow, M.darken(result.surface, 0.25))
-  result.on_surface = M.normalize(
-    values.mOnSurface,
-    M.contrast_text(result.surface)
-  )
+  result.on_surface =
+    M.normalize(values.mOnSurface, M.contrast_text(result.surface))
   result.on_surface_variant = M.normalize(
     values.mOnSurfaceVariant,
     M.mix(result.on_surface, result.surface_variant, 0.25)
@@ -107,18 +103,12 @@ function M.material(values)
     values.mOutline,
     M.mix(result.surface_variant, result.on_surface, 0.35)
   )
-  result.on_primary = M.normalize(
-    values.mOnPrimary,
-    M.contrast_text(result.primary)
-  )
-  result.on_secondary = M.normalize(
-    values.mOnSecondary,
-    M.contrast_text(result.secondary)
-  )
-  result.on_tertiary = M.normalize(
-    values.mOnTertiary,
-    M.contrast_text(result.tertiary)
-  )
+  result.on_primary =
+    M.normalize(values.mOnPrimary, M.contrast_text(result.primary))
+  result.on_secondary =
+    M.normalize(values.mOnSecondary, M.contrast_text(result.secondary))
+  result.on_tertiary =
+    M.normalize(values.mOnTertiary, M.contrast_text(result.tertiary))
   result.on_error = M.normalize(values.mOnError, M.contrast_text(result.error))
   result.hover = M.normalize(values.mHover, M.lighten(result.tertiary, 0.08))
   result.on_hover = M.normalize(values.mOnHover, M.contrast_text(result.hover))

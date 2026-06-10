@@ -8,6 +8,10 @@
 
 set -u
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
 LOGFILE="$(dirname "$0")/dispatch.log"
 
 # Parse arguments: <workspace> [rule ...] -- <command>
@@ -15,6 +19,7 @@ TARGET_WS="$1"
 shift || true
 
 CAPTURE_RULES=()
+CAPTURE_RULE_NAMES=()
 while [[ "${1-}" != "--" && -n "${1-}" ]]; do
   CAPTURE_RULES+=("$1")
   shift || break
@@ -30,6 +35,29 @@ fi
 
 echo "=== Deploy '$CMD' → WS $TARGET_WS @ $(date) ===" >>"$LOGFILE"
 
+rule_var_name() {
+  local value="$1"
+  value="${value//[^[:alnum:]_]/_}"
+  printf 'tak0_capture_%s_%s\n' "$$" "$value"
+}
+
+parse_rule_match() {
+  local rule="$1"
+  local key="${rule%%:*}"
+  local value="${rule#*:}"
+
+  case "$key" in
+    class) printf 'class\t%s\n' "$value" ;;
+    initialClass) printf 'initial_class\t%s\n' "$value" ;;
+    title) printf 'title\t%s\n' "$value" ;;
+    initialTitle) printf 'initial_title\t%s\n' "$value" ;;
+    *)
+      echo "Unsupported capture rule for Lua window_rule: $rule" >>"$LOGFILE"
+      return 1
+      ;;
+  esac
+}
+
 # Wait for Hyprland to be ready (silent early-autostart guard)
 for _ in {1..50}; do
   hyprctl -j monitors >/dev/null 2>&1 && break
@@ -39,24 +67,25 @@ done
 # Remove all temporary rules on exit, crash, or signal
 cleanup() {
   echo "Cleanup: removing temporary capture rules at $(date)" >>"$LOGFILE"
-  hyprctl keyword windowrulev2 "unset, initialClass:.*" >>"$LOGFILE" 2>&1 || true
-  for RULE in "${CAPTURE_RULES[@]}"; do
-    hyprctl keyword windowrulev2 "unset, $RULE" >>"$LOGFILE" 2>&1 || true
+  hypr_disable_rule "tak0_capture_$$_initial_class" >>"$LOGFILE" 2>&1 || true
+  for RULE_NAME in "${CAPTURE_RULE_NAMES[@]}"; do
+    hypr_disable_rule "$RULE_NAME" >>"$LOGFILE" 2>&1 || true
   done
 }
 trap cleanup EXIT INT TERM ERR
 
 # Temporarily force ALL new windows onto target workspace (catches fast helpers like gpu-process)
 echo "Applying temporary initialWorkspace capture (initialClass:.*)" >>"$LOGFILE"
-hyprctl keyword windowrulev2 \
-  "initialWorkspace $TARGET_WS silent, initialClass:.*" \
+hypr_window_rule_initial_workspace "tak0_capture_$$_initial_class" "$TARGET_WS" "initial_class" ".*" \
   >>"$LOGFILE" 2>&1 || true
 
 # Apply optional class-based pre-capture rules for Electron/Steam multi-process apps
 for RULE in "${CAPTURE_RULES[@]}"; do
+  IFS=$'\t' read -r MATCH_KEY MATCH_VALUE < <(parse_rule_match "$RULE") || continue
+  RULE_NAME="$(rule_var_name "$RULE")"
+  CAPTURE_RULE_NAMES+=("$RULE_NAME")
   echo "Applying temporary capture rule: $RULE" >>"$LOGFILE"
-  hyprctl keyword windowrulev2 \
-    "initialWorkspace $TARGET_WS silent, $RULE" \
+  hypr_window_rule_initial_workspace "$RULE_NAME" "$TARGET_WS" "$MATCH_KEY" "$MATCH_VALUE" \
     >>"$LOGFILE" 2>&1 || true
 done
 
@@ -85,7 +114,7 @@ sleep 1.5
 
 # Release the broad capture rule now that the main process is running
 echo "Releasing ultra-early wide capture" >>"$LOGFILE"
-hyprctl keyword windowrulev2 "unset, initialClass:.*" >>"$LOGFILE" 2>&1 || true
+hypr_disable_rule "tak0_capture_$$_initial_class" >>"$LOGFILE" 2>&1 || true
 
 # Recursively collect all descendant PIDs of a root process
 get_descendants() {
@@ -139,8 +168,7 @@ while ((SECONDS < END_TIME)); do
 
     if ((MATCH)) && [[ -z "${SEEN[$ADDR]-}" ]]; then
       echo "Placing window $ADDR (pid $PID, class $CLASS) → WS $TARGET_WS" >>"$LOGFILE"
-      hyprctl dispatch movetoworkspacesilent \
-        "$TARGET_WS,address:$ADDR" >>"$LOGFILE" 2>&1 || true
+      hypr_move_window "$TARGET_WS" "address:$ADDR" >>"$LOGFILE" 2>&1 || true
       SEEN[$ADDR]=1
     fi
   done < <(hyprctl clients -j | jq -r '.[] | [.pid, .address, .class] | @tsv')

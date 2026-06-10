@@ -32,19 +32,23 @@ if [[ -z "$touchpad_device" ]]; then
   exit 1
 fi
 
-touchpad_keyword="${TOUCHPAD_KEYWORD:-device:${touchpad_device}:enabled}"
 status_file="${XDG_RUNTIME_DIR:-/tmp}/touchpad.status"
+
+set_touchpad_enabled() {
+  local enabled="$1"
+  hypr_eval "hl.device({ name = $(lua_string "$touchpad_device"), enabled = $enabled })"
+}
 
 enable_touchpad() {
   printf "true" >"$status_file"
   notify_success "Touchpad" "Enabled" "$notif" "touchpad"
-  hyprctl keyword "$touchpad_keyword" true -r
+  set_touchpad_enabled true
 }
 
 disable_touchpad() {
   printf "false" >"$status_file"
   notify_info "Touchpad" "Disabled" "$notif" "touchpad"
-  hyprctl keyword "$touchpad_keyword" false -r
+  set_touchpad_enabled false
 }
 
 current_state="false"

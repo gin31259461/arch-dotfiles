@@ -53,7 +53,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 Run validation with:
 
 ```sh
-Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
+hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 ```
 
 ## References

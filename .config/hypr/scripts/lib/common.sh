@@ -29,6 +29,89 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+lua_string() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\n'/\\n}"
+  printf '"%s"' "$value"
+}
+
+hypr_eval() {
+  hyprctl eval "$1"
+}
+
+hypr_dispatch() {
+  hypr_eval "hl.dispatch($1)"
+}
+
+hypr_set_config() {
+  hypr_eval "hl.config($1)"
+}
+
+hypr_unbind() {
+  hypr_eval "hl.unbind($(lua_string "$1"))"
+}
+
+hypr_bind() {
+  local keys="$1"
+  local dispatcher="$2"
+  hypr_eval "hl.bind($(lua_string "$keys"), $dispatcher)"
+}
+
+hypr_move_window() {
+  local workspace="$1"
+  local window="$2"
+  hypr_dispatch "hl.dsp.window.move({ workspace = $(lua_string "$workspace"), window = $(lua_string "$window") })"
+}
+
+hypr_move_window_pixel() {
+  local x="$1"
+  local y="$2"
+  local window="$3"
+  hypr_dispatch "hl.dsp.window.move({ x = $x, y = $y, window = $(lua_string "$window") })"
+}
+
+hypr_resize_window_pixel() {
+  local width="$1"
+  local height="$2"
+  local window="$3"
+  hypr_dispatch "hl.dsp.window.resize({ x = $width, y = $height, window = $(lua_string "$window") })"
+}
+
+hypr_pin_window() {
+  hypr_dispatch "hl.dsp.window.pin({ window = $(lua_string "$1") })"
+}
+
+hypr_focus_window() {
+  hypr_dispatch "hl.dsp.focus({ window = $(lua_string "$1") })"
+}
+
+hypr_exec_cmd() {
+  local command="$1"
+  local rules="${2:-}"
+
+  if [[ -n "$rules" ]]; then
+    hypr_dispatch "hl.dsp.exec_cmd($(lua_string "$command"), $rules)"
+  else
+    hypr_dispatch "hl.dsp.exec_cmd($(lua_string "$command"))"
+  fi
+}
+
+hypr_window_rule_initial_workspace() {
+  local name="$1"
+  local workspace="$2"
+  local match_key="$3"
+  local match_value="$4"
+
+  hypr_eval "$name = hl.window_rule({ name = $(lua_string "$name"), match = { $match_key = $(lua_string "$match_value") }, workspace = $(lua_string "$workspace silent") })"
+}
+
+hypr_disable_rule() {
+  local name="$1"
+  hypr_eval "if $name then $name:set_enabled(false); $name = nil end"
+}
+
 truthy() {
   case "${1:-}" in
     1 | true | yes | on) return 0 ;;

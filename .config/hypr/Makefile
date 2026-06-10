@@ -13,6 +13,6 @@ lint:
 
 test:
 	@echo "===> Validation"
-	Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
+	hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 
 pr-ready: fmt lint test

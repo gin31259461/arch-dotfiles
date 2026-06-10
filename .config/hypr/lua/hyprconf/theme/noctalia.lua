@@ -255,11 +255,8 @@ local function generate_wallust(colors)
   }
 
   for _, name in ipairs(order) do
-    lines[#lines + 1] = string.format(
-      "$%s = %s",
-      name,
-      color.rgb(palette[name])
-    )
+    lines[#lines + 1] =
+      string.format("$%s = %s", name, color.rgb(palette[name]))
   end
 
   return table.concat(lines, "\n") .. "\n"

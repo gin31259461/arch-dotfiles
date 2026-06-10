@@ -19,29 +19,29 @@ fi
 
 case $LAYOUT in
   "dwindle")
-    hyprctl keyword general:layout master
-    hyprctl keyword unbind SUPER,J
-    hyprctl keyword unbind SUPER,K
-    hyprctl keyword unbind SUPER,O
-    hyprctl keyword bind SUPER,J,layoutmsg,cyclenext
-    hyprctl keyword bind SUPER,K,layoutmsg,cycleprev
+    hypr_set_config "{ general = { layout = \"master\" } }"
+    hypr_unbind "SUPER + J"
+    hypr_unbind "SUPER + K"
+    hypr_unbind "SUPER + O"
+    hypr_bind "SUPER + J" "hl.dsp.layout(\"cyclenext\")"
+    hypr_bind "SUPER + K" "hl.dsp.layout(\"cycleprev\")"
     notify_success "Window Layout" "Master" "$(icon_img ja.png)" "window-layout"
     ;;
   "master")
-    hyprctl keyword general:layout scrolling
-    hyprctl keyword unbind SUPER,J
-    hyprctl keyword unbind SUPER,K
-    hyprctl keyword bind SUPER,J,layoutmsg,focus d
-    hyprctl keyword bind SUPER,K,layoutmsg,focus u
+    hypr_set_config "{ general = { layout = \"scrolling\" } }"
+    hypr_unbind "SUPER + J"
+    hypr_unbind "SUPER + K"
+    hypr_bind "SUPER + J" "hl.dsp.layout(\"focus d\")"
+    hypr_bind "SUPER + K" "hl.dsp.layout(\"focus u\")"
     notify_success "Window Layout" "Scrolling" "$(icon_img ja.png)" "window-layout"
     ;;
   "scrolling")
-    hyprctl keyword general:layout dwindle
-    hyprctl keyword unbind SUPER,J
-    hyprctl keyword unbind SUPER,K
-    hyprctl keyword bind SUPER,J,cyclenext
-    hyprctl keyword bind SUPER,K,cyclenext,prev
-    hyprctl keyword bind SUPER,O,togglesplit
+    hypr_set_config "{ general = { layout = \"dwindle\" } }"
+    hypr_unbind "SUPER + J"
+    hypr_unbind "SUPER + K"
+    hypr_bind "SUPER + J" "hl.dsp.window.cycle_next()"
+    hypr_bind "SUPER + K" "hl.dsp.window.cycle_next({ next = false })"
+    hypr_bind "SUPER + O" "hl.dsp.layout(\"togglesplit\")"
     notify_success "Window Layout" "Dwindle" "$(icon_img ja.png)" "window-layout"
     ;;
 esac

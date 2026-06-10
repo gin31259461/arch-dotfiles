@@ -110,7 +110,4 @@ for color in "${active_border[@]}"; do
   lua_colors="${lua_colors}\"${color}\", "
 done
 
-hyprctl eval "hl.config({ general = { col = { active_border = { colors = { ${lua_colors} }, angle = 270 } } } })"
-
-# border effect for INACTIVE windows
-#hyprctl keyword general:col.inactive_border $(get_color 0) $(get_color 1) $(get_color 2) $(get_color 3) $(get_color 4) $(get_color 5) $(get_color 6) $(get_color 7) $(get_color 8) $(get_color 9) 270deg
+hypr_set_config "{ general = { col = { active_border = { colors = { ${lua_colors} }, angle = 270 } } } }"

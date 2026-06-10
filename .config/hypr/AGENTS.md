@@ -48,7 +48,7 @@ find scripts -type f -name '*.sh' ! -path 'scripts/rofi/rofi-emoji.sh' -print0 |
 while IFS= read -r -d '' f; do bash -n "$f" || exit 1; done < <(find scripts -type f -name '*.sh' ! -path 'scripts/rofi/rofi-emoji.sh' -print0)
 bash -n initial-boot.sh
 find lua profiles -type f -name '*.lua' -print0 | xargs -0 luac -p
-Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
+hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 ```
 
 `scripts/rofi/rofi-emoji.sh` is excluded from shell parsing/formatting because it embeds emoji list data and is not valid standalone Bash.

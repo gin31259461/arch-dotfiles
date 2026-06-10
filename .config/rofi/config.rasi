@@ -2,5 +2,4 @@
 
 @import "~/.config/rofi/shared-fonts.rasi"
 
-@theme "~/.config/rofi/themes/style-4.rasi"
-
+@theme "~/.config/rofi/themes/default.rasi"

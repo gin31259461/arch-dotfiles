@@ -73,11 +73,6 @@ local function applications()
     "rofi theme selector",
     "$scriptsDir/rofi/rofi-theme-selector.sh"
   )
-  bind_exec(
-    mod .. " + CTRL + SHIFT + R",
-    "rofi theme selector (modified)",
-    "pkill rofi || true && $scriptsDir/rofi/rofi-theme-selector-modified.sh"
-  )
   bind_exec(mod .. " + N", "open obsidian", "obsidian")
   bind_exec(
     mod .. " + SHIFT + M",

@@ -91,15 +91,32 @@ apply_rofi_theme() {
   theme_ref="$(theme_config_path "$theme_path")"
   temp_file="$(mktemp)"
 
+  # Keep a history of applied themes
+  # awk -v theme_ref="$theme_ref" '
+  #   /^[[:space:]]*@theme[[:space:]]/ {
+  #     print "//" $0
+  #     next
+  #   }
+  #   { print }
+  #   END {
+  #     print ""
+  #     print "@theme \"" theme_ref "\""
+  #   }
+  # ' "$rofi_config_file" >"$temp_file"
+
+  # Replace
   awk -v theme_ref="$theme_ref" '
     /^[[:space:]]*@theme[[:space:]]/ {
-      print "//" $0
+      print "@theme \"" theme_ref "\""
+      replaced = 1
       next
     }
     { print }
     END {
-      print ""
-      print "@theme \"" theme_ref "\""
+      if (!replaced) {
+        print ""
+        print "@theme \"" theme_ref "\""
+      }
     }
   ' "$rofi_config_file" >"$temp_file"
 
@@ -209,7 +226,7 @@ main() {
         valid_index "$chosen_index" && current_index="$chosen_index"
         ;;
       1 | 65)
-        notify_info "Rofi Theme" "Selection cancelled. Reverted original theme." "$(icon_img note.png)" "rofi-theme"
+        # notify_info "Rofi Theme" "Selection cancelled. Reverted original theme." "$(icon_img note.png)" "rofi-theme"
         exit 0
         ;;
       10)
@@ -221,7 +238,7 @@ main() {
         exit 0
         ;;
       *)
-        notify_error "Rofi Theme" "Unexpected rofi exit: $rofi_status" "$(icon_img error.png)" "rofi-theme"
+        # notify_error "Rofi Theme" "Unexpected rofi exit: $rofi_status" "$(icon_img error.png)" "rofi-theme"
         exit 1
         ;;
     esac

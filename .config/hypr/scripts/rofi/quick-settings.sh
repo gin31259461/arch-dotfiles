@@ -91,7 +91,6 @@ Edit Input Settings
 Edit Laptop Settings
 --- UTILITIES ---
 Choose Kitty Terminal Theme
-Configure Monitors (nwg-displays)
 GTK Settings (nwg-look)
 QT Apps Settings (qt6ct)
 QT Apps Settings (qt5ct)
@@ -125,10 +124,10 @@ main() {
     "Edit Input Settings") file="$lua_conf/options.lua" ;;
     "Edit Laptop Settings") file="$lua_conf/context.lua" ;;
     "Choose Kitty Terminal Theme") "$SCRIPT_DIR/display/kitty-themes.sh" ;;
-    "Configure Monitors (nwg-displays)")
-      require_command nwg-displays "Install nwg-displays first." || exit 1
-      nwg-displays
-      ;;
+    # "Configure Monitors (nwg-displays)")
+    #   require_command nwg-displays "Install nwg-displays first." || exit 1
+    #   nwg-displays
+    #   ;;
     "GTK Settings (nwg-look)")
       require_command nwg-look "Install nwg-look first." || exit 1
       nwg-look

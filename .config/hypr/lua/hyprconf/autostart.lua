@@ -30,6 +30,7 @@ local commands = {
   ctx.scripts_dir .. "/services/dropterminal.sh kitty &",
   ctx.scripts_dir .. "/input/keybinds-layout-init.sh",
   ctx.scripts_dir .. "/display/change-layout.sh init",
+  ctx.scripts_dir .. "/display/rainbow-border.sh",
 }
 
 local function autostart_commands()
@@ -52,6 +53,10 @@ function M.setup()
     for _, command in ipairs(autostart_commands()) do
       hl.exec_cmd(command, {})
     end
+  end)
+
+  hl.on("config.reloaded", function()
+    hl.exec_cmd(ctx.scripts_dir .. "/services/refresh-no-waybar.sh", {})
   end)
 end
 

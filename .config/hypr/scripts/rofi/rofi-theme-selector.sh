@@ -45,7 +45,6 @@ canonical_theme_name() {
 
   name="$(basename "$name")"
   name="${name%.rasi}"
-  name="${name#KooL_}"
   name="${name,,}"
   name="${name//_/-}"
 
@@ -116,7 +115,6 @@ load_available_themes() {
   available_theme_names=()
   while IFS= read -r -d '' file; do
     theme_name="$(basename "$file")"
-    [[ "$theme_name" == KooL_* ]] && continue
     [[ -n "${seen[$theme_name]+x}" ]] && continue
 
     seen[$theme_name]=1

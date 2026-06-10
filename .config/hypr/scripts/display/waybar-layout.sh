@@ -18,7 +18,7 @@ marker="›"
 
 apply_layout() {
   local layout="$1"
-  local source_layout="$waybar_layouts/$layout"
+  local source_layout="$waybar_layouts/$layout.jsonc"
 
   if [[ ! -f "$source_layout" ]]; then
     notify_error "Waybar Layout" "Layout not found: $layout"
@@ -42,13 +42,14 @@ main() {
   local options=("no panel")
 
   if [[ -e "$waybar_config" ]]; then
-    current_name=$(basename "$(readlink -f "$waybar_config")")
+    current_name=$(basename "$(readlink -f "$waybar_config")" .jsonc)
   else
     current_name=""
   fi
 
   mapfile -t -O "${#options[@]}" options < <(
-    find -L "$waybar_layouts" -maxdepth 1 -type f -printf '%f\n' | sort -V
+    find -L "$waybar_layouts" -maxdepth 1 -type f -name '*.jsonc' \
+      -exec basename {} .jsonc \; | sort -V
   )
 
   choice=$(rofi_select_marked "$rofi_config" "$msg" "$current_name" "$marker" "${options[@]}") || exit 0

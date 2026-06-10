@@ -1,4 +1,3 @@
-/* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Rofi Config for Google Search) */
 
 @import "~/.config/rofi/config.rasi"
@@ -8,11 +7,11 @@ window {
 	width: 40%;
 	//orientation: horizontal;
 	height: inherit;
-    y-offset: 10px;
-    location: north;
-    children: [ "entry", "message" ];
-    border: 2px;
-    border-color: white/25%;
+ y-offset: 10px;
+ location: north;
+ children: [ "entry", "message" ];
+ border: 2px;
+ border-color: white/25%;
 }
 
 /* ---- Entry ---- */

@@ -1,48 +1,47 @@
-/* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Main Config (Waybar Layout) */
 
 @import "~/.config/rofi/config.rasi"
 
 /* ---- Mainbox ---- */
 mainbox {
-  children:
-    [ "inputbar", "message", "listview"];
+ children:
+ [ "inputbar", "message", "listview"];
 }
 
 /* ---- Configuration ---- */
 configuration {
-  modi: "drun";
+ modi: "drun";
 }
 
 /* ---- Window ---- */
 window {
-  width: inherit;
-  height: inherit;
+ width: inherit;
+ height: inherit;
 }
 
 /* ---- Entry ---- */
 entry {
-  expand: true;
-  placeholder: " 🖼️  Search / Choose Waybar Layout";
+ expand: true;
+ placeholder: " 🖼️ Search / Choose Waybar Layout";
 }
 
 /* ---- Listview ---- */
 listview {
-  columns: 2;
-  lines: 7;
-  fixed-height: false;
-  margin: 10px;
-  scrollbar: true;
-  spacing: 6px;
-  cycle: true;
+ columns: 2;
+ lines: 7;
+ fixed-height: false;
+ margin: 10px;
+ scrollbar: true;
+ spacing: 6px;
+ cycle: true;
 }
 
 /* ---- Elements ---- */
 element-icon {
-  size: 0%;
+ size: 0%;
 }
 element-text {
-  horizontal-align: 0.0;
-  margin: 0px;
-  padding: 0px;
+ horizontal-align: 0.0;
+ margin: 0px;
+ padding: 0px;
 }

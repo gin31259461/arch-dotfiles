@@ -1,4 +1,0 @@
-/* Compatibility import. Use config-monitors.rasi for new references. */
-
-@import "~/.config/rofi/config-monitors.rasi"
-

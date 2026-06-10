@@ -1,4 +1,0 @@
-/* Compatibility import. Use config-theme-selector.rasi for new references. */
-
-@import "~/.config/rofi/config-theme-selector.rasi"
-

@@ -1,4 +1,0 @@
-/* Compatibility import. Use config-animations.rasi for new references. */
-
-@import "~/.config/rofi/config-animations.rasi"
-

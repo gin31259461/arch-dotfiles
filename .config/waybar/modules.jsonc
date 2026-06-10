@@ -49,9 +49,9 @@
 },
 
 "backlight#2": {
-  "device": "intel_backlight",
-  "format": "{icon} {percent}%",
-  "format-icons": ["", ""]
+ "device": "intel_backlight",
+ "format": "{icon} {percent}%",
+ "format-icons": ["", ""]
 },
 
 "battery": {
@@ -96,9 +96,9 @@
 
 "clock": {
 	"interval": 1,
-    //"format": " {:%I:%M %p}", // AM PM format
-    "format": " {:%H:%M:%S}", // 24H
-	"format-alt": " {:L%H:%M   %Y, %d %B, %A}",
+ //"format": " {:%I:%M %p}", // AM PM format
+ "format": " {:%H:%M:%S}", // 24H
+	"format-alt": " {:L%H:%M  %Y, %d %B, %A}",
 	"tooltip-format": "<tt><small>{calendar}</small></tt>",
 	"calendar": {
 		"mode": "year",
@@ -124,29 +124,29 @@
 },
 
 "clock#2": {
-    //"format": " {:%I:%M %p}", // AM PM format
-    "format": "  {:%H:%M}", // 24H
-    "format-alt": "{:L%A  |  %H:%M  |  %e %B}",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+ //"format": " {:%I:%M %p}", // AM PM format
+ "format": " {:%H:%M}", // 24H
+ "format-alt": "{:L%A | %H:%M | %e %B}",
+ "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
 },
 
 "clock#3": {
-    //"format": "{:L%I:%M %p - %d/%b}", //for AM/PM
-    "format": "{:L%H:%M - %d/%b}", // 24H
+ //"format": "{:L%I:%M %p - %d/%b}", //for AM/PM
+ "format": "{:L%H:%M - %d/%b}", // 24H
 	"tooltip": false
 },
 
 "clock#4": {
 	"interval": 60,
-    //"format": "{:L%B | %a %d, %Y | %I:%M %p}", // AM PM format
-    "format": "{:L%B | %a %d, %Y | %H:%M}", // 24H
+ //"format": "{:L%B | %a %d, %Y | %I:%M %p}", // AM PM format
+ "format": "{:L%B | %a %d, %Y | %H:%M}", // 24H
 	"format-alt": "{:L%a %b %d, %G}",
 	"tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
 },
 
 "clock#5": {
-    //"format": "{:%A, %I:%M %P}", // AM PM format
-    "format": "{:%a %d | %H:%M}", // 24H
+ //"format": "{:%A, %I:%M %P}", // AM PM format
+ "format": "{:%a %d | %H:%M}", // 24H
 	"format-alt": "{:L%A, %d %B, %Y (%R)}",
 	"tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
 },
@@ -182,7 +182,7 @@
 },
 
 "hyprland/submap": {
-	"format": "<span style=\"italic\">  {}</span>", // Icon: expand-arrows-alt
+	"format": "<span style=\"italic\"> {}</span>", // Icon: expand-arrows-alt
 	"tooltip": false,
 },
 
@@ -302,15 +302,15 @@
 },
 
 "power-profiles-daemon": {
-  "format": "{icon} ",
-  "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-  "tooltip": true,
-  "format-icons": {
-    "default": "",
-    "performance": "",
-    "balanced": "",
-    "power-saver": ""
-  }
+ "format": "{icon} ",
+ "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+ "tooltip": true,
+ "format-icons": {
+ "default": "",
+ "performance": "",
+ "balanced": "",
+ "power-saver": ""
+ }
 },
 
 "pulseaudio": {
@@ -325,7 +325,7 @@
 		"portable": "",
 		"car": "",
 		"default": [
-			"", "", "󰕾",  ""
+			"", "", "󰕾", ""
 		],
 		"ignored-sinks": [
 			"Easy Effects Sink"
@@ -341,23 +341,23 @@
 },
 
 "pulseaudio#1": {
-  "format": "{icon} {volume}%",
-  "format-bluetooth": "{icon} {volume}%",
-  "format-bluetooth-muted": " {icon}",
-  "format-muted": "󰸈",
-  "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["", "", ""]
-    },
-  "on-click": "pamixer --toggle-mute",
-  "on-click-right": "pavucontrol -t 3",
-  "tooltip": true,
-  "tooltip-format": "{icon} {desc} | {volume}%",
+ "format": "{icon} {volume}%",
+ "format-bluetooth": "{icon} {volume}%",
+ "format-bluetooth-muted": " {icon}",
+ "format-muted": "󰸈",
+ "format-icons": {
+ "headphone": "",
+ "hands-free": "",
+ "headset": "",
+ "phone": "",
+ "portable": "",
+ "car": "",
+ "default": ["", "", ""]
+ },
+ "on-click": "pamixer --toggle-mute",
+ "on-click-right": "pavucontrol -t 3",
+ "tooltip": true,
+ "tooltip-format": "{icon} {desc} | {volume}%",
 },
 
 "pulseaudio#microphone": {
@@ -400,7 +400,7 @@
 		"wofi",
 		"rofi",
 		"kitty",
-    "kitty-dropterm"
+ "kitty-dropterm"
 		],
 },
 }

@@ -1,6 +1,6 @@
 /* Main rofi config. Menu-specific overrides live next to this file. */
 
-@import "~/.config/rofi/0-shared-fonts.rasi"
+@import "~/.config/rofi/shared-fonts.rasi"
 
 @theme "~/.config/rofi/themes/style-4.rasi"
 

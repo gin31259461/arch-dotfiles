@@ -142,7 +142,7 @@
 	"format": "<span>{}</span>",
 	"return-type": "json",
 	"max-length": 25,
-	"exec": "playerctl -a metadata --format '{\"text\": \"{{artist}}  {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+	"exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
 	"on-click-middle": "playerctl play-pause",
 	"on-click": "playerctl previous",
 	"on-click-right": "playerctl next",
@@ -161,16 +161,16 @@
 },
 
 "custom/reboot": {
-    "format": "󰜉",
-    "on-click": "systemctl reboot",
-    "tooltip": true,
+ "format": "󰜉",
+ "on-click": "systemctl reboot",
+ "tooltip": true,
 	"tooltip-format": "Left Click: Reboot",
 },
 
 "custom/quit": {
-    "format": "󰗼",
-    "on-click": "hyprctl dispatch exit",
-    "tooltip": true,
+ "format": "󰗼",
+ "on-click": "hyprctl dispatch exit",
+ "tooltip": true,
 	"tooltip-format": "Left Click: Exit Hyprland",
 },
 
@@ -195,7 +195,7 @@
 	"on-click-right": "swaync-client -d -sw",
 	"escape": true,
 },
-// NOTE:! This is mainly for Arch and Arch Based Distros  depend: pacman-contrib
+// NOTE:! This is mainly for Arch and Arch Based Distros depend: pacman-contrib
 // Other Distro dont have notifications but can use to check for update for any other distro
 "custom/updater": {
 	"format": " {}",
@@ -228,12 +228,12 @@
 	"tooltip": false
 },
 "custom/separator#blank_2": {
-	"format": "  ",
+	"format": " ",
 	"interval": "once",
 	"tooltip": false
 },
 "custom/separator#blank_3": {
-	"format": "   ",
+	"format": " ",
 	"interval": "once",
 	"tooltip": false
 },

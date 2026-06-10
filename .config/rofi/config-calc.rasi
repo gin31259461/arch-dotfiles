@@ -1,4 +1,3 @@
-/* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Main Config Calculator */
 /* Submitted by: https://github.com/JosephArmas */
 
@@ -6,20 +5,20 @@
 
 /* ---- Mainbox ---- */
 mainbox {
-  children: [ "entry", "message" ];
-  height: inherit;
+ children: [ "entry", "message" ];
+ height: inherit;
 }
 
 /* ---- Window ---- */
 window {
-  width: 30%;
-  height: inherit;
+ width: 30%;
+ height: inherit;
 }
 
 /* ---- Entry ---- */
 entry {
-  expand: true;
-  placeholder: " 🧮 Calculate";
+ expand: true;
+ placeholder: " 🧮 Calculate";
 }
 
 listview {enable: false;}

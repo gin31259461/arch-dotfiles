@@ -13,8 +13,8 @@
 	"on-click": "activate",
 	"on-scroll-up": "hyprctl dispatch workspace e+1",
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 	"format-icons": {
 		"active": "",
@@ -30,8 +30,8 @@
 	"on-click": "activate",
 	"on-scroll-up": "hyprctl dispatch workspace e+1",
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 	"format-icons": {
 		"1": "I",
@@ -55,14 +55,14 @@
 	"on-scroll-up": "hyprctl dispatch workspace e+1",
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
 	"show-special": false,
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 	"format": "{icon}",
 	"format-icons": {
-            "active": "<span font='12'>󰮯</span>",
-            "empty": "<span font='8'></span>",
-            "default": "󰊠",
+ "active": "<span font='12'>󰮯</span>",
+ "empty": "<span font='8'></span>",
+ "default": "󰊠",
 	},
 },
 // Kanji / Japanese style
@@ -71,8 +71,8 @@
 	"show-special": false,
 	"all-outputs": true,
 	"format": "{icon}",
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 	"format-icons": {
 		"1": "一",
@@ -96,8 +96,8 @@
 	"on-click": "activate",
 	"on-scroll-up": "hyprctl dispatch workspace e+1",
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 		"format-icons": {
 		"1": "Uno",
@@ -111,9 +111,9 @@
 		"9":"Nove",
 		"10":"Dieci"
 	}
-  },
+ },
 
-//  NUMBERS and ICONS style
+// NUMBERS and ICONS style
 "hyprland/workspaces#4": {
 	"format": "{name}",
 	"format": " {name} {icon} ",
@@ -148,8 +148,8 @@
 	"on-click": "activate",
 	"on-scroll-up": "hyprctl dispatch workspace e+1",
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
-    "persistent-workspaces": {
-      "*": 5
+ "persistent-workspaces": {
+ "*": 5
 	},
 	"format-icons": {
 		"1": "1",
@@ -176,7 +176,7 @@
 	"on-scroll-down": "hyprctl dispatch workspace e-1",
 	"persistent-workspaces": {
 		"*": 5
-	  },
+	 },
 	"format": "{icon} {windows}",
 	"format-window-separator": " ",
 	"window-rewrite-default": " ",

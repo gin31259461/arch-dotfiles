@@ -1,4 +1,0 @@
-/* Compatibility import. Use config-beats-menu.rasi for new references. */
-
-@import "~/.config/rofi/config-beats-menu.rasi"
-

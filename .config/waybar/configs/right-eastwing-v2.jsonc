@@ -1,0 +1,63 @@
+
+// ### RIGHTPANEL v2 ### //
+
+{
+"include": [
+ "$HOME/.config/waybar/modules.jsonc",
+ "$HOME/.config/waybar/modules-workspaces.jsonc",
+ "$HOME/.config/waybar/modules-custom.jsonc",
+ "$HOME/.config/waybar/modules-groups.jsonc",
+ "$HOME/.config/waybar/user-modules.jsonc",
+ "$HOME/.config/waybar/modules-vertical.jsonc",
+ ],
+"layer": "top",
+"position": "right",
+"margin-top": 8,
+"margin-bottom": 8,
+//"margin-left": 3,
+"margin-right": 3,
+"spacing": 3,
+"fixed-center": true,
+"ipc": true,
+//"gtk-layer-shell": true,
+
+"modules-left": [
+	"group/notify",
+ "clock#vertical",
+
+	"custom/menu",
+],
+
+"modules-center": [
+	"idle_inhibitor",
+	"hyprland/workspaces#numbers",
+],
+
+"modules-right": [
+	"mpris",
+	"tray",
+	"backlight#vertical",
+	"pulseaudio/slider",
+	"pulseaudio#microphone_vertical",
+	"custom/nightlight",
+	"group/power#vert",
+],
+
+
+// Additional modules //
+"pulseaudio/slider": {
+	"min": 0,
+	"max": 100,
+	"orientation": "vertical",
+	"tooltip": "true",
+	"tooltip-format": "{icon} {desc} | {volume}%",
+
+},
+"backlight/slider": {
+	"min": 0,
+	"max": 100,
+	"orientation": "vertical",
+	"device": "intel_backlight"
+},
+
+}

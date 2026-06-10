@@ -4,39 +4,39 @@
 
 /* ---- Mainbox ---- */
 mainbox {
-  children:
-    [ "inputbar", "listview"];
+ children:
+ [ "inputbar", "listview"];
 }
 
 /* ---- Entry ---- */
 entry {
-  expand: false;
-  width: 25%;
-  placeholder: "Choose music source";
-  horizontal-align: 0.5;
+ expand: false;
+ width: 25%;
+ placeholder: "Choose music source";
+ horizontal-align: 0.5;
 }
 
 /* ---- Window ---- */
 window {
-  width: 28%;
-  height: inherit;
+ width: 28%;
+ height: inherit;
 }
 
 /* ---- Listview ---- */
 listview {
-  fixed-columns: false;
-  scrollbar: false;
-  columns: 1;
-  lines: 4;
-  spacing: 6px;
-  cycle: true;
+ fixed-columns: false;
+ scrollbar: false;
+ columns: 1;
+ lines: 4;
+ spacing: 6px;
+ cycle: true;
 }
 
 /* ---- Element ---- */
 element-icon {
-  size: 0%;
+ size: 0%;
 }
 element-text {
-  horizontal-align: 0.5;
+ horizontal-align: 0.5;
 }
 

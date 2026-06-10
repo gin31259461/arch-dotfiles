@@ -4,45 +4,45 @@
 
 /* ---- Window ---- */
 window {
-  width: inherit;
-  height: inherit;
+ width: inherit;
+ height: inherit;
 }
 
 /* ---- Mainbox ---- */
 mainbox {
-  children:
-    [ "inputbar", "listview"];
+ children:
+ [ "inputbar", "listview"];
 }
 
 /* ---- Entry ---- */
 entry {
-  placeholder: "Search media and stations";
+ placeholder: "Search media and stations";
 }
 
 /* ---- Listview ---- */
 listview {
-  columns: 2;
-  lines: 7;
-  fixed-height: false;
-  margin: 10px;
-  scrollbar: true;
-  spacing: 6px;
-  cycle: true;
+ columns: 2;
+ lines: 7;
+ fixed-height: false;
+ margin: 10px;
+ scrollbar: true;
+ spacing: 6px;
+ cycle: true;
 }
 
 /* ---- Elements ---- */
 element {
-  orientation: horizontal;
+ orientation: horizontal;
 }
 
 element-icon {
-  size: 0%;
+ size: 0%;
 }
 
 element-text {
-  horizontal-align: 0.0;
-  vertical-align: 0.5;
-  margin: 0px;
-  padding: 0px;
+ horizontal-align: 0.0;
+ vertical-align: 0.5;
+ margin: 0px;
+ padding: 0px;
 }
 

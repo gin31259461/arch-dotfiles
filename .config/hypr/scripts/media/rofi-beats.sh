@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/lib/notify.sh"
 source "$SCRIPT_DIR/lib/rofi.sh"
 
 music_dir="${MUSIC_DIR:-$HOME/Music}"
-music_list="$ROFI_CONFIG_DIR/online_music.list"
+music_list="$ROFI_CONFIG_DIR/online-music.list"
 rofi_theme="$ROFI_CONFIG_DIR/config-beats.rasi"
 rofi_theme_menu="$ROFI_CONFIG_DIR/config-beats-menu.rasi"
 

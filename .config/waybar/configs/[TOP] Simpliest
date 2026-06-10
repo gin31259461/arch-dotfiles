@@ -3,14 +3,14 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
-"layer": "top", 
-"position": "top", 
+"layer": "top",
+"position": "top",
 //"mode": "dock",
 "exclusive": true,
 "passthrough": false,
@@ -19,20 +19,21 @@
 "margin-right": 6,
 "margin-top": 2,
 
-"modules-left": [	 
+"modules-left": [
 	"hyprland/workspaces",
 	"tray",
-	"mpris", 
+	"mpris",
 	],
-    
+
 "modules-center": [
-	"hyprland/window", 
+	"hyprland/window",
 	],
-    
+
 "modules-right": [
 	"idle_inhibitor",
 	"custom/nightlight",
 	"group/notify",
 	],
 }
+
 

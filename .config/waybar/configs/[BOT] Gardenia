@@ -5,13 +5,13 @@
 //* --- 👍 designed by https://github.com/Krautt  👍 --- */
 
 {
- 
+
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -24,20 +24,20 @@
 "margin-top": 5,
 //"margin-bottom": 5,
 "width": 1000,
-	
+
 "modules-left": [
-	"clock#5", 
-	"mpris", 
-	"tray", 
+	"clock#5",
+	"mpris",
+	"tray",
 	"group/notify"
 	],
-	  
-"modules-center": ["hyprland/workspaces#kanji"], 
-	
+
+"modules-center": ["hyprland/workspaces#kanji"],
+
 "modules-right": [
 	"pulseaudio#1",
 	"backlight#2",
-	"power-profiles-daemon", 
+	"power-profiles-daemon",
 	"battery"
 	],
 

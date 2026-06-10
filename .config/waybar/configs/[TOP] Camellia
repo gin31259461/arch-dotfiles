@@ -5,13 +5,13 @@
 //* --- 👍 designed by https://github.com/Krautt  👍 --- */
 
 {
- 
+
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -25,17 +25,17 @@
 //"margin-bottom": 0,
 //"margin-left": 0,
 //"margin-right": 0,
-	
+
 "modules-left": [
 	"hyprland/workspaces#cam",
 	"custom/separator#line",
 	"mpris",
 	"group/notify",
-	"tray", 
+	"tray",
 	"wlr/taskbar"],
 
-"modules-center": ["hyprland/window"], 
-	
+"modules-center": ["hyprland/window"],
+
 "modules-right": [
 	"custom/backlight",
 	"backlight/slider",
@@ -43,7 +43,7 @@
 	"pulseaudio/slider",
 	"power-profiles-daemon",
 	"battery",
-	"clock#3", 
+	"clock#3",
 	"network",
 	"custom/nightlight"],
 
@@ -52,11 +52,11 @@
 	"min": 0,
 	"max": 100,
 	"orientation": "horizontal"
-	
+
 },
 
 "custom/speaker": {
-	"exec": "echo '🔊'",  
+	"exec": "echo '🔊'",
 	"interval": 1,
 	"format": "{}"
 },
@@ -69,7 +69,7 @@
 },
 
 "custom/backlight": {
-	"exec": "echo '✨'",  
+	"exec": "echo '✨'",
 	"interval": 1,
 	"format": "{}"
 },

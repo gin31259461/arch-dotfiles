@@ -3,9 +3,14 @@
 # Add to waybar config: "exec": "~/.config/hypr/scripts/media/waybar-cava.sh"
 
 set -euo pipefail
+IFS=$'\n\t'
 
-command -v cava >/dev/null 2>&1 || {
-  echo "cava not found" >&2
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+
+command_exists cava || {
+  printf '%s\n' "cava not found" >&2
   exit 1
 }
 
@@ -29,7 +34,9 @@ fi
 printf '%d' $$ >"$pidfile"
 
 config_file="$(mktemp "$RUNTIME_DIR/waybar-cava.XXXXXX.conf")"
-cleanup() { rm -f "$config_file" "$pidfile"; }
+cleanup() {
+  rm -f "$config_file" "$pidfile"
+}
 trap cleanup EXIT INT TERM
 
 cat >"$config_file" <<'EOF'
@@ -48,4 +55,4 @@ data_format = ascii
 ascii_max_range = 7
 EOF
 
-exec cava -p "$config_file" | sed -u "$dict"
+cava -p "$config_file" | sed -u "$dict"

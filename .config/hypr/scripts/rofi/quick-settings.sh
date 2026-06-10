@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Quick Settings menu — config editor, rainbow borders, and utilities (SUPER SHIFT E)
+# Quick settings menu.
+
+set -euo pipefail
+IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
@@ -12,19 +15,18 @@ lua_user="$HYPR_CONFIG_DIR/lua/user"
 term="${TERMINAL:-kitty}"
 edit="${EDITOR:-nvim}"
 
-scriptsDir="$SCRIPT_DIR"
 rofi_theme="$ROFI_CONFIG_DIR/config-edit.rasi"
 msg='Choose a setting'
-iDIR="$SWAYNC_IMAGE_DIR"
+marker="›"
 
 show_info() {
-  notify_info "Quick Settings" "$1" "$iDIR/info.png" "quick-settings"
+  notify_info "Quick Settings" "$1" "$(icon_img info.png)" "quick-settings"
 }
 
 rainbow_borders_menu() {
-  local rainbow_script="$scriptsDir/display/rainbow-border.sh"
+  local rainbow_script="$SCRIPT_DIR/display/rainbow-border.sh"
   local mode_file="$RAINBOW_BORDER_MODE_FILE"
-  local refresh_script="$scriptsDir/services/refresh.sh"
+  local refresh_script="$SCRIPT_DIR/services/refresh.sh"
   local current
 
   current="$(rainbow_border_mode)"
@@ -38,12 +40,15 @@ rainbow_borders_menu() {
   esac
 
   local choice
-  choice=$(printf "Disable Rainbow Borders\nWallust Color\nOriginal Rainbow\nGradient Flow" \
-    | rofi_dmenu "$rofi_theme" "Rainbow Borders: current = $current_display")
+  choice=$(rofi_select_marked "$rofi_theme" "Rainbow Borders" "$current_display" "$marker" \
+    "Disabled" \
+    "Wallust Color" \
+    "Original Rainbow" \
+    "Gradient Flow") || return 0
   [[ -z "$choice" ]] && return
 
   case "$choice" in
-    "Disable Rainbow Borders")
+    "Disabled")
       mkdir -p "$(dirname "$mode_file")"
       printf '%s\n' disabled >"$mode_file"
       current="disabled"
@@ -105,7 +110,10 @@ EOF
 }
 
 main() {
-  choice=$(menu | rofi_dmenu "$rofi_theme" "$msg")
+  local choice file
+
+  file=""
+  choice=$(menu | rofi_dmenu "$rofi_theme" "$msg") || exit 0
 
   case "$choice" in
     "Edit Environment & Defaults") file="$lua_conf/context.lua" ;;
@@ -116,7 +124,7 @@ main() {
     "Edit Animations") file="$lua_user/animations.lua" ;;
     "Edit Input Settings") file="$lua_conf/options.lua" ;;
     "Edit Laptop Settings") file="$lua_conf/context.lua" ;;
-    "Choose Kitty Terminal Theme") "$scriptsDir/display/kitty-themes.sh" ;;
+    "Choose Kitty Terminal Theme") "$SCRIPT_DIR/display/kitty-themes.sh" ;;
     "Configure Monitors (nwg-displays)")
       require_command nwg-displays "Install nwg-displays first." || exit 1
       nwg-displays
@@ -133,15 +141,15 @@ main() {
       require_command qt5ct "Install qt5ct first." || exit 1
       qt5ct
       ;;
-    "Choose Hyprland Animations") "$scriptsDir/profile-selector/animation" ;;
-    "Choose Monitor Profiles") "$scriptsDir/profile-selector/monitor" ;;
-    "Choose Rofi Themes") "$scriptsDir/rofi/rofi-theme-selector.sh" ;;
-    "Search for Keybinds") "$scriptsDir/input/keybinds.sh" ;;
-    "Toggle Game Mode") "$scriptsDir/session/game-mode.sh" ;;
-    "Switch Dark-Light Theme") "$scriptsDir/display/dark-light.sh" ;;
+    "Choose Hyprland Animations") "$SCRIPT_DIR/profile-selector/animation" ;;
+    "Choose Monitor Profiles") "$SCRIPT_DIR/profile-selector/monitor" ;;
+    "Choose Rofi Themes") "$SCRIPT_DIR/rofi/rofi-theme-selector.sh" ;;
+    "Search for Keybinds") "$SCRIPT_DIR/input/keybinds.sh" ;;
+    "Toggle Game Mode") "$SCRIPT_DIR/session/game-mode.sh" ;;
+    "Switch Dark-Light Theme") "$SCRIPT_DIR/display/dark-light.sh" ;;
     "Rainbow Borders Mode") rainbow_borders_menu ;;
-    "Waybar Style") "$scriptsDir/display/waybar-style.sh" ;;
-    "Waybar Layout") "$scriptsDir/display/waybar-layout.sh" ;;
+    "Waybar Style") "$SCRIPT_DIR/display/waybar-style.sh" ;;
+    "Waybar Layout") "$SCRIPT_DIR/display/waybar-layout.sh" ;;
     "Toggle Waybar")
       if noctalia_shell_manages waybar; then
         show_info "Waybar is managed by Noctalia shell."
@@ -159,6 +167,7 @@ main() {
   [[ -n "$file" ]] && "$term" -e "$edit" "$file"
 }
 
+require_command rofi "Install rofi first." || exit 1
 rofi_close_existing
 
 main

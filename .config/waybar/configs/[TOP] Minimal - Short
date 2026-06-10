@@ -4,11 +4,11 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 "position": "top",
@@ -16,8 +16,8 @@
 "margin-top": 3,
 
 "modules-left": [
-	"clock",  
-	"custom/weather", 
+	"clock",
+	"custom/weather",
 	],
 
 "modules-center": [
@@ -25,15 +25,16 @@
 	],
 
 "modules-right": [
-	"custom/menu", 
+	"custom/menu",
 	"tray",
 	"group/notify",
-	"mpris", 
-	"network", 
-	"bluetooth", 
-	"backlight", 
-	"pulseaudio", 
-	"battery", 
+	"mpris",
+	"network",
+	"bluetooth",
+	"backlight",
+	"pulseaudio",
+	"battery",
 	"custom/nightlight",
 	"custom/power"],
 }
+

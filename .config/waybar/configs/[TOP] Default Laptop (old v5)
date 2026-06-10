@@ -3,11 +3,11 @@
 // ### DEFAULT Laptop  - Top ### //
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -40,8 +40,8 @@
 	"custom/separator#dot-line",
 	"custom/weather",
 	"custom/separator#dot-line",
-	"idle_inhibitor",	
-	"custom/hint",	
+	"idle_inhibitor",
+	"custom/hint",
 	],
 
 "modules-right": [
@@ -51,9 +51,9 @@
 	"group/laptop",
 	"custom/separator#dot-line",
 	"group/mobo_drawer",
-	"custom/separator#line",  
+	"custom/separator#line",
 	"group/audio",
-	"custom/separator#dot-line", 
+	"custom/separator#dot-line",
 	"custom/nightlight",
 	"group/status",
 	],

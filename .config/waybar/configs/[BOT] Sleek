@@ -1,14 +1,14 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 
-// Sleek 
+// Sleek
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 "position": "bottom",
@@ -16,7 +16,7 @@
 "margin-left": 10,
 "margin-right": 10,
 "margin-bottom": 2,
-	
+
 "modules-left": [
 	"custom/menu",
 	"custom/separator#blank_2",
@@ -33,14 +33,15 @@
 	"custom/separator#blank",
 	"group/notify"
 ],
-		
+
 "modules-right": [
 	"hyprland/window",
 	"custom/separator#blank_2",
 	"pulseaudio",
 	"custom/separator#blank",
 	"power-profiles-daemon",
-	"custom/power",					
+	"custom/power",
 	],
 
 }
+

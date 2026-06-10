@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Calculator interface via Rofi
+# Calculator interface.
+
+set -euo pipefail
+IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
@@ -10,6 +13,7 @@ source "$SCRIPT_DIR/lib/rofi.sh"
 rofi_theme="$ROFI_CONFIG_DIR/config-calc.rasi"
 
 require_command qalc "Install qalc first." || exit 1
+require_command wl-copy "Install wl-clipboard first." || exit 1
 
 rofi_close_existing
 
@@ -20,6 +24,6 @@ while true; do
 
   if [[ -n "$result" ]]; then
     calc_result=$(qalc -t "$result")
-    echo "$calc_result" | wl-copy
+    printf '%s\n' "$calc_result" | wl-copy
   fi
 done

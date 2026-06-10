@@ -3,11 +3,11 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 "position": "top",
@@ -15,7 +15,7 @@
 "margin-left": 10,
 "margin-right": 10,
 "margin-top": 2,
-	
+
 "modules-left": [
 	"custom/menu",
 	"custom/separator#blank_2",
@@ -32,7 +32,7 @@
 	"custom/separator#blank",
 	"group/notify"
 ],
-		
+
 "modules-right": [
 	"hyprland/window",
 	"custom/separator#blank_2",
@@ -40,6 +40,7 @@
 	"custom/separator#blank",
 	"group/mobo_drawer",
 	"custom/nightlight",
-	"custom/power",					
+	"custom/power",
 	],
 }
+

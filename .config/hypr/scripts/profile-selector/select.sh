@@ -59,8 +59,8 @@ theme_for_category() {
   local category="$1"
 
   case "$category" in
-    animation) printf '%s/config-Animations.rasi\n' "$ROFI_CONFIG_DIR" ;;
-    monitor) printf '%s/config-Monitors.rasi\n' "$ROFI_CONFIG_DIR" ;;
+    animation) printf '%s/config-animations.rasi\n' "$ROFI_CONFIG_DIR" ;;
+    monitor) printf '%s/config-monitors.rasi\n' "$ROFI_CONFIG_DIR" ;;
     *) printf '%s/config-edit.rasi\n' "$ROFI_CONFIG_DIR" ;;
   esac
 }

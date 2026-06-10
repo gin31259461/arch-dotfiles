@@ -5,11 +5,11 @@
 [
   {
   "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
     "name": "topbar",
     "layer": "top",
@@ -33,7 +33,7 @@
       "battery",
       "backlight",
       "pulseaudio",
-      "group/mobo_drawer", 
+      "group/mobo_drawer",
       "idle_inhibitor",
       "custom/nightlight",
       "group/power"
@@ -42,11 +42,11 @@
 },
   {
   "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
     "name": "bottombar",
     "layer": "top",
@@ -63,3 +63,4 @@
     "modules-right": ["tray", "custom/updater", "group/notify"],
   }
 ]
+

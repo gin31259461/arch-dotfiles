@@ -6,11 +6,11 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -23,20 +23,20 @@
 "margin-left": 5,
 "margin-right": 5,
 "margin-top": 0,
-	
+
 "modules-left": [
-	"clock#5", 
-	"mpris", 
-	"tray", 
+	"clock#5",
+	"mpris",
+	"tray",
 	"group/notify"
 	],
-  
-"modules-center": ["hyprland/workspaces"], 
-	
+
+"modules-center": ["hyprland/workspaces"],
+
 "modules-right": [
 	"pulseaudio#1",
-	"backlight#2", 
+	"backlight#2",
 	"battery",
 	"custom/nightlight"],
-   
+
 }

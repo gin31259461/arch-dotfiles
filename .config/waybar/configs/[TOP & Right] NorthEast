@@ -4,11 +4,11 @@
 
 [{
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -22,18 +22,18 @@
 "margin-top": 2,
 "margin-left": 8,
 "margin-right": 8,
-    
+
 "modules-left": [
     "custom/menu",
 	"custom/separator#blank_2",
 	"group/motherboard",
     ],
-    
+
 "modules-center": [
     //"hyprland/window",
     "hyprland/workspaces#pacman",
 	],
-    
+
 "modules-right": [
     "network",
     "bluetooth",
@@ -48,12 +48,12 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
-  "$HOME/.config/waybar/ModulesVertical",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
+  "$HOME/.config/waybar/modules-vertical.jsonc",
   ],
 "layer": "top",
 "position": "right",
@@ -66,21 +66,21 @@
 "fixed-center": true,
 "ipc": true,
 //"gtk-layer-shell": true,
-   
+
 "modules-left": [
     "custom/lock",
-    "idle_inhibitor",   
+    "idle_inhibitor",
     ],
-    
+
 "modules-center": [
     "clock#vertical",
     ],
-    
+
 "modules-right": [
 	"mpris",
 	"group/notify",
     "tray",
     "custom/light_dark",
     ],
-    
+
 }]

@@ -3,14 +3,14 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
-"layer": "top", 
-"position": "bottom", 
+"layer": "top",
+"position": "bottom",
 //"mode": "dock",
 "exclusive": true,
 "passthrough": false,
@@ -19,24 +19,25 @@
 "margin-right": 6,
 "margin-top": 2,
 
-"modules-left": [	
+"modules-left": [
 	"idle_inhibitor",
 	"group/mobo_drawer",
 	"hyprland/workspaces#rw",
 	"tray",
-	"mpris", 
+	"mpris",
 	],
-    
+
 "modules-center": [
 	"clock#2",
 	"group/notify",
 	],
-    
+
 "modules-right": [
-	"hyprland/window",  
+	"hyprland/window",
 	"battery",
- 	"group/audio", 
+ 	"group/audio",
 	"custom/power",
 	],
 }
+
 

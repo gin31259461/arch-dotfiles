@@ -1,7 +1,7 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Clipboard Config - Clipboard */
 
-@import "~/.config/rofi/config.rasi"  
+@import "~/.config/rofi/config.rasi"
 
 /* ---- Window ---- */
 window {
@@ -45,3 +45,4 @@ element-text {
   margin: 0px;
   padding: 0px;
 }
+

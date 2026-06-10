@@ -3,11 +3,11 @@
 // ### DEFAULT (Laptop)  - Top (old v3) ### //
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -41,16 +41,16 @@
 	"custom/separator#line",
 	"hyprland/workspaces#kanji",
 	"custom/separator#dot-line",
-	"idle_inhibitor",	
-	"custom/hint",	
-	], 
+	"idle_inhibitor",
+	"custom/hint",
+	],
 
 "modules-right": [
 	"network#speed",
 	"group/connections",
 	"custom/separator#line",
 	"tray",
-	"mpris", 
+	"mpris",
 	"group/audio",
 	"custom/separator#line",
 	"custom/nightlight",
@@ -60,3 +60,4 @@
 	"custom/power",
 	],
 }
+

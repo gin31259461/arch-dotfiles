@@ -1,9 +1,9 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Oh My ZSH Theme */
 
-@import "~/.config/rofi/config.rasi"  
+@import "~/.config/rofi/config.rasi"
 
-/* ---- Configuration ---- */ 
+/* ---- Configuration ---- */
 configuration {
   modi: "drun";
 }
@@ -66,3 +66,4 @@ element-text {
   horizontal-align: 0.0;
   margin: 5px 30px 5px 30px;
 }
+

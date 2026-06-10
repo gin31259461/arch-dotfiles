@@ -4,11 +4,11 @@
 
 {
 "include": [
-  "$HOME/.config/waybar/Modules",
-  "$HOME/.config/waybar/ModulesWorkspaces",
-  "$HOME/.config/waybar/ModulesCustom",
-  "$HOME/.config/waybar/ModulesGroups",
-  "$HOME/.config/waybar/UserModules",
+  "$HOME/.config/waybar/modules.jsonc",
+  "$HOME/.config/waybar/modules-workspaces.jsonc",
+  "$HOME/.config/waybar/modules-custom.jsonc",
+  "$HOME/.config/waybar/modules-groups.jsonc",
+  "$HOME/.config/waybar/user-modules.jsonc",
   ],
 "layer": "top",
 //"mode": "dock",
@@ -24,7 +24,7 @@
 
 "modules-left": [
   "custom/arch",
-	"custom/separator#blank_2", 
+	"custom/separator#blank_2",
 	"hyprland/workspaces#rw",
 	"custom/separator#blank_2",
 //	"mpris",
@@ -91,8 +91,8 @@
 	"format-time": "{H}h {M}min",
 	"tooltip": true,
 	"tooltip-format": "{timeTo} {power}w",
-	"on-click-middle": "$HOME/.config/hypr/scripts/ChangeBlur.sh",
-	"on-click-right": "$HOME/.config/hypr/scripts/Wlogout.sh",
+	"on-click-middle": "$HOME/.config/hypr/scripts/display/change-blur.sh",
+	"on-click-right": "$HOME/.config/hypr/scripts/session/wlogout.sh",
 },
 
 "cpu#forest": {
@@ -144,4 +144,5 @@
 	"on-click-right": "kitty --title nvtop sh -c 'nvtop'"
 },
 }
+
 

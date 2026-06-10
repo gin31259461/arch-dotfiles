@@ -1,7 +1,7 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Rofi Config for Google Search) */
 
-@import "~/.config/rofi/config.rasi"  
+@import "~/.config/rofi/config.rasi"
 
 /* ---- Window ---- */
 window {
@@ -15,7 +15,7 @@ window {
     border-color: white/25%;
 }
 
-/* ---- Entry ---- */ 
+/* ---- Entry ---- */
 entry {
 	expand: true;
 	placeholder: " 🔎 Google Search";
@@ -23,3 +23,4 @@ entry {
 	padding: 15px;
 	border-radius: inherit;
 }
+

@@ -21,7 +21,6 @@ local commands = {
   "uwsm app -- blueman-applet",
   "ags",
   "qs -c overview",
-  "qs -c noctalia-shell",
   "wl-paste --type text --watch cliphist store",
   "wl-paste --type image --watch cliphist store",
   "uwsm app -- fcitx5",
@@ -33,10 +32,24 @@ local commands = {
   ctx.scripts_dir .. "/display/change-layout.sh init",
 }
 
+local function autostart_commands()
+  local result = {}
+  for _, command in ipairs(commands) do
+    result[#result + 1] = command
+  end
+
+  local noctalia = ctx.noctalia_shell or {}
+  if noctalia.enabled then
+    result[#result + 1] = noctalia.command or "qs -c noctalia-shell"
+  end
+
+  return result
+end
+
 function M.setup()
   hl.on("hyprland.start", function()
     hl.exec_cmd(ctx.config_dir .. "/initial-boot.sh", {})
-    for _, command in ipairs(commands) do
+    for _, command in ipairs(autostart_commands()) do
       hl.exec_cmd(command, {})
     end
   end)

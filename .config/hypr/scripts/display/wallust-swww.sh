@@ -5,9 +5,12 @@
 set -euo pipefail
 
 passed_path="${1:-}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+# shellcheck source=../lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 cache_dir="$HOME/.cache/swww/"
 rofi_link="$HOME/.config/rofi/.current_wallpaper"
-wallpaper_current="$HOME/.config/hypr/wallpaper-effects/.wallpaper_current"
+wallpaper_current="$(cd -- "$SCRIPT_DIR/.." && pwd -P)/wallpaper-effects/.wallpaper_current"
 
 read_cached_wallpaper() {
   local cache_file="$1"
@@ -107,8 +110,4 @@ if pgrep -x ghostty >/dev/null; then
   pgrep -x ghostty | xargs -r -I{} kill -SIGUSR2 {} 2>/dev/null || true
 fi
 
-if command -v waybar-msg >/dev/null 2>&1; then
-  waybar-msg cmd reload >/dev/null 2>&1 || true
-elif pgrep -x waybar >/dev/null; then
-  pgrep -x waybar | xargs -r -I{} kill -SIGUSR2 {} 2>/dev/null || true
-fi
+reload_waybar

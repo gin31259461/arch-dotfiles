@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Wrapper script for weather integration
 
-SCRIPT_DIR="$(dirname "$0")"
-PY_SCRIPT="$SCRIPT_DIR/Weather.py"
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+PY_SCRIPT="$SCRIPT_DIR/weather.py"
 BASH_FALLBACK="$SCRIPT_DIR/weather.sh"
 
 # Check network connectivity
@@ -19,7 +21,6 @@ fi
 run_fallback() {
   if [[ -f "$BASH_FALLBACK" ]]; then
     bash "$BASH_FALLBACK" "$@"
-    return $?
   else
     echo "Weather fallback not found: $BASH_FALLBACK" >&2
     return 127
@@ -28,19 +29,21 @@ run_fallback() {
 
 if command -v python3 >/dev/null 2>&1; then
   if [[ -f "$PY_SCRIPT" ]]; then
+    set +e
     python3 "$PY_SCRIPT" "$@"
     exit_code=$?
+    set -e
     if [[ "$exit_code" -eq 0 ]]; then
       exit 0
     fi
-    echo "Weather.py failed with code $exit_code — falling back to weather.sh" >&2
+    echo "weather.py failed with code $exit_code; falling back to weather.sh" >&2
   else
-    echo "Weather.py not found: $PY_SCRIPT — falling back to weather.sh" >&2
+    echo "weather.py not found: $PY_SCRIPT; falling back to weather.sh" >&2
   fi
   run_fallback "$@"
   exit $?
 else
-  echo "python3 not found in PATH — falling back to weather.sh" >&2
+  echo "python3 not found in PATH; falling back to weather.sh" >&2
   run_fallback "$@"
   exit $?
 fi

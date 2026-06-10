@@ -3,7 +3,7 @@
 # Usage: wallpaper-auto.sh <directory>
 # Example: wallpaper-auto.sh $HOME/Pictures/wallpapers
 
-SCRIPTSDIR="$HOME/.config/hypr/scripts"
+SCRIPTSDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 focused_monitor=$(hyprctl monitors | awk '/^Monitor/{name=$2} /focused: yes/{print name}')
 
 if [[ $# -lt 1 ]] || [[ ! -d "$1" ]]; then

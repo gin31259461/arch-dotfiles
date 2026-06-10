@@ -96,8 +96,8 @@ local function applications()
   )
   bind_exec(
     mod .. " + SHIFT + A",
-    "animations menu",
-    "$scriptsDir/display/animations.sh"
+    "profile selector",
+    "$scriptsDir/profile-selector/select.sh"
   )
   bind_exec(
     mod .. " + SHIFT + O",

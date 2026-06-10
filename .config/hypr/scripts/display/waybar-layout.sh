@@ -30,6 +30,7 @@ main() {
   [[ -z "$choice" ]] && exit 0
 
   if [[ "$choice" == "no panel" ]]; then
+    noctalia_shell_manages waybar && exit 0
     kill_by_name waybar
   else
     apply_layout "$choice"

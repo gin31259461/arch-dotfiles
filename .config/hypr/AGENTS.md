@@ -12,19 +12,21 @@ Guidance for coding agents working in this Hyprland config repository.
 
 - `hyprland.lua` is the minimal Lua entrypoint.
 - `lua/hyprconf/` contains tracked Hyprland modules.
-- `lua/user/` contains active user-local Lua data, currently `monitors.lua`.
-- `monitor-profiles/*.lua` are reusable monitor presets.
+- `lua/user/` contains active user-local Lua profile data.
+- `profiles/<category>/*.lua` contains reusable profile presets.
+- `profiles/.selected/<category>` remembers the selected preset per category.
 - `scripts/lib/` contains shared shell helpers:
   - `common.sh` for paths, process helpers, and reload helpers.
   - `notify.sh` for notifications.
   - `rofi.sh` for rofi menu helpers.
-- `scripts/display/monitor-profiles.sh` copies a preset into `lua/user/monitors.lua`.
+- `scripts/profile-selector/select.sh` copies presets into the matching `lua/user` target.
 
 ## Editing Rules
 
 - Prefer extending existing modules over adding new top-level concepts.
 - Keep Lua modules returning an `M` table with `M.setup()` when they are loaded by `lua/hyprconf/init.lua`.
 - Keep monitor profiles as plain Lua snippets that call `hl.monitor(...)`.
+- Keep animation profiles as Lua snippets that call `profile.apply_animation(...)`.
 - For shell scripts, source shared helpers instead of duplicating paths, `notify-send`, rofi cleanup, or process-kill logic.
 - Use `#!/usr/bin/env bash`, `set -euo pipefail` for new non-trivial shell scripts, and quote variables.
 - Preserve generated or machine-written files unless the task is specifically about regeneration.
@@ -45,7 +47,7 @@ Run the relevant checks before finishing:
 find scripts -type f -name '*.sh' ! -path 'scripts/rofi/rofi-emoji.sh' -print0 | xargs -0 shfmt -d
 while IFS= read -r -d '' f; do bash -n "$f" || exit 1; done < <(find scripts -type f -name '*.sh' ! -path 'scripts/rofi/rofi-emoji.sh' -print0)
 bash -n initial-boot.sh
-find lua monitor-profiles -type f -name '*.lua' -print0 | xargs -0 luac -p
+find lua profiles -type f -name '*.lua' -print0 | xargs -0 luac -p
 Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 ```
 

@@ -2,6 +2,7 @@ local M = {}
 
 local modules = {
   "hyprconf.env",
+  "hyprconf.runtime",
   "hyprconf.monitors",
   "hyprconf.autostart",
   "hyprconf.options",

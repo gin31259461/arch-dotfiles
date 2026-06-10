@@ -12,18 +12,24 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── context.lua           # Paths, defaults, devices
 │   ├── env.lua               # Environment variables
 │   ├── autostart.lua         # Startup commands
-│   ├── monitors.lua          # lua/user monitor profile loader
+│   ├── profile.lua           # Shared user profile loader
+│   ├── monitors.lua          # Active/fallback monitor profile loader
 │   ├── options.lua           # General/input/layout/misc options
-│   ├── animations.lua        # Curves and animations
+│   ├── animations.lua        # Active/fallback animation profile loader
 │   ├── gestures.lua          # Touchpad gestures
 │   ├── binds.lua             # Keybinds
 │   ├── rules.lua             # Window and layer rules
 │   ├── colors.lua            # Wallust/Noctalia color loader
+│   ├── color.lua             # Hex color helpers and palette generation
 │   └── util.lua              # Shared Lua helpers
-├── lua/user/monitors.lua     # Active user monitor profile
+├── lua/user/                 # Active user profile snippets
+│   ├── monitors.lua          # Active monitor profile
+│   └── animations.lua        # Active animation profile
+├── profiles/                 # Profile presets and selected-profile memory
+│   ├── monitor/
+│   └── animation/
 ├── wallust/                  # Generated color data
 ├── scripts/                  # Helper scripts and menus
-├── monitor-profiles/         # Monitor profile presets
 ├── hyprlock.conf
 ├── hyprlock-2k.conf
 ├── hyprlock-1080.conf
@@ -34,12 +40,15 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 ## Editing
 
 - Defaults, paths, and device names: `lua/hyprconf/context.lua`
+- Noctalia shell integration: `lua/hyprconf/context.lua` (`noctalia_shell`)
 - Keybinds: `lua/hyprconf/binds.lua`
 - Autostart: `lua/hyprconf/autostart.lua`
 - Appearance/input/layout/misc: `lua/hyprconf/options.lua`
 - Window and layer rules: `lua/hyprconf/rules.lua`
-- Animations: `lua/hyprconf/animations.lua`
-- Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua`
+- Active profiles: `lua/user/`
+- Profile presets: `profiles/`
+- Profile selector: `scripts/profile-selector/select.sh`
+- Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua` writes quickshell, rofi, Hyprland, and `wallust/wallust-hyprland.conf`
 
 Run validation with:
 

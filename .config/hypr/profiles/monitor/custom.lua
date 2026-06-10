@@ -1,4 +1,4 @@
--- custom
+-- profile: Mirrored Laptop
 
 hl.monitor({
   output = "eDP-1",

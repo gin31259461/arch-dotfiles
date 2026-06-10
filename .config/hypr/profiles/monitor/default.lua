@@ -1,4 +1,4 @@
--- default profile
+-- profile: Default
 
 hl.monitor({
   output = "",
@@ -17,6 +17,13 @@ hl.monitor({
 hl.monitor({
   output = "",
   mode = "highres",
+  position = "auto",
+  scale = "1",
+})
+
+hl.monitor({
+  output = "Virtual-1",
+  mode = "1920x1080@60",
   position = "auto",
   scale = "1",
 })

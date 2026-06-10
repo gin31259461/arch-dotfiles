@@ -8,6 +8,7 @@ source "$SCRIPT_DIR/lib/notify.sh"
 source "$SCRIPT_DIR/lib/rofi.sh"
 
 lua_conf="$HYPR_CONFIG_DIR/lua/hyprconf"
+lua_user="$HYPR_CONFIG_DIR/lua/user"
 term="${TERMINAL:-kitty}"
 edit="${EDITOR:-nvim}"
 
@@ -20,55 +21,13 @@ show_info() {
   notify_info "Quick Settings" "$1" "$iDIR/info.png" "quick-settings"
 }
 
-toggle_rainbow_borders() {
-  local rainbow_script="$scriptsDir/display/RainbowBorders.sh"
-  local disabled_sh_bak="${rainbow_script}.bak"
-  local disabled_bak_sh="$scriptsDir/display/RainbowBorders.bak.sh"
-  local refresh_script="$scriptsDir/services/refresh.sh"
-  local status=""
-
-  if [[ -f "$disabled_sh_bak" && -f "$disabled_bak_sh" ]]; then
-    if [[ "$disabled_sh_bak" -nt "$disabled_bak_sh" ]]; then
-      rm -f "$disabled_bak_sh"
-    else
-      rm -f "$disabled_sh_bak"
-    fi
-  fi
-
-  if [[ -f "$rainbow_script" ]]; then
-    if mv "$rainbow_script" "$disabled_sh_bak"; then
-      status="disabled"
-      command -v hyprctl &>/dev/null && hyprctl reload >/dev/null 2>&1 || true
-    fi
-  elif [[ -f "$disabled_sh_bak" ]]; then
-    mv "$disabled_sh_bak" "$rainbow_script" && status="enabled"
-  elif [[ -f "$disabled_bak_sh" ]]; then
-    mv "$disabled_bak_sh" "$rainbow_script" && status="enabled"
-  else
-    show_info "RainbowBorders script not found in $scriptsDir/display"
-    return
-  fi
-
-  if [[ -x "$refresh_script" ]]; then
-    "$refresh_script" >/dev/null 2>&1 &
-  elif [[ "$status" == "enabled" && -x "$rainbow_script" ]]; then
-    "$rainbow_script" >/dev/null 2>&1 &
-  fi
-
-  [[ -n "$status" ]] && show_info "Rainbow Borders ${status}."
-}
-
 rainbow_borders_menu() {
-  local rainbow_script="$scriptsDir/display/RainbowBorders.sh"
-  local disabled_sh_bak="${rainbow_script}.bak"
-  local disabled_bak_sh="$scriptsDir/display/RainbowBorders.bak.sh"
+  local rainbow_script="$scriptsDir/display/rainbow-border.sh"
+  local mode_file="$RAINBOW_BORDER_MODE_FILE"
   local refresh_script="$scriptsDir/services/refresh.sh"
-  local current="disabled"
+  local current
 
-  if [[ -f "$rainbow_script" ]]; then
-    current=$(grep -E '^EFFECT_TYPE=' "$rainbow_script" 2>/dev/null | sed -E 's/^EFFECT_TYPE="?([^"]*)"?/\1/')
-    [[ -z "$current" ]] && current="unknown"
-  fi
+  current="$(rainbow_border_mode)"
 
   local current_display
   case "$current" in
@@ -85,7 +44,8 @@ rainbow_borders_menu() {
 
   case "$choice" in
     "Disable Rainbow Borders")
-      [[ -f "$rainbow_script" ]] && mv "$rainbow_script" "$disabled_sh_bak"
+      mkdir -p "$(dirname "$mode_file")"
+      printf '%s\n' disabled >"$mode_file"
       current="disabled"
       command -v hyprctl &>/dev/null && hyprctl reload >/dev/null 2>&1 || true
       ;;
@@ -96,28 +56,21 @@ rainbow_borders_menu() {
         "Original Rainbow") mode="rainbow" ;;
         "Gradient Flow") mode="gradient_flow" ;;
       esac
-      if [[ ! -f "$rainbow_script" ]]; then
-        if [[ -f "$disabled_sh_bak" ]]; then
-          mv "$disabled_sh_bak" "$rainbow_script"
-        elif [[ -f "$disabled_bak_sh" ]]; then
-          mv "$disabled_bak_sh" "$rainbow_script"
-        else
-          show_info "RainbowBorders script not found in $scriptsDir/display."
-          return
-        fi
+      if [[ ! -x "$rainbow_script" ]]; then
+        show_info "Rainbow border script not found: $rainbow_script"
+        return
       fi
-      if grep -q '^EFFECT_TYPE=' "$rainbow_script" 2>/dev/null; then
-        sed -i "s/^EFFECT_TYPE=.*/EFFECT_TYPE=\"$mode\"/" "$rainbow_script"
-      else
-        sed -i "1a EFFECT_TYPE=\"$mode\"" "$rainbow_script"
-      fi
+      mkdir -p "$(dirname "$mode_file")"
+      printf '%s\n' "$mode" >"$mode_file"
       current="$mode"
       ;;
     *) return ;;
   esac
 
   [[ -x "$refresh_script" ]] && "$refresh_script" >/dev/null 2>&1 &
-  [[ "$current" != "disabled" && -x "$rainbow_script" ]] && "$rainbow_script" >/dev/null 2>&1 &
+  if [[ "$current" != "disabled" && -x "$rainbow_script" ]]; then
+    "$rainbow_script" >/dev/null 2>&1 &
+  fi
 }
 
 menu() {
@@ -160,7 +113,7 @@ main() {
     "Edit Autostart Apps") file="$lua_conf/autostart.lua" ;;
     "Edit Window Rules") file="$lua_conf/rules.lua" ;;
     "Edit Appearance") file="$lua_conf/options.lua" ;;
-    "Edit Animations") file="$lua_conf/animations.lua" ;;
+    "Edit Animations") file="$lua_user/animations.lua" ;;
     "Edit Input Settings") file="$lua_conf/options.lua" ;;
     "Edit Laptop Settings") file="$lua_conf/context.lua" ;;
     "Choose Kitty Terminal Theme") "$scriptsDir/display/kitty-themes.sh" ;;
@@ -180,8 +133,8 @@ main() {
       require_command qt5ct "Install qt5ct first." || exit 1
       qt5ct
       ;;
-    "Choose Hyprland Animations") "$scriptsDir/display/animations.sh" ;;
-    "Choose Monitor Profiles") "$scriptsDir/display/monitor-profiles.sh" ;;
+    "Choose Hyprland Animations") "$scriptsDir/profile-selector/animation" ;;
+    "Choose Monitor Profiles") "$scriptsDir/profile-selector/monitor" ;;
     "Choose Rofi Themes") "$scriptsDir/rofi/rofi-theme-selector.sh" ;;
     "Search for Keybinds") "$scriptsDir/input/keybinds.sh" ;;
     "Toggle Game Mode") "$scriptsDir/session/game-mode.sh" ;;
@@ -190,6 +143,10 @@ main() {
     "Waybar Style") "$scriptsDir/display/waybar-style.sh" ;;
     "Waybar Layout") "$scriptsDir/display/waybar-layout.sh" ;;
     "Toggle Waybar")
+      if noctalia_shell_manages waybar; then
+        show_info "Waybar is managed by Noctalia shell."
+        return
+      fi
       if pgrep -x waybar >/dev/null; then
         kill_by_name waybar
       else

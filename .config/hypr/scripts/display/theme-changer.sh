@@ -123,8 +123,8 @@ if wallust theme -- "${choice}"; then
   fi
 
   # Refresh bars/menus after files are ready
-  if [[ -x "$HOME/.config/hypr/scripts/services/refresh.sh" ]]; then
-    "$HOME/.config/hypr/scripts/services/refresh.sh" >/dev/null 2>&1 || true
+  if [[ -x "$SCRIPT_DIR/services/refresh.sh" ]]; then
+    "$SCRIPT_DIR/services/refresh.sh" >/dev/null 2>&1 || true
   fi
 
   # Ask kitty to reload its config

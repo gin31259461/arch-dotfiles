@@ -539,7 +539,7 @@ def fetch_place(lat: float, lon: float) -> Optional[str]:
         "format": "jsonv2",
         "accept-language": lang,
     }
-    headers = {"User-Agent": UA + " Weather.py/1.0"}
+    headers = {"User-Agent": UA + " weather.py/1.0"}
     place = reverse_geocode(base, params, headers)
     if place:
         return place

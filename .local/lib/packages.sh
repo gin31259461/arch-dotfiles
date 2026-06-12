@@ -77,9 +77,9 @@ qalculate-gtk nvtop yt-dlp baobab inxi power-profiles-daemon\
 |obsidian remmina vlc loupe\
 |vesktop-bin zen-browser-bin onlyoffice-bin"
   "neovim|Neovim Editor\
-|lazygit\
-|neovim-nightly-bin"
-  "noctalia|Noctalia Shell|Quickshell\
+|lazygit neovim\
+|"
+  "noctalia|Noctalia Shell\
 |\
 |noctalia-shell noctalia-qs quickshell-overview-git"
   "razer|Razer Devices\

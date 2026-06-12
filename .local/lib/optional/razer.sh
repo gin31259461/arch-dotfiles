@@ -13,11 +13,22 @@ set_razer_group() {
 # troubleshooting: https://github.com/openrazer/openrazer/wiki/Troubleshooting
 build_kernal_module() {
   note "Building Razer kernel module"
-  sudo dkms install $(ls /usr/src/ | grep openrazer | sort -V | tail -n 1 | sed 's/\(openrazer-driver\)-\(.*\)/\1\/\2/')
+  local module
+  module=$(find /usr/src -maxdepth 1 -type d -name 'openrazer-driver-*' -printf '%f\n' |
+    sort -V |
+    tail -n 1 |
+    sed 's/\(openrazer-driver\)-\(.*\)/\1\/\2/')
+
+  [[ -n "$module" ]] || {
+    warn "No OpenRazer DKMS source found in /usr/src"
+    return
+  }
+
+  sudo dkms install "$module"
   ok "Razer kernel module built and installed"
 }
 
-setup_razer() {
+setup() {
   set_razer_group
   build_kernal_module
 

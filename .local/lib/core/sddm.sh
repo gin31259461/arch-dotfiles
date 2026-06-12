@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-setup_sddm() {
+setup() {
   note "Setting up SDDM (Simple Desktop Display Manager)"
 
   # Enable SDDM service

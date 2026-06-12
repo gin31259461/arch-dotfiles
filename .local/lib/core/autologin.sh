@@ -13,7 +13,7 @@ remove_autologin() {
   ok "Autologin configuration removed"
 }
 
-setup_autologin() {
+setup() {
   if [[ -f "$GETTY_TTY1_DIR/override.conf" ]]; then
     ok "Autologin already configured for '$USER' on tty1"
     return
@@ -21,8 +21,8 @@ setup_autologin() {
 
   note "Setting up autologin for user '$USER' on tty1"
 
-  if [ ! -d $GETTY_TTY1_DIR ]; then
-    sudo mkdir -p $GETTY_TTY1_DIR
+  if [[ ! -d "$GETTY_TTY1_DIR" ]]; then
+    sudo mkdir -p "$GETTY_TTY1_DIR"
   fi
 
   cat <<EOF | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf >/dev/null

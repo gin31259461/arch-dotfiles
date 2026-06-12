@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-setup_docker() {
+setup() {
   sudo systemctl enable --now docker.service
 
   if ! groups "$USER" | grep -q "\bdocker\b"; then

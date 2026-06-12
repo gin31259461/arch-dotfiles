@@ -11,14 +11,6 @@ set -euo pipefail
 source "$HOME/.local/lib/tui.sh"
 source "$HOME/.local/lib/packages.sh"
 
-for core in $HOME/.local/lib/core/*.sh; do
-  source "$core"
-done
-
-for optional in $HOME/.local/lib/optional/*.sh; do
-  source "$optional"
-done
-
 # ── Package helpers ───────────────────────────────────────────────────────────
 is_installed() { pacman -Qi "$1" &>/dev/null; }
 
@@ -328,56 +320,96 @@ show_summary() {
 
 # ── Extra Config ─────────────────────────────────────────────────────────
 
-# Auto-detect setup functions from core/ and optional/ based on filenames
-# For each *.sh file, extract the package name and call setup_pkgname() if installed
-# Special package name mappings for cases where filename ≠ package name
-declare -A PKG_NAME_MAP=(
-  [razer]="openrazer-daemon" # razer.sh checks for openrazer-daemon package
-)
+setup_file_for_key() {
+  local key="$1" file
+  for file in "$HOME/.local/lib/core/$key.sh" "$HOME/.local/lib/optional/$key.sh"; do
+    [[ -f "$file" ]] && {
+      printf '%s\n' "$file"
+      return
+    }
+  done
+}
+
+group_has_installed_package() {
+  local key="$1" official aur pkg
+  official=$(_group_field "$key" official)
+  aur=$(_group_field "$key" aur)
+
+  for pkg in $official $aur; do
+    is_installed "$pkg" && return 0
+  done
+
+  [[ -z "${official// /}" && -z "${aur// /}" ]]
+}
+
+run_setup_file() {
+  local file="$1"
+
+  (
+    source "$file"
+
+    if ! declare -f setup &>/dev/null; then
+      warn "$(basename "$file") has no setup() function — skipping"
+      return 0
+    fi
+
+    setup
+  )
+}
 
 run_auto_setup() {
   section "Extra configuration"
 
   local ran_any=false
-  declare -a setup_files=()
+  declare -a setup_files=() setup_keys=()
+  declare -A seen_keys=() seen_files=()
 
-  # Collect all setup files from core/ and optional/
-  for file in $HOME/.local/lib/core/*.sh $HOME/.local/lib/optional/*.sh; do
-    [[ -f "$file" ]] && setup_files+=("$file")
-  done
-
-  # For each setup file, extract package name from filename and call setup function
-  for file in "${setup_files[@]}"; do
-    # Extract base name: /path/to/sunshine.sh → sunshine
-    local basename
-    basename=$(basename "$file" .sh)
-
-    # Setup function name based on base name
-    local setup_func="setup_${basename}"
-
-    # Check if the function is defined
-    if ! declare -f "$setup_func" &>/dev/null; then
-      continue
+  for key in "${SELECTED_KEYS[@]}"; do
+    if [[ -n "$(setup_file_for_key "$key")" ]] && group_has_installed_package "$key" && [[ -z "${seen_keys[$key]:-}" ]]; then
+      setup_keys+=("$key")
+      seen_keys[$key]=1
     fi
 
-    # Determine actual package name (use mapping if available)
-    local pkg_to_check="${PKG_NAME_MAP[$basename]:-$basename}"
+    local official aur pkg
+    official=$(_group_field "$key" official)
+    aur=$(_group_field "$key" aur)
 
-    # For autologin, skip if already configured; otherwise prompt
-    if [[ "$basename" == "autologin" ]]; then
-      if [[ -f "$GETTY_TTY1_DIR/override.conf" ]]; then
-        ok "Autologin already configured — skipping"
-        ran_any=true
-      elif gum_confirm "Configure autologin for $USER?"; then
-        spin "Running $setup_func" "$setup_func"
-        ran_any=true
-      fi
-    # For other setups, auto-run only if package is installed
-    elif is_installed "$pkg_to_check"; then
-      spin "Running $setup_func" "$setup_func"
+    for pkg in $official $aur; do
+      is_installed "$pkg" || continue
+      [[ -n "${seen_keys[$pkg]:-}" ]] && continue
+      setup_keys+=("$pkg")
+      seen_keys[$pkg]=1
+    done
+  done
+
+  for key in "${setup_keys[@]}"; do
+    local file
+    file=$(setup_file_for_key "$key")
+    [[ -n "$file" ]] || continue
+    [[ -n "${seen_files[$file]:-}" ]] && continue
+    setup_files+=("$file")
+    seen_files[$file]=1
+  done
+
+  for file in "${setup_files[@]}"; do
+    local name
+    name=$(basename "$file" .sh)
+    spin "Running setup for $name" run_setup_file "$file"
+    ran_any=true
+  done
+
+  local autologin_file
+  autologin_file=$(setup_file_for_key autologin)
+  if [[ -n "$autologin_file" ]]; then
+    local getty_tty1_dir="/etc/systemd/system/getty@tty1.service.d"
+    if [[ -f "$getty_tty1_dir/override.conf" ]]; then
+      ok "Autologin already configured — skipping"
+      ran_any=true
+    elif gum_confirm "Configure autologin for $USER?"; then
+      spin "Running setup for autologin" run_setup_file "$autologin_file"
       ran_any=true
     fi
-  done
+  fi
 
   if ! $ran_any; then
     note "No extra setup to run"

@@ -1,6 +1,7 @@
 {
   "workspace": {
     "library": [
+      "${workspaceFolder}/lua",
       "/usr/share/hypr/stubs"
     ]
   }

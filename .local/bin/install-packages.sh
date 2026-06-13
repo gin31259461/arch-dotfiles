@@ -365,7 +365,8 @@ run_auto_setup() {
   declare -A seen_keys=() seen_files=()
 
   for key in "${SELECTED_KEYS[@]}"; do
-    if [[ -n "$(setup_file_for_key "$key")" ]] && group_has_installed_package "$key" && [[ -z "${seen_keys[$key]:-}" ]]; then
+    local setup_file
+    if setup_file=$(setup_file_for_key "$key") && group_has_installed_package "$key" && [[ -z "${seen_keys[$key]:-}" ]]; then
       setup_keys+=("$key")
       seen_keys[$key]=1
     fi
@@ -384,8 +385,7 @@ run_auto_setup() {
 
   for key in "${setup_keys[@]}"; do
     local file
-    file=$(setup_file_for_key "$key")
-    [[ -n "$file" ]] || continue
+    file=$(setup_file_for_key "$key") || continue
     [[ -n "${seen_files[$file]:-}" ]] && continue
     setup_files+=("$file")
     seen_files[$file]=1
@@ -399,8 +399,7 @@ run_auto_setup() {
   done
 
   local autologin_file
-  autologin_file=$(setup_file_for_key autologin)
-  if [[ -n "$autologin_file" ]]; then
+  if autologin_file=$(setup_file_for_key autologin); then
     local getty_tty1_dir="/etc/systemd/system/getty@tty1.service.d"
     if [[ -f "$getty_tty1_dir/override.conf" ]]; then
       ok "Autologin already configured — skipping"
@@ -416,6 +415,7 @@ run_auto_setup() {
   fi
 
   ok "Extra configuration complete"
+  return 0
 }
 
 extra_config() {

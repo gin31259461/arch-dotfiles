@@ -39,3 +39,34 @@ Rules:
 
 - Filename must match the package key (e.g. `sunshine.sh` → `setup()`).
 - Setup packages via `*.sh -> setup()` after install for that package.
+
+## Commit Convention
+
+Structure: Header, optional Body, optional Footer.
+
+```plain
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+Rules:
+
+- Header is brief, 50 chars or less, imperative mood, no period at end
+- Body 72 chars wrapped, optional
+- Footer for co-authors, references, etc., optional (this project not allow co-authors trailers)
+
+Types:
+
+- feat: new feature
+- fix: bug fix
+- docs: documentation only changes
+- style: code formatting, no logic changes
+- refactor: code refactoring
+- perf: performance improvement
+- test: test changes
+- build: build system changes
+- ci: CI configuration changes
+- chore: other changes

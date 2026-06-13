@@ -1,12 +1,18 @@
 [user]
 	email = qw0207060413@gmail.com
 	name = abner
+
 [credential]
 	helper = /usr/bin/git-credential-manager
 	credentialStore = gpg
+
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+
 [core]
+  # https://github.com/dandavison/delta
+  pager = delta
+
   # commit with LF, checkout with CRLF
   # autocrlf = true
 
@@ -39,3 +45,13 @@
 
 [rebase]
   autoStash = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    ; dark = true      # or light = true, or omit for auto-detection
+
+[merge]
+    conflictStyle = zdiff3

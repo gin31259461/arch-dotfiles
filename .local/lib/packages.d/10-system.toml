@@ -17,10 +17,21 @@ label = "Shell & Prompt"
 official = [
   "zsh",
   "zsh-completions",
-  "fzf",
   "gum",
   "lsd",
   "fastfetch",
+]
+
+[cli-tools]
+label = "CLI Tools"
+official = [
+  "fzf",
+  "fd",
+  "thefuck",
+  "tldr",
+  "eza",
+  "bat",
+  "git-delta",
 ]
 
 [terminal]

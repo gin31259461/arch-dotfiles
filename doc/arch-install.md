@@ -1,86 +1,64 @@
-# Arch Linux Installation (Dual-Boot)
+# Arch Linux Installation (Dual Boot)
 
-Step-by-step guide for installing Arch Linux alongside Windows on a UEFI system.
+Step-by-step guide for installing Arch Linux alongside Windows on a UEFI
+system.
 
-> **Reference:** [2021 Archlinux双系统安装教程（超详细）](https://zhuanlan.zhihu.com/p/138951848)
+Reference: [Arch Linux dual-boot tutorial][reference].
 
-**Prerequisites**
+## Prerequisites
 
-- UEFI boot mode (not legacy BIOS)
-- Dual-boot alongside Windows — reuse the existing Windows EFI partition
+- UEFI boot mode, not legacy BIOS
+- Dual boot alongside Windows with the existing Windows EFI partition
 - One dedicated partition for Arch root (`/`)
 - Swap file instead of a swap partition
 
-<!-- markdownlint-disable -->
-<!-- toc -->
+## Download ISO
 
-- [0. Download ISO](#0-download-iso)
-- [1. Disk Partitioning](#1-disk-partitioning)
-- [2. Create Bootable USB](#2-create-bootable-usb)
-- [3. BIOS Settings](#3-bios-settings)
-- [4. Check Network](#4-check-network)
-- [5. Set Mirrors](#5-set-mirrors)
-- [6. Disk Setup](#6-disk-setup)
-- [7. Install Base System](#7-install-base-system)
-- [8. Generate fstab](#8-generate-fstab)
-- [9. Configure New System](#9-configure-new-system)
-- [10. Exit and Reboot](#10-exit-and-reboot)
-- [11. Activate Network](#11-activate-network)
-- [12. Create User](#12-create-user)
-- [13. Install GPU Drivers](#13-install-gpu-drivers)
-- [14. Add archlinuxcn Repository](#14-add-archlinuxcn-repository)
-- [15. Install Hyprland](#15-install-hyprland)
+Get the latest ISO from [archlinux.org/download][arch-download].
+Use a mirror close to you, such as Tsinghua, BFSU, or NetEase.
 
-<!-- tocstop -->
-<!-- markdownlint-enable -->
+## Disk Partitioning
 
-## 0. Download ISO
-
-Get the latest ISO from [archlinux.org/download](https://archlinux.org/download/).
-Use a mirror close to you (e.g. Tsinghua, BFSU, NetEase).
-
-## 1. Disk Partitioning
-
-Use **Windows Disk Management** to shrink an existing volume and leave unallocated
-free space for Arch.
+Use **Windows Disk Management** to shrink an existing volume and leave
+unallocated free space for Arch.
 
 Recommended layout:
 
-| Mount  | Filesystem | Notes |
-|--------|------------|-------|
-| `/boot` | FAT32 | Reuse existing Windows EFI partition |
-| `/`    | ext4       | New partition from free space (e.g. 250 GB) |
-| swap   | —          | Swap file on `/`, not a separate partition |
+| Mount   | Filesystem | Notes                                           |
+| ------- | ---------- | ----------------------------------------------- |
+| `/boot` | FAT32      | Reuse existing Windows EFI partition            |
+| `/`     | ext4       | New partition from free space, such as 250 GB   |
+| swap    | -          | Swap file on `/`, not a separate partition      |
 
-> If the Windows EFI partition is only 100 MB, consider expanding it with a
-> partition tool (e.g. 傲梅分區助手 in WinPE) before proceeding.
+> If the Windows EFI partition is only 100 MB, consider expanding it first.
+> AOMEI Partition Assistant in WinPE is one option.
 
-## 2. Create Bootable USB
+## Create Bootable USB
 
-Use [Rufus](https://rufus.ie):
+Use [Rufus][rufus]:
 
-- Write mode: **DD** (not ISO)
-- Partition scheme: **GPT** (not MBR)
+- Write mode: **DD**, not ISO
+- Partition scheme: **GPT**, not MBR
 
-## 3. BIOS Settings
+## BIOS Settings
 
-Reboot into BIOS (e.g. **F12** on Dell) with the USB plugged in:
+Reboot into BIOS, such as **F12** on Dell, with the USB plugged in:
 
-1. Disable **Secure Boot**
-2. If the target disk is NVMe, set the disk mode to **AHCI**
-3. Move the USB drive to the **top** of the boot order
+1. Disable **Secure Boot**.
+1. If the target disk is NVMe, set the disk mode to **AHCI**.
+1. Move the USB drive to the **top** of the boot order.
 
 Save, exit, and boot into the Arch ISO.
 
-## 4. Check Network
+## Check Network
 
 ```bash
 ip a
 ```
 
-**Wired:** should be connected automatically.
+For wired networking, the connection should be automatic.
 
-**Wireless:** use `iwctl`:
+For wireless networking, use `iwctl`:
 
 ```bash
 iwctl
@@ -97,63 +75,71 @@ Verify connectivity:
 pacman -Syyy
 ```
 
-## 5. Set Mirrors
+## Set Mirrors
 
 ```bash
 nano /etc/pacman.d/mirrorlist
 ```
 
-Press `Ctrl-W`, search `## China`, cut (`Ctrl-K`) a few nearby mirrors (Tsinghua,
-BFSU, NetEase) and paste (`Ctrl-U`) them at the top of the file. Remove the
-leading `#`. Save with `Ctrl-X → Y → Enter`.
+Press `Ctrl-W`, search `## China`, cut (`Ctrl-K`) a few nearby mirrors, and
+paste (`Ctrl-U`) them at the top of the file. Remove the leading `#`, then save
+with `Ctrl-X`, `Y`, and `Enter`.
 
-## 6. Disk Setup
+## Disk Setup
 
-**Check current layout:**
+Check current layout:
 
 ```bash
 lsblk
 ```
 
-**Create the root partition** from the unallocated free space:
+Create the root partition from the unallocated free space:
 
 ```bash
-cfdisk /dev/nvme0n1   # adjust device name to match your disk
+cfdisk /dev/nvme0n1
 ```
 
-Select **New → Enter size (e.g. 250G) → Write → yes → Quit**.
+Adjust the device name to match your disk. Select **New**, enter a size such as
+`250G`, then select **Write**, type `yes`, and select **Quit**.
 
-**Format the new partition:**
+Format the new partition:
 
 ```bash
-mkfs.ext4 /dev/nvme0n1p5   # adjust partition number as shown by lsblk
+mkfs.ext4 /dev/nvme0n1p5
 ```
 
-**Mount the partitions:**
+Adjust the partition number to match the output from `lsblk`.
+
+Mount the partitions:
 
 ```bash
-mount /dev/nvme0n1p5 /mnt          # root partition
+mount /dev/nvme0n1p5 /mnt
 
 mkdir /mnt/boot
-mount /dev/nvme0n1p2 /mnt/boot     # Windows EFI partition
+mount /dev/nvme0n1p2 /mnt/boot
 ```
 
-## 7. Install Base System
+The first command mounts the Arch root partition. The final command mounts the
+Windows EFI partition.
+
+## Install Base System
 
 ```bash
 pacstrap /mnt base linux linux-firmware nano
 ```
 
-> Alternative kernels: `linux-lts`, `linux-zen`, `linux-hardened`.
+Alternative kernels include `linux-lts`, `linux-zen`, and `linux-hardened`.
 
-## 8. Generate fstab
+## Generate fstab
 
 ```bash
 genfstab -U /mnt >> /mnt/etc/fstab
-cat /mnt/etc/fstab    # verify the output looks correct
+cat /mnt/etc/fstab
 ```
 
-## 9. Configure New System
+Verify that the generated output looks correct.
+
+## Configure New System
 
 Chroot into the new system:
 
@@ -161,7 +147,9 @@ Chroot into the new system:
 arch-chroot /mnt
 ```
 
-**Swap file** (use `dd`, not `fallocate`, to avoid ext4 holes bug):
+### Swap File
+
+Use `dd` instead of `fallocate` to avoid sparse-file issues on ext4:
 
 ```bash
 dd if=/dev/zero of=/swapfile bs=2048 count=1048576 status=progress
@@ -171,43 +159,45 @@ swapon /swapfile
 echo '/swapfile none swap defaults 0 0' >> /etc/fstab
 ```
 
-**Timezone:**
+### Timezone
 
 ```bash
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
 ```
 
-**Locale:**
+### Locale
 
 ```bash
 nano /etc/locale.gen
-# Uncomment: en_US.UTF-8 UTF-8  and  zh_CN.UTF-8 UTF-8
+# Uncomment: en_US.UTF-8 UTF-8 and zh_CN.UTF-8 UTF-8
 locale-gen
 echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 ```
 
-**Hostname:**
+### Hostname
 
 ```bash
 echo 'arch' > /etc/hostname
 ```
 
-**`/etc/hosts`:**
+### Hosts
 
-```
+Edit `/etc/hosts`:
+
+```text
 127.0.0.1   localhost
 ::1         localhost
 127.0.1.1   arch.localdomain   arch
 ```
 
-**Root password:**
+### Root Password
 
 ```bash
 passwd
 ```
 
-**Bootloader (GRUB):**
+### Bootloader
 
 Install required packages:
 
@@ -232,31 +222,35 @@ nano /etc/default/grub
 # GRUB_DISABLE_OS_PROBER=false
 ```
 
-Install and generate GRUB config:
+Install GRUB and generate the config:
 
 ```bash
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-## 10. Exit and Reboot
+## Exit and Reboot
 
 ```bash
 exit
 umount -a
-reboot    # remove the USB drive when the screen goes blank
+reboot
 ```
 
-## 11. Activate Network
+Remove the USB drive when the screen goes blank.
+
+## Activate Network
 
 Log in as `root`, then:
 
 ```bash
 systemctl enable --now NetworkManager
-nmtui    # connect to Wi-Fi if needed
+nmtui
 ```
 
-## 12. Create User
+Use `nmtui` to connect to Wi-Fi if needed.
+
+## Create User
 
 ```bash
 useradd -m -G wheel <username>
@@ -265,10 +259,10 @@ EDITOR=nano visudo
 # Uncomment: %wheel ALL=(ALL:ALL) ALL
 ```
 
-## 13. Install GPU Drivers
+## Install GPU Drivers
 
 ```bash
-# Intel integrated (modesetting via mesa — xf86-video-intel not needed)
+# Intel integrated; modesetting via mesa, xf86-video-intel not needed
 pacman -S mesa
 
 # AMD integrated / discrete
@@ -277,7 +271,7 @@ pacman -S xf86-video-amdgpu
 # NVIDIA discrete
 pacman -S nvidia nvidia-utils
 
-# NVIDIA Optimus (switch between iGPU and dGPU)
+# NVIDIA Optimus; switch between iGPU and dGPU
 # sudo pacman -S optimus-manager
 ```
 
@@ -285,23 +279,24 @@ pacman -S nvidia nvidia-utils
 > [AMD GPU Setup](amd-gpu.md) guide to verify drivers, enable Vulkan, configure
 > VA-API hardware acceleration, and set Hyprland environment variables.
 
-## 14. Add archlinuxcn Repository
+## Add archlinuxcn Repository
 
 ```bash
 nano /etc/pacman.conf
 ```
 
-Append at the end:
+Append this repository:
 
 ```ini
 [archlinuxcn]
 Server = https://mirrors.bfsu.edu.cn/archlinuxcn/$arch
 ```
 
-Also uncomment the `[multilib]` section. Then:
+Also uncomment the `[multilib]` section. Then run:
 
 ```bash
-pacman -Syu && pacman -S archlinuxcn-keyring
+pacman -Syu
+pacman -S archlinuxcn-keyring
 ```
 
 Install Chinese fonts:
@@ -310,11 +305,16 @@ Install Chinese fonts:
 pacman -S noto-fonts-cjk ttf-sarasa-gothic
 ```
 
-## 15. Install Hyprland
+## Install Hyprland
 
 Run the bootstrap script to deploy dotfiles, install Oh My Zsh, and optionally
 install all dependencies in one step:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/gin31259461/arch-dotfiles/main/.local/bin/bootstrap.sh)
+repo_url="https://raw.githubusercontent.com/gin31259461/arch-dotfiles"
+curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh" | bash
 ```
+
+[arch-download]: https://archlinux.org/download/
+[reference]: https://zhuanlan.zhihu.com/p/138951848
+[rufus]: https://rufus.ie

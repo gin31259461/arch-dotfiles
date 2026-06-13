@@ -1,0 +1,81 @@
+[git-shell]
+paths = [
+  "README.md",
+  ".dotfiles-repo",
+  "doc",
+  "assets",
+  ".local/bin/dotfiles.sh",
+  ".local/bin/bootstrap.sh",
+  ".local/bin/install-packages.sh",
+  ".local/bin/cleanup.sh",
+  ".local/lib/core",
+  ".local/lib/optional",
+  ".local/lib/packages.d",
+  ".local/lib/tui.sh",
+  ".local/lib/packages.sh",
+  ".local/lib/read-packages-toml.py",
+  ".local/lib/dotfiles.toml",
+  ".local/lib/read-dotfiles-toml.py",
+  ".local/lib/cleanup.toml",
+  ".local/lib/read-cleanup-toml.py",
+  ".gitconfig",
+  ".gitattributes",
+  ".gitmodules",
+  ".gitignore",
+  ".editorconfig",
+  ".agents",
+  ".claude/skills",
+  "AGENTS.md",
+  "CLAUDE.md",
+]
+
+[zsh]
+paths = [
+  ".zshrc",
+  ".zprofile",
+  ".p10k.zsh",
+]
+
+[gtk]
+paths = [
+  ".local/share/icons/Bibata-Modern-Ice",
+  ".config/gtk-3.0",
+  ".config/gtk-4.0",
+]
+
+[apps]
+paths = [
+  ".config/nvim",
+  ".config/kitty",
+  ".config/electron-flags.conf",
+  ".config/hypr",
+  ".config/Kvantum",
+  ".config/quickshell",
+  ".config/rofi",
+  ".config/btop",
+  ".config/fastfetch",
+  ".config/qt5ct",
+  ".config/qt6ct",
+  ".config/swappy",
+  ".config/swaync",
+  ".config/wallust",
+  ".config/vesktop/settings",
+  ".config/vesktop/themes",
+  ".config/vesktop/settings.json",
+  ".config/cava",
+  ".config/ghostty",
+  ".config/waybar",
+  ".config/noctalia",
+  ".config/sunshine/sunshine.conf",
+]
+
+[systemd-user]
+paths = [
+  ".config/systemd/user/sunshine.service.d",
+]
+
+[onedrive]
+paths = [
+  ".config/onedrive/config",
+  ".config/onedrive/sync_list",
+]

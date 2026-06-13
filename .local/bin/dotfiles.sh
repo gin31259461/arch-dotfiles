@@ -44,79 +44,22 @@ fi
 
 cd "$HOME"
 
-# ── stage files ──────────────────────────────────────────────────
+# ── Stage files ───────────────────────────────────────────────────────────────
 
-# git & shell
-dot add \
-  README.md \
-  .dotfiles-repo \
-  doc \
-  assets \
-  .local/bin/dotfiles.sh \
-  .local/bin/bootstrap.sh \
-  .local/bin/install-packages.sh \
-  .local/bin/cleanup.sh \
-  .local/lib/core \
-  .local/lib/optional \
-  .local/lib/packages.d \
-  .local/lib/tui.sh \
-  .local/lib/packages.sh \
-  .local/lib/read-packages-toml.py \
-  .gitconfig \
-  .gitattributes \
-  .gitmodules \
-  .gitignore \
-  .editorconfig \
-  .agents \
-  .claude/skills \
-  AGENTS.md \
-  CLAUDE.md
+DOTFILES_CONFIG="${DOTFILES_CONFIG:-$HOME/.local/lib/dotfiles.toml}"
+DOTFILES_LOADER="${DOTFILES_LOADER:-$HOME/.local/lib/read-dotfiles-toml.py}"
 
-# zsh
-dot add \
-  .zshrc \
-  .zprofile \
-  .p10k.zsh
+[[ -f "$DOTFILES_CONFIG" ]] || die "Dotfiles config not found: $DOTFILES_CONFIG"
+[[ -f "$DOTFILES_LOADER" ]] || die "Dotfiles TOML loader not found: $DOTFILES_LOADER"
 
-# gtk
-dot add \
-  .local/share/icons/Bibata-Modern-Ice \
-  .config/gtk-3.0 \
-  .config/gtk-4.0
+if ! DOTFILE_RECORDS="$(python3 "$DOTFILES_LOADER" "$DOTFILES_CONFIG")"; then
+  exit 1
+fi
 
-# app configs
-dot add \
-  .config/nvim \
-  .config/kitty \
-  .config/electron-flags.conf \
-  .config/hypr \
-  .config/Kvantum \
-  .config/quickshell \
-  .config/rofi \
-  .config/btop \
-  .config/fastfetch \
-  .config/qt5ct \
-  .config/qt6ct \
-  .config/swappy \
-  .config/swaync \
-  .config/wallust \
-  .config/vesktop/settings \
-  .config/vesktop/themes \
-  .config/vesktop/settings.json \
-  .config/cava \
-  .config/ghostty \
-  .config/waybar \
-  .config/noctalia \
-  .config/sunshine/sunshine.conf
+mapfile -t DOTFILE_PATHS <<<"$DOTFILE_RECORDS"
+[[ ${#DOTFILE_PATHS[@]} -gt 0 ]] || die "No dotfile paths configured"
 
-# systemd user services
-dot add \
-  .config/systemd/user/sunshine.service.d
-
-# OneDrive
-dot add \
-  .config/onedrive/config \
-  .config/onedrive/sync_list
+dot add -- "${DOTFILE_PATHS[@]}"
 
 # ── Commit and push ───────────────────────────────────────────────────────────
 

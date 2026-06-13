@@ -27,7 +27,7 @@ set -euo pipefail
 DEFAULT_REPO_SSH="git@github.com:gin31259461/arch-dotfiles.git"
 DEFAULT_REPO_HTTPS="https://github.com/gin31259461/arch-dotfiles.git"
 DOTFILES_DIR="$HOME/.dotfiles"
-DOTFILES_REPO_FILE="$HOME/.dotfiles-repo"   # remembers current SSH remote URL
+DOTFILES_REPO_FILE="$HOME/.dotfiles-repo" # remembers current SSH remote URL
 OPT_YES=false
 OPT_REPO=""
 # Working repo URLs — overwritten by resolve_repo_urls when --repo is given
@@ -39,8 +39,11 @@ if [[ ! -f "$HOME/.local/lib/tui.sh" ]]; then
   _raw="${DEFAULT_REPO_HTTPS%.git}"
   _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/tui.sh"
   mkdir -p "$HOME/.local/lib"
-  curl -fsSL "$_raw" -o "$HOME/.local/lib/tui.sh" \
-    || { printf 'ERROR: failed to fetch tui.sh from %s\n' "$_raw" >&2; exit 1; }
+  curl -fsSL "$_raw" -o "$HOME/.local/lib/tui.sh" ||
+    {
+      printf 'ERROR: failed to fetch tui.sh from %s\n' "$_raw" >&2
+      exit 1
+    }
   unset _raw
 fi
 # shellcheck source=../.local/lib/tui.sh
@@ -49,16 +52,18 @@ source "$HOME/.local/lib/tui.sh"
 # ── Argument parsing ──────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --yes|-y) OPT_YES=true ;;
-    --repo|-r)
-      [[ -n "${2:-}" ]] || die "--repo requires a value"
-      OPT_REPO="$2"
-      shift ;;
-    --help|-h)
-      printf 'Usage: %s [--yes] [--repo <ssh-url>]\n  -y, --yes           non-interactive (accept all defaults)\n  -r, --repo SSH-URL  your dotfiles SSH remote\n                      accepts: user/repo | git@host:user/repo.git\n                      matches memory → SSH clone your repo\n                      new URL       → HTTPS clone default + set your SSH remote\n' \
-        "$(basename "$0")"
-      exit 0 ;;
-    *) die "Unknown option: $1" ;;
+  --yes | -y) OPT_YES=true ;;
+  --repo | -r)
+    [[ -n "${2:-}" ]] || die "--repo requires a value"
+    OPT_REPO="$2"
+    shift
+    ;;
+  --help | -h)
+    printf 'Usage: %s [--yes] [--repo <ssh-url>]\n  -y, --yes           non-interactive (accept all defaults)\n  -r, --repo SSH-URL  your dotfiles SSH remote\n                      accepts: user/repo | git@host:user/repo.git\n                      matches memory → SSH clone your repo\n                      new URL       → HTTPS clone default + set your SSH remote\n' \
+      "$(basename "$0")"
+    exit 0
+    ;;
+  *) die "Unknown option: $1" ;;
   esac
   shift
 done
@@ -68,11 +73,12 @@ done
 # so that a fork owner's bootstrap.sh clones the right repo on any new machine.
 # --repo can still override further inside main().
 if [[ -f "$DOTFILES_REPO_FILE" ]]; then
-  _mem=$(< "$DOTFILES_REPO_FILE")
+  _mem=$(<"$DOTFILES_REPO_FILE")
   if [[ -n "$_mem" ]]; then
     DEFAULT_REPO_SSH="$_mem"
     if [[ "$_mem" == git@github.com:* ]]; then
-      _slug="${_mem#git@github.com:}"; _slug="${_slug%.git}"
+      _slug="${_mem#git@github.com:}"
+      _slug="${_slug%.git}"
       DEFAULT_REPO_HTTPS="https://github.com/${_slug}.git"
     else
       DEFAULT_REPO_HTTPS=""
@@ -101,7 +107,8 @@ resolve_repo_urls() {
     REPO_SSH="git@github.com:${input%.git}.git"
     REPO_HTTPS="https://github.com/${input%.git}.git"
   elif [[ "$input" == git@github.com:* ]]; then
-    local slug="${input#git@github.com:}"; slug="${slug%.git}"
+    local slug="${input#git@github.com:}"
+    slug="${slug%.git}"
     REPO_SSH="git@github.com:${slug}.git"
     REPO_HTTPS="https://github.com/${slug}.git"
   elif [[ "$input" == git@* ]]; then
@@ -123,7 +130,7 @@ read_stored_ssh() {
 }
 
 save_ssh_url() {
-  printf '%s\n' "$1" > "$DOTFILES_REPO_FILE"
+  printf '%s\n' "$1" >"$DOTFILES_REPO_FILE"
 }
 
 # ── Prompt for custom SSH URL (interactive) ───────────────────────────────────
@@ -170,14 +177,16 @@ main() {
     ok "Bare repo already present at $DOTFILES_DIR — skipping clone"
     # Ensure the memory file exists even when the repo was cloned manually
     if [[ ! -f "$DOTFILES_REPO_FILE" ]]; then
-      local current_remote; current_remote=$(dot remote get-url origin 2>/dev/null || true)
+      local current_remote
+      current_remote=$(dot remote get-url origin 2>/dev/null || true)
       if [[ -n "$current_remote" ]]; then
         save_ssh_url "$current_remote"
         note "Saved existing remote to $DOTFILES_REPO_FILE ($current_remote)"
       fi
     fi
   else
-    local stored_ssh; stored_ssh=$(read_stored_ssh)
+    local stored_ssh
+    stored_ssh=$(read_stored_ssh)
 
     # ── Determine effective SSH URL (flag > interactive > stored > default) ──
     if [[ -n "$OPT_REPO" ]]; then
@@ -185,7 +194,8 @@ main() {
     elif ! $OPT_YES; then
       local label="${stored_ssh:-$DEFAULT_REPO_SSH (default)}"
       if ! gum_confirm "Use dotfiles repo: ${label}?"; then
-        local custom_repo; custom_repo=$(prompt_repo)
+        local custom_repo
+        custom_repo=$(prompt_repo)
         [[ -n "$custom_repo" ]] || die "No repository provided"
         resolve_repo_urls "$custom_repo"
       elif [[ -n "$stored_ssh" ]]; then
@@ -203,9 +213,9 @@ main() {
     # future pushes.  Otherwise we clone directly from REPO_SSH (or HTTPS
     # fallback when there are no SSH keys yet).
     local new_ssh_remote=false
-    if [[ -n "$REPO_SSH" ]] \
-       && [[ "$REPO_SSH" != "${stored_ssh:-}" ]] \
-       && [[ "$REPO_SSH" != "$DEFAULT_REPO_SSH" ]]; then
+    if [[ -n "$REPO_SSH" ]] &&
+      [[ "$REPO_SSH" != "${stored_ssh:-}" ]] &&
+      [[ "$REPO_SSH" != "$DEFAULT_REPO_SSH" ]]; then
       new_ssh_remote=true
     fi
 
@@ -214,8 +224,8 @@ main() {
       note "New SSH remote: $REPO_SSH"
       note "Base clone from default: $DEFAULT_REPO_HTTPS"
       clone_url="$DEFAULT_REPO_HTTPS"
-    elif [[ -n "$REPO_SSH" && "$REPO_SSH" == git@github.com:* ]] \
-         && ! ssh -T git@github.com -o BatchMode=yes -o ConnectTimeout=5 &>/dev/null 2>&1; then
+    elif [[ -n "$REPO_SSH" && "$REPO_SSH" == git@github.com:* ]] &&
+      ! ssh -T git@github.com -o BatchMode=yes -o ConnectTimeout=5 &>/dev/null 2>&1; then
       warn "No SSH access to GitHub — using HTTPS"
       clone_url="${REPO_HTTPS:-$REPO_SSH}"
     else
@@ -223,10 +233,14 @@ main() {
     fi
     [[ -n "$clone_url" ]] || die "No valid repository URL resolved"
 
-    local tmp; tmp=$(mktemp -d)
+    local tmp
+    tmp=$(mktemp -d)
     spin "Cloning $clone_url" \
-      git clone --separate-git-dir="$DOTFILES_DIR" "$clone_url" "$tmp/dotfiles" \
-      || { rm -rf "$tmp"; die "Clone failed — check URL and network"; }
+      git clone --separate-git-dir="$DOTFILES_DIR" "$clone_url" "$tmp/dotfiles" ||
+      {
+        rm -rf "$tmp"
+        die "Clone failed — check URL and network"
+      }
 
     section "Deploying to \$HOME"
     spin "Copying files…" rsync --recursive --exclude '.git' "$tmp/dotfiles/" "$HOME/"
@@ -265,7 +279,7 @@ main() {
   if [[ -f "$HOME/.zshrc" ]] && grep -q 'alias dot=' "$HOME/.zshrc"; then
     ok "dot alias already in .zshrc"
   else
-    printf '\n# dotfiles bare repo\n%s\n' "$alias_line" >> "$HOME/.zshrc"
+    printf '\n# dotfiles bare repo\n%s\n' "$alias_line" >>"$HOME/.zshrc"
     ok "dot alias added to .zshrc"
   fi
 

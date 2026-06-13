@@ -11,16 +11,22 @@ set -euo pipefail
 # shellcheck source=../.local/lib/tui.sh
 source "$HOME/.local/lib/tui.sh"
 
-strip_ansi() { sed 's/\x1b\[[0-9;]*m//g' <<< "$1"; }
+strip_ansi() { sed 's/\x1b\[[0-9;]*m//g' <<<"$1"; }
+
+CLEANUP_CONFIG="${CLEANUP_CONFIG:-$HOME/.local/lib/cleanup.toml}"
+CLEANUP_LOADER="${CLEANUP_LOADER:-$HOME/.local/lib/read-cleanup-toml.py}"
 
 # ── Options ───────────────────────────────────────────────────────────────────
 OPT_YES=false
 for arg in "$@"; do
   case "$arg" in
-    --yes)    OPT_YES=true ;;
-    --help|-h) printf 'Usage: %s [--yes]\n  --yes  skip confirmation prompts\n' \
-                 "$(basename "$0")"; exit 0 ;;
-    *)        die "Unknown option: $arg" ;;
+  --yes) OPT_YES=true ;;
+  --help | -h)
+    printf 'Usage: %s [--yes]\n  --yes  skip confirmation prompts\n' \
+      "$(basename "$0")"
+    exit 0
+    ;;
+  *) die "Unknown option: $arg" ;;
   esac
 done
 
@@ -37,11 +43,14 @@ path_size() {
 # paccache_reclaimable → "1.2G" | "0B" | "n/a"
 # Uses paccache --dryrun to report what -r would actually free.
 paccache_reclaimable() {
-  command -v paccache &>/dev/null || { printf 'n/a'; return; }
+  command -v paccache &>/dev/null || {
+    printf 'n/a'
+    return
+  }
   local output freed
   output=$(paccache -d --nocolor 2>/dev/null) || true
-  freed=$(printf '%s' "$output" | grep -oE '[0-9]+(\.[0-9]+)? [KMGT]iB' \
-    | tail -1 | tr -d ' ') || true
+  freed=$(printf '%s' "$output" | grep -oE '[0-9]+(\.[0-9]+)? [KMGT]iB' |
+    tail -1 | tr -d ' ') || true
   printf '%s' "${freed:-0B}"
 }
 
@@ -49,23 +58,31 @@ paccache_reclaimable() {
 # Sums the sizes of journal files whose mtime is older than 2 weeks.
 journal_reclaimable() {
   local cutoff total_bytes
-  cutoff=$(date -d '2 weeks ago' +%s 2>/dev/null) || { printf 'n/a'; return; }
+  cutoff=$(date -d '2 weeks ago' +%s 2>/dev/null) || {
+    printf 'n/a'
+    return
+  }
   total_bytes=$(
     find /var/log/journal -type f \( -name '*.journal' -o -name '*.journal~' \) \
-      2>/dev/null \
-    | while IFS= read -r f; do
-        local ft; ft=$(stat -c '%Y' "$f" 2>/dev/null) || continue
-        (( ft < cutoff )) && stat -c '%s' "$f" 2>/dev/null || true
-      done \
-    | awk '{s+=$1} END {print (s+0)}'
+      2>/dev/null |
+      while IFS= read -r f; do
+        local ft
+        ft=$(stat -c '%Y' "$f" 2>/dev/null) || continue
+        ((ft < cutoff)) && stat -c '%s' "$f" 2>/dev/null || true
+      done |
+      awk '{s+=$1} END {print (s+0)}'
   ) || true
   local b="${total_bytes:-0}"
-  if   (( b == 0 ));               then printf '0B'
-  elif (( b < 1024*1024 ));        then printf '%dK' $(( b / 1024 ))
-  elif (( b < 1024*1024*1024 ));   then printf '%.1fM' \
-    "$(awk "BEGIN{printf \"%.1f\", $b/1048576}")"
-  else                                  printf '%.1fG' \
-    "$(awk "BEGIN{printf \"%.1f\", $b/1073741824}")"
+  if ((b == 0)); then
+    printf '0B'
+  elif ((b < 1024 * 1024)); then
+    printf '%dK' $((b / 1024))
+  elif ((b < 1024 * 1024 * 1024)); then
+    printf '%.1fM' \
+      "$(awk "BEGIN{printf \"%.1f\", $b/1048576}")"
+  else
+    printf '%.1fG' \
+      "$(awk "BEGIN{printf \"%.1f\", $b/1073741824}")"
   fi
 }
 
@@ -78,10 +95,10 @@ color_badge() {
   local text="$1" hint="${2:-yel}"
   local color
   case "$hint" in
-    red) color="$RED" ;; yel) color="$YLW" ;;
-    grn) color="$GRN" ;; dim) color="$DIM" ;;
+  red) color="$RED" ;; yel) color="$YLW" ;;
+  grn) color="$GRN" ;; dim) color="$DIM" ;;
   esac
-  local pad=$(( 8 > ${#text} ? 8 - ${#text} : 0 ))
+  local pad=$((8 > ${#text} ? 8 - ${#text} : 0))
   printf '%s%s%*s%s' "$color" "$text" "$pad" '' "$RST"
 }
 
@@ -90,57 +107,78 @@ task_badge() {
   local key="$1"
   local text hint
   case "$key" in
-    pacman-cache)
-      text=$(paccache_reclaimable)
-      if   [[ "$text" == "0B" || "$text" == "n/a" ]]; then hint=grn
-      elif [[ "$text" == *G ]];                        then hint=red
-      else                                                  hint=yel; fi ;;
-    yay-cache)
-      text=$(path_size ~/.cache/yay/)
-      if   [[ "$text" == "n/a" ]]; then hint=grn
-      elif [[ "$text" == *G ]];    then hint=red
-      else                              hint=yel; fi ;;
-    orphans)
-      local n; n=$(orphan_count)
-      text="${n} pkgs"
-      if   [[ "$n" -eq 0 ]];  then hint=grn
-      elif [[ "$n" -gt 20 ]]; then hint=red
-      else                         hint=yel; fi ;;
-    journal)
-      text=$(journal_reclaimable)
-      if   [[ "$text" == "0B" || "$text" == "n/a" ]]; then hint=grn
-      elif [[ "$text" == *G ]];                        then hint=red
-      else                                                  hint=yel; fi ;;
-    npm-cache)
-      text=$(path_size ~/.npm/)
-      [[ "$text" == "n/a" ]] && hint=grn || hint=yel ;;
-    thumbnails)
-      text=$(path_size ~/.cache/thumbnails/)
-      [[ "$text" == "n/a" ]] && hint=grn || hint=yel ;;
+  pacman-cache)
+    text=$(paccache_reclaimable)
+    if [[ "$text" == "0B" || "$text" == "n/a" ]]; then
+      hint=grn
+    elif [[ "$text" == *G ]]; then
+      hint=red
+    else hint=yel; fi
+    ;;
+  yay-cache)
+    text=$(path_size ~/.cache/yay/)
+    if [[ "$text" == "n/a" ]]; then
+      hint=grn
+    elif [[ "$text" == *G ]]; then
+      hint=red
+    else hint=yel; fi
+    ;;
+  orphans)
+    local n
+    n=$(orphan_count)
+    text="${n} pkgs"
+    if [[ "$n" -eq 0 ]]; then
+      hint=grn
+    elif [[ "$n" -gt 20 ]]; then
+      hint=red
+    else hint=yel; fi
+    ;;
+  journal)
+    text=$(journal_reclaimable)
+    if [[ "$text" == "0B" || "$text" == "n/a" ]]; then
+      hint=grn
+    elif [[ "$text" == *G ]]; then
+      hint=red
+    else hint=yel; fi
+    ;;
+  npm-cache)
+    text=$(path_size ~/.npm/)
+    [[ "$text" == "n/a" ]] && hint=grn || hint=yel
+    ;;
+  thumbnails)
+    text=$(path_size ~/.cache/thumbnails/)
+    [[ "$text" == "n/a" ]] && hint=grn || hint=yel
+    ;;
   esac
   color_badge "$text" "$hint"
 }
 
 # ── Task definitions ──────────────────────────────────────────────────────────
-# Format: "key|Label|Preview detail"
-declare -a CLEANUP_TASKS=(
-  "pacman-cache|Pacman package cache|paccache -r  —  keeps last 3 versions per package"
-  "yay-cache|AUR build cache|removes ~/.cache/yay  —  build dirs and tarballs"
-  "orphans|Orphaned packages|pacman -Rns  —  packages no longer required by any dep"
-  "journal|Systemd journal|--vacuum-time=2weeks  —  discards logs older than 2 weeks"
-  "npm-cache|npm cache|npm cache clean --force  —  ~/.npm"
-  "thumbnails|Thumbnail cache|rm -rf ~/.cache/thumbnails  —  safe, rebuilds on demand"
-)
+# TOML record format: "key|Label|Preview detail|Required command|Needs sudo"
+declare -a CLEANUP_TASKS=()
+declare -A CLEANUP_TASK_SUDO=()
 
-# Drop npm-cache entry when npm is not installed
-if ! command -v npm &>/dev/null; then
-  declare -a _filtered=()
-  for _t in "${CLEANUP_TASKS[@]}"; do
-    [[ "$_t" == npm-cache* ]] || _filtered+=("$_t")
-  done
-  CLEANUP_TASKS=("${_filtered[@]}")
-  unset _filtered _t
-fi
+load_cleanup_tasks() {
+  [[ -f "$CLEANUP_CONFIG" ]] || die "Cleanup config not found: $CLEANUP_CONFIG"
+  [[ -f "$CLEANUP_LOADER" ]] || die "Cleanup TOML loader not found: $CLEANUP_LOADER"
+
+  local records
+  if ! records="$(python3 "$CLEANUP_LOADER" "$CLEANUP_CONFIG")"; then
+    exit 1
+  fi
+
+  local key label detail requires needs_sudo
+  while IFS='|' read -r key label detail requires needs_sudo; do
+    [[ -n "$key" ]] || continue
+    if [[ -n "$requires" ]] && ! command -v "$requires" &>/dev/null; then
+      continue
+    fi
+    CLEANUP_TASKS+=("$key|$label|$detail")
+    CLEANUP_TASK_SUDO["$key"]="$needs_sudo"
+  done <<<"$records"
+
+  [[ ${#CLEANUP_TASKS[@]} -gt 0 ]] || die "No cleanup tasks configured"
+}
 
 # ── fzf / numbered selection ──────────────────────────────────────────────────
 declare -a SELECTED_KEYS=()
@@ -156,8 +194,9 @@ select_tasks() {
 
 build_fzf_lines() {
   for t in "${CLEANUP_TASKS[@]}"; do
-    IFS='|' read -r key label detail <<< "$t"
-    local badge; badge=$(task_badge "$key")
+    IFS='|' read -r key label detail <<<"$t"
+    local badge
+    badge=$(task_badge "$key")
     printf "%-14s  [%s]  ${BOLD}%-28s${RST}  ${DIM}%s${RST}\n" \
       "$key" "$badge" "$label" "$detail"
   done
@@ -168,8 +207,9 @@ _select_fzf() {
   local lines raw_selected
   lines=$(build_fzf_lines)
 
-  raw_selected=$(printf '%s\n' "$lines" \
-    | fzf \
+  raw_selected=$(
+    printf '%s\n' "$lines" |
+      fzf \
         --multi \
         --ansi \
         --no-sort \
@@ -179,14 +219,15 @@ _select_fzf() {
         --prompt='Cleanup ❯ ' \
         --header=$'TAB = toggle  ·  ENTER = confirm  ·  CTRL-A = select all\n' \
         --bind='ctrl-a:toggle-all' \
-        --color="$FZF_COLORS" \
+        --color="$FZF_COLORS"
   ) || true
 
   while IFS= read -r line; do
     [[ -z "$line" ]] && continue
-    local key; key=$(strip_ansi "$line" | awk '{print $1}')
+    local key
+    key=$(strip_ansi "$line" | awk '{print $1}')
     [[ -n "$key" ]] && SELECTED_KEYS+=("$key")
-  done <<< "$raw_selected"
+  done <<<"$raw_selected"
 }
 
 _select_numbered() {
@@ -195,8 +236,9 @@ _select_numbered() {
   local -a menu_keys=()
 
   for t in "${CLEANUP_TASKS[@]}"; do
-    IFS='|' read -r key label _ <<< "$t"
-    local badge; badge=$(task_badge "$key")
+    IFS='|' read -r key label _ <<<"$t"
+    local badge
+    badge=$(task_badge "$key")
     printf "${DIM}%2d)${RST}  %-14s  [%s]  %s\n" "$i" "$key" "$badge" "$label"
     menu_keys+=("$key")
     i=$((i + 1))
@@ -205,22 +247,25 @@ _select_numbered() {
   printf "\n${BOLD}Select:${RST} "
   read -r input
 
-  [[ "${input,,}" == "all" ]] && { SELECTED_KEYS=("${menu_keys[@]}"); return; }
+  [[ "${input,,}" == "all" ]] && {
+    SELECTED_KEYS=("${menu_keys[@]}")
+    return
+  }
 
   local total=${#menu_keys[@]}
   for token in $input; do
     if [[ "$token" =~ ^([0-9]+)-([0-9]+)$ ]]; then
       local lo="${BASH_REMATCH[1]}" hi="${BASH_REMATCH[2]}"
-      for (( n=lo; n<=hi; n++ )); do
-        if (( n >= 1 && n <= total )); then
-          SELECTED_KEYS+=("${menu_keys[$((n-1))]}")
+      for ((n = lo; n <= hi; n++)); do
+        if ((n >= 1 && n <= total)); then
+          SELECTED_KEYS+=("${menu_keys[$((n - 1))]}")
         else
           warn "Number $n out of range (1–$total)"
         fi
       done
     elif [[ "$token" =~ ^[0-9]+$ ]]; then
-      if (( token >= 1 && token <= total )); then
-        SELECTED_KEYS+=("${menu_keys[$((token-1))]}")
+      if ((token >= 1 && token <= total)); then
+        SELECTED_KEYS+=("${menu_keys[$((token - 1))]}")
       else
         warn "Number $token out of range (1–$total)"
       fi
@@ -230,13 +275,20 @@ _select_numbered() {
 
 # ── Show plan ─────────────────────────────────────────────────────────────────
 show_plan() {
-  [[ ${#SELECTED_KEYS[@]} -eq 0 ]] && { warn "Nothing selected."; return 1; }
+  [[ ${#SELECTED_KEYS[@]} -eq 0 ]] && {
+    warn "Nothing selected."
+    return 1
+  }
   section "Cleanup plan"
   for key in "${SELECTED_KEYS[@]}"; do
     local label detail
     for t in "${CLEANUP_TASKS[@]}"; do
-      IFS='|' read -r k l d <<< "$t"
-      [[ "$k" == "$key" ]] && { label="$l"; detail="$d"; break; }
+      IFS='|' read -r k l d <<<"$t"
+      [[ "$k" == "$key" ]] && {
+        label="$l"
+        detail="$d"
+        break
+      }
     done
     printf "${BLU}·${RST}  ${BOLD}%-28s${RST}  ${DIM}%s${RST}\n" "$label" "$detail"
   done
@@ -244,14 +296,17 @@ show_plan() {
 
 # ── Run tasks ─────────────────────────────────────────────────────────────────
 run_pacman_cache() {
-  command -v paccache &>/dev/null \
-    || die "paccache not found — install pacman-contrib"
+  command -v paccache &>/dev/null ||
+    die "paccache not found — install pacman-contrib"
   spin "Cleaning pacman cache…" sudo paccache -r
   ok "Pacman cache cleaned"
 }
 
 run_yay_cache() {
-  command -v yay &>/dev/null || { warn "yay not found — skipping"; return; }
+  command -v yay &>/dev/null || {
+    warn "yay not found — skipping"
+    return
+  }
   spin "Clearing AUR build cache…" rm -rf "$HOME/.cache/yay/"
   ok "AUR build cache cleared"
 }
@@ -265,8 +320,11 @@ run_orphans() {
   fi
   note "Packages to remove (${#pkgs[@]}): ${pkgs[*]}"
   if [[ "$OPT_YES" != true ]]; then
-    gum_confirm "Remove ${#pkgs[@]} orphan(s)? (${pkgs[*]})" \
-      || { warn "Skipped orphans"; return; }
+    gum_confirm "Remove ${#pkgs[@]} orphan(s)? (${pkgs[*]})" ||
+      {
+        warn "Skipped orphans"
+        return
+      }
   fi
   spin "Removing ${#pkgs[@]} orphan(s)…" sudo pacman -Rns --noconfirm "${pkgs[@]}"
   ok "Orphaned packages removed"
@@ -303,18 +361,24 @@ run_task() {
 # ── Main ──────────────────────────────────────────────────────────────────────
 main() {
   printf "\n${BOLD}${BLU}Arch Linux System Cleanup${RST}\n"
+  load_cleanup_tasks
   select_tasks
   show_plan || exit 0
 
   if [[ "$OPT_YES" != true ]]; then
-    gum_confirm "Proceed with cleanup?" || { warn "Aborted."; exit 0; }
+    gum_confirm "Proceed with cleanup?" || {
+      warn "Aborted."
+      exit 0
+    }
   fi
 
   # Pre-warm sudo credentials for tasks that need root
-  if printf '%s\n' "${SELECTED_KEYS[@]}" \
-      | grep -qE '^(pacman-cache|orphans|journal)$'; then
-    sudo -v || die "sudo authentication failed"
-  fi
+  for key in "${SELECTED_KEYS[@]}"; do
+    if [[ "${CLEANUP_TASK_SUDO[$key]:-false}" == true ]]; then
+      sudo -v || die "sudo authentication failed"
+      break
+    fi
+  done
 
   for key in "${SELECTED_KEYS[@]}"; do
     run_task "$key"

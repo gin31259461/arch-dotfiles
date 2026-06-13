@@ -1,11 +1,372 @@
+# EditorConfig: https://editorconfig.org
+# Place this file at the repository root.
 root = true
+
+# ---------------------------------------------------------------------------
+# Global defaults
+# ---------------------------------------------------------------------------
 
 [*]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
-
-[*.sh]
 indent_style = space
 indent_size = 2
+tab_width = 2
+
+# ---------------------------------------------------------------------------
+# Build systems / Makefiles
+# Make recipes require real tabs.
+# ---------------------------------------------------------------------------
+
+[{Makefile,makefile,GNUmakefile,*.mk,*.mak}]
+indent_style = tab
+indent_size = tab
+tab_width = 4
+
+# ---------------------------------------------------------------------------
+# Shell / scripting
+# ---------------------------------------------------------------------------
+
+[*.{sh,bash,zsh,ksh,fish}]
+indent_style = space
+indent_size = 2
+
+[{.bashrc,.bash_profile,.profile,.zshrc,.zprofile,.zshenv,.kshrc}]
+indent_style = space
+indent_size = 2
+
+[*.{ps1,psm1,psd1}]
+indent_style = space
+indent_size = 4
+
+[*.{bat,cmd}]
+indent_style = space
+indent_size = 2
+end_of_line = crlf
+
+# ---------------------------------------------------------------------------
+# Web / frontend
+# ---------------------------------------------------------------------------
+
+[*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}]
+indent_style = space
+indent_size = 2
+
+[*.{html,htm,xhtml,xml,svg}]
+indent_style = space
+indent_size = 2
+
+[*.{css,scss,sass,less,styl}]
+indent_style = space
+indent_size = 2
+
+[*.{vue,svelte,astro}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Data / config
+# ---------------------------------------------------------------------------
+
+[*.{json,jsonc,json5,webmanifest}]
+indent_style = space
+indent_size = 2
+
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 2
+
+[*.{toml,ini,cfg,conf,properties,env,envrc}]
+indent_style = space
+indent_size = 2
+
+[{*.lock,package-lock.json,npm-shrinkwrap.json,pnpm-lock.yaml,yarn.lock}]
+indent_style = space
+indent_size = 2
+
+[{.prettierrc,.prettierrc.json,.eslintrc,.eslintrc.json,.stylelintrc,.stylelintrc.json}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Documentation / prose
+# Markdown may intentionally use trailing spaces for hard line breaks.
+# ---------------------------------------------------------------------------
+
+[*.{md,mdx,markdown}]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+[*.{rst,txt,adoc,asciidoc}]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Diff / patch files
+# Trailing whitespace can be meaningful content here.
+# ---------------------------------------------------------------------------
+
+[*.{diff,patch}]
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# ---------------------------------------------------------------------------
+# C-family / systems languages
+# ---------------------------------------------------------------------------
+
+[*.{c,h,cc,cpp,cxx,hpp,hxx,hh,ino}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{cs,csx}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{java,kt,kts,scala,sc}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{go}]
+indent_style = tab
+indent_size = tab
+tab_width = 8
+
+[*.{rs}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{zig}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{swift}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# ---------------------------------------------------------------------------
+# Python / Ruby / PHP / Perl / Lua
+# ---------------------------------------------------------------------------
+
+[*.{py,pyi,pyw}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{rb,rake,gemspec}]
+indent_style = space
+indent_size = 2
+
+[{Rakefile,Gemfile,Guardfile,Capfile}]
+indent_style = space
+indent_size = 2
+
+[*.{php,phtml}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{pl,pm,t}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{lua}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# JVM / Android / Gradle
+# ---------------------------------------------------------------------------
+
+[*.{gradle}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{groovy,gvy,gy,gsh}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# ---------------------------------------------------------------------------
+# Databases / query languages
+# ---------------------------------------------------------------------------
+
+[*.{sql,pgsql,mysql,sqlite}]
+indent_style = space
+indent_size = 2
+
+[*.{graphql,gql}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Scientific / data languages
+# ---------------------------------------------------------------------------
+
+[*.{r,R}]
+indent_style = space
+indent_size = 2
+
+[*.{jl}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{m,matlab}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# ---------------------------------------------------------------------------
+# Functional / niche languages
+# ---------------------------------------------------------------------------
+
+[*.{hs,lhs}]
+indent_style = space
+indent_size = 2
+
+[*.{erl,hrl}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{ex,exs}]
+indent_style = space
+indent_size = 2
+
+[*.{clj,cljs,cljc,edn}]
+indent_style = space
+indent_size = 2
+
+[*.{fs,fsx,fsi}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{ml,mli,re,rei}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Infrastructure / DevOps
+# ---------------------------------------------------------------------------
+
+[{Dockerfile,Containerfile}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[{*.dockerfile,*.containerfile,Dockerfile.*,Containerfile.*}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{tf,tfvars,hcl}]
+indent_style = space
+indent_size = 2
+
+[*.{nomad}]
+indent_style = space
+indent_size = 2
+
+[*.{proto}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Version control / CI config
+# ---------------------------------------------------------------------------
+
+[{.gitignore,.gitattributes,.gitmodules,.dockerignore,.npmignore,.eslintignore,.prettierignore}]
+indent_style = space
+indent_size = 2
+
+[*.{editorconfig}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# Project files
+# ---------------------------------------------------------------------------
+
+[*.{sln,csproj,vbproj,fsproj,vcxproj,props,targets}]
+indent_style = space
+indent_size = 2
+
+[*.{xcodeproj,xcworkspace,pbxproj}]
+indent_style = space
+indent_size = 2
+
+# ---------------------------------------------------------------------------
+# CSV / tabular text
+# Avoid trimming because spaces may be data.
+# ---------------------------------------------------------------------------
+
+[*.{csv,tsv,psv}]
+trim_trailing_whitespace = false
+insert_final_newline = true
+
+# ---------------------------------------------------------------------------
+# Generated / minified files
+# Avoid accidental whitespace rewrites.
+# ---------------------------------------------------------------------------
+
+[*.min.{js,css}]
+indent_style = unset
+indent_size = unset
+tab_width = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
+
+# ---------------------------------------------------------------------------
+# Binary / packaged assets
+# EditorConfig cannot truly ignore files, but unsetting avoids applying defaults
+# in tools that accidentally open them.
+# ---------------------------------------------------------------------------
+
+[*.{png,jpg,jpeg,gif,webp,avif,ico,icns,bmp,tiff}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+[*.{pdf,zip,tar,gz,bz2,xz,7z,rar,jar,war,ear}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+[*.{woff,woff2,ttf,otf,eot}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+[*.{mp3,mp4,m4a,m4v,mov,avi,mkv,webm,wav,flac,ogg}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset

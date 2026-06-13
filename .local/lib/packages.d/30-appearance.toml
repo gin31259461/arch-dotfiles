@@ -1,0 +1,47 @@
+[theming]
+label = "Qt Theming"
+official = [
+  "kvantum",
+  "qt5ct",
+  "qt6ct",
+  "qt6-5compat",
+  "nwg-look",
+  "nwg-displays",
+  "papirus-icon-theme",
+  "gtk-engine-murrine",
+]
+
+[fonts]
+label = "Fonts"
+official = [
+  "noto-fonts",
+  "noto-fonts-emoji",
+  "otf-font-awesome",
+  "ttf-jetbrains-mono-nerd",
+  "ttf-firacode-nerd",
+  "ttf-fantasque-nerd",
+  "adobe-source-code-pro-fonts",
+  "ttf-droid",
+  "ttf-fira-code",
+  "ttf-jetbrains-mono",
+]
+aur = [
+  "ttf-victor-mono",
+  "noto-fonts-tc-vf",
+]
+
+[input]
+label = "Input Method (fcitx5)"
+official = [
+  "fcitx5",
+  "fcitx5-chewing",
+  "fcitx5-gtk",
+  "fcitx5-qt",
+  "fcitx5-configtool",
+]
+
+[gtk]
+label = "GTK Theme & Cursor"
+aur = [
+  "adw-gtk-theme",
+]

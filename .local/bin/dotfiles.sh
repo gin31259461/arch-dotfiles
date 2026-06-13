@@ -58,8 +58,10 @@ dot add \
   .local/bin/cleanup.sh \
   .local/lib/core \
   .local/lib/optional \
+  .local/lib/packages.d \
   .local/lib/tui.sh \
   .local/lib/packages.sh \
+  .local/lib/read-packages-toml.py \
   .gitconfig \
   .gitattributes \
   .gitmodules \

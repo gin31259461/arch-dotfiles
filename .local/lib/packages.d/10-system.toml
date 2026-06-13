@@ -1,0 +1,43 @@
+[core]
+label = "Core Hyprland"
+official = [
+  "hyprland",
+  "hyprpolkitagent",
+  "hyprlock",
+  "hypridle",
+  "hyprsunset",
+  "xdg-desktop-portal-hyprland",
+  "xdg-desktop-portal-gtk",
+  "uwsm",
+  "libnewt",
+]
+
+[shell]
+label = "Shell & Prompt"
+official = [
+  "zsh",
+  "zsh-completions",
+  "fzf",
+  "gum",
+  "lsd",
+  "fastfetch",
+]
+
+[terminal]
+label = "Terminals"
+official = [
+  "kitty",
+  "ghostty",
+]
+
+[dm]
+label = "Display Manager"
+official = [
+  "sddm",
+]
+
+[session]
+label = "Session & Logout"
+aur = [
+  "wlogout",
+]

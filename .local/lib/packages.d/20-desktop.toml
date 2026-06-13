@@ -1,0 +1,63 @@
+[files]
+label = "File Manager"
+official = [
+  "thunar",
+  "thunar-archive-plugin",
+  "thunar-volman",
+  "tumbler",
+  "gvfs",
+  "gvfs-mtp",
+  "ffmpegthumbnailer",
+  "xarchiver",
+]
+
+[bar]
+label = "Bar & Notifications"
+official = [
+  "waybar",
+]
+
+[audio]
+label = "Audio"
+official = [
+  "pipewire",
+  "pipewire-alsa",
+  "pipewire-audio",
+  "pipewire-pulse",
+  "wireplumber",
+  "pamixer",
+  "pavucontrol",
+  "playerctl",
+  "mpv",
+  "mpv-mpris",
+]
+
+[network]
+label = "Network & Bluetooth"
+official = [
+  "networkmanager",
+  "network-manager-applet",
+  "bluez",
+  "bluez-utils",
+  "blueman",
+  "networkmanager-openconnect",
+  "networkmanager-openvpn",
+]
+
+[capture]
+label = "Screenshot & Clipboard"
+official = [
+  "grim",
+  "slurp",
+  "swappy",
+  "cliphist",
+  "wl-clipboard",
+  "libnotify",
+]
+
+[wallpaper]
+label = "Wallpaper & Colors"
+aur = [
+  "swww",
+  "wallust",
+]

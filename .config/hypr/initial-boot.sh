@@ -10,7 +10,7 @@
 scriptsDir=$HOME/.config/hypr/scripts
 kvantum_theme="catppuccin-mocha-blue"
 color_scheme="prefer-dark"
-gtk_theme="Flat-Remix-GTK-Blue-Dark"
+gtk_theme="adw-gtk3"
 icon_theme="Papirus"
 cursor_theme="Bibata-Modern-Ice"
 

@@ -35,12 +35,6 @@ local tagged_windows = {
   { "browser", { class = "^(Brave-browser(-beta|-dev|-unstable)?)$" } },
   { "browser", { class = "^([Tt]horium-browser|[Cc]achy-browser)$" } },
   { "browser", { class = "^(zen-alpha|zen)$" } },
-  {
-    "notif",
-    {
-      class = "^(swaync-control-center|swaync-notification-window|swaync-client|class)$",
-    },
-  },
   { "quick-cheat", { title = "^(Quick Cheat Sheet)$" } },
   { "quick-settings", { title = "^(Quick Settings)$" } },
   { "nwg-settings", { class = "^(nwg-displays|nwg-look)$" } },

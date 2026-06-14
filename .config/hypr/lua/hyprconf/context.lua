@@ -13,9 +13,6 @@ M.touchpad_device = "asue1209:00-04f3:319f-touchpad"
 M.noctalia_shell = {
   enabled = true,
   command = "qs -c noctalia-shell",
-  manages = {
-    waybar = true,
-  },
 }
 
 return M

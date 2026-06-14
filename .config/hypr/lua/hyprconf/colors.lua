@@ -17,7 +17,7 @@ local function load(path)
   end
 end
 
-load(ctx.config_dir .. "/wallust/wallust-hyprland.conf")
+load(ctx.config_dir .. "/effects/colors-hyprland.conf")
 
 local ok, noctalia = pcall(require, "hyprconf.generated.noctalia")
 if ok then

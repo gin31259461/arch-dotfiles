@@ -8,10 +8,10 @@ local paths = {
   colors = ctx.home .. "/.config/noctalia/colors.json",
   wallpapers = ctx.home .. "/.cache/noctalia/wallpapers.json",
   qml = ctx.home .. "/.config/quickshell/qml_color.json",
-  rofi = ctx.home .. "/.config/rofi/wallust/colors-rofi.rasi",
-  wallust = ctx.config_dir .. "/wallust/wallust-hyprland.conf",
+  rofi = ctx.home .. "/.config/rofi/noctalia/colors.rasi",
+  effects_colors = ctx.config_dir .. "/effects/colors-hyprland.conf",
   generated = ctx.config_dir .. "/lua/hyprconf/generated/noctalia.lua",
-  wallpaper_effects = ctx.config_dir .. "/wallpaper-effects",
+  effects_cache = ctx.home .. "/.cache/hypr/effects",
 }
 
 local material_keys = {
@@ -225,10 +225,10 @@ color15: %s;
   )
 end
 
-local function generate_wallust(colors)
-  local palette = color.wallust_palette(colors)
+local function generate_hypr_effect_colors(colors)
+  local palette = color.material_terminal_palette(colors)
   local lines = {
-    "# /* wallust template - colors-hyprland */",
+    "# Generated Noctalia material colors for Hyprland",
     "# Generated from Noctalia Material colors by scripts/display/generate-noctalia-theme.lua",
     "",
   }
@@ -295,7 +295,7 @@ local function current_wallpaper()
     or json.object_string_field(content, "wallpapers", "HDMI-A-1")
 end
 
-local function sync_wallpaper_effects(colors)
+local function sync_wallpaper_cache(colors)
   local wallpaper = current_wallpaper()
   if not wallpaper then
     return
@@ -307,12 +307,18 @@ local function sync_wallpaper_effects(colors)
   end
   probe:close()
 
-  os.execute("mkdir -p " .. shell_quote(paths.wallpaper_effects))
+  os.execute("mkdir -p " .. shell_quote(paths.effects_cache))
   os.execute(
-    "cp -f "
+    "ln -sf "
       .. shell_quote(wallpaper)
       .. " "
-      .. shell_quote(paths.wallpaper_effects .. "/.wallpaper_current")
+      .. shell_quote(paths.effects_cache .. "/wallpaper-source")
+  )
+  os.execute(
+    "ln -sf "
+      .. shell_quote(wallpaper)
+      .. " "
+      .. shell_quote(paths.effects_cache .. "/wallpaper-current")
   )
 
   local cmd = table.concat({
@@ -322,7 +328,7 @@ local function sync_wallpaper_effects(colors)
     "-fill " .. shell_quote(colors.mSurface),
     "-colorize 30",
     "-quality 90",
-    shell_quote(paths.wallpaper_effects .. "/.wallpaper_modified"),
+    shell_quote(paths.effects_cache .. "/wallpaper-modified"),
   }, " ")
   os.execute(cmd .. " >/dev/null 2>&1 || true")
 end
@@ -341,14 +347,14 @@ function M.apply()
 
   write_file(paths.qml, generate_qml(colors))
   write_file(paths.rofi, generate_rofi(colors))
-  write_file(paths.wallust, generate_wallust(colors))
+  write_file(paths.effects_colors, generate_hypr_effect_colors(colors))
   write_file(paths.generated, generate_hypr_colors(colors))
-  sync_wallpaper_effects(colors)
+  sync_wallpaper_cache(colors)
 
   os.execute("hyprctl reload config-only >/dev/null 2>&1 || true")
   notify(
     "Noctalia Theme",
-    "Applied Material Design colors to rofi, quickshell, Hyprland, and wallust."
+    "Applied Material Design colors to rofi, quickshell, and Hyprland."
   )
   return true
 end

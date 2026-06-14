@@ -19,7 +19,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── gestures.lua          # Touchpad gestures
 │   ├── binds.lua             # Keybinds
 │   ├── rules.lua             # Window and layer rules
-│   ├── colors.lua            # Wallust/Noctalia color loader
+│   ├── colors.lua            # Noctalia color loader
 │   ├── color.lua             # Hex color helpers and palette generation
 │   └── util.lua              # Shared Lua helpers
 ├── lua/user/                 # Active user profile snippets
@@ -28,11 +28,9 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 ├── profiles/                 # Profile presets and selected-profile memory
 │   ├── monitor/
 │   └── animation/
-├── wallust/                  # Generated color data
+├── effects/                  # Generated color/effect state
 ├── scripts/                  # Helper scripts and menus
 ├── hyprlock.conf
-├── hyprlock-2k.conf
-├── hyprlock-1080.conf
 ├── hypridle.conf
 └── initial-boot.sh
 ```
@@ -48,7 +46,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 - Active profiles: `lua/user/`
 - Profile presets: `profiles/`
 - Profile selector: `scripts/profile-selector/select.sh`
-- Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua` writes quickshell, rofi, Hyprland, and `wallust/wallust-hyprland.conf`
+- Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua` writes quickshell, rofi, Hyprland, and `effects/colors-hyprland.conf`
 
 Run validation with:
 

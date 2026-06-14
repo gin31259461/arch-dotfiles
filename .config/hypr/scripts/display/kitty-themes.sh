@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/lib/notify.sh"
 # Define directories and variables
 kitty_themes_DiR="$HOME/.config/kitty/kitty-themes" # Kitty Themes Directory
 kitty_config="$HOME/.config/kitty/kitty.conf"
-iDIR="$SWAYNC_IMAGE_DIR" # For notifications
+iDIR="$NOTIFICATION_IMAGE_DIR"
 rofi_theme_for_this_script="$ROFI_CONFIG_DIR/config-kitty-theme.rasi"
 
 # --- Helper Functions ---
@@ -104,8 +104,8 @@ while true; do
   done
   rofi_input_list_trimmed="${rofi_input_list%\\n}"
 
-  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" \
-    | rofi -dmenu -i \
+  chosen_index_from_rofi=$(echo -e "$rofi_input_list_trimmed" |
+    rofi -dmenu -i \
       -format 'i' \
       -p "Kitty Theme" \
       -mesg "Preview: ${theme_to_preview_now} | Enter: Preview | Ctrl+S: Apply & Exit | Esc: Cancel" \

@@ -116,7 +116,7 @@ function M.material(values)
   return result
 end
 
-function M.wallust_palette(values)
+function M.material_terminal_palette(values)
   local c = M.material(values)
   local yellow = M.mix(c.tertiary, c.error, 0.34)
   local cyan = M.mix(c.primary, c.tertiary, 0.5)

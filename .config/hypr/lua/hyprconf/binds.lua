@@ -30,11 +30,6 @@ local function applications()
   bind_exec(mod .. " + Return", "open terminal", "$term")
   bind_exec(mod .. " + E", "file manager", "$files")
   bind_exec(
-    mod .. " + T",
-    "global theme switcher",
-    "$scriptsDir/display/theme-changer.sh"
-  )
-  bind_exec(
     mod .. " + SHIFT + T",
     "apply noctalia material theme",
     "$scriptsDir/display/noctalia-theme.sh"

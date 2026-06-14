@@ -11,12 +11,6 @@ official = [
   "xarchiver",
 ]
 
-[bar]
-label = "Bar & Notifications"
-official = [
-  "waybar",
-]
-
 [audio]
 label = "Audio"
 official = [
@@ -25,7 +19,6 @@ official = [
   "pipewire-audio",
   "pipewire-pulse",
   "wireplumber",
-  "pamixer",
   "pavucontrol",
   "playerctl",
   "mpv",
@@ -53,11 +46,4 @@ official = [
   "cliphist",
   "wl-clipboard",
   "libnotify",
-]
-
-[wallpaper]
-label = "Wallpaper & Colors"
-aur = [
-  "swww",
-  "wallust",
 ]

@@ -46,9 +46,3 @@ label = "Display Manager"
 official = [
   "sddm",
 ]
-
-[session]
-label = "Session & Logout"
-aur = [
-  "wlogout",
-]

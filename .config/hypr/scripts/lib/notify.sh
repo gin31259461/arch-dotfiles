@@ -64,7 +64,6 @@ notify_progress() {
     -a "$NOTIFY_APP_NAME"
     -u low
     -h "string:x-canonical-private-synchronous:$tag"
-    -h boolean:SWAYNC_BYPASS_DND:true
     -t "$timeout"
   )
   [[ "$value" =~ ^[0-9]+$ ]] && args+=(-h "int:value:$value")
@@ -92,9 +91,9 @@ notify_action() {
     shift
   done
 
-  notify-send -e "${args[@]}" "$title" "$body" 2>/dev/null \
-    || notify-send "${args[@]}" "$title" "$body" 2>/dev/null \
-    || true
+  notify-send -e "${args[@]}" "$title" "$body" 2>/dev/null ||
+    notify-send "${args[@]}" "$title" "$body" 2>/dev/null ||
+    true
 }
 
 require_command() {

@@ -10,7 +10,7 @@ PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
 dir="$PICTURES_DIR/Screenshots"
 file="Screenshot_${time}_${RANDOM}.png"
 
-iDIR="$SWAYNC_ICON_DIR"
+iDIR="$NOTIFICATION_ICON_DIR"
 sDIR="$SCRIPT_DIR/media"
 
 active_window_class=$(hyprctl -j activewindow | jq -r '(.class)')
@@ -23,8 +23,8 @@ notify_view() {
       "${sDIR}/sounds.sh" --screenshot
       resp=$(notify_action "Screenshot" "${active_window_class} saved." "$iDIR/picture.png" "shot-notify" 10000 action1=Open action2=Delete)
       case "$resp" in
-        action1) xdg-open "${active_window_path}" & ;;
-        action2) rm "${active_window_path}" & ;;
+      action1) xdg-open "${active_window_path}" & ;;
+      action2) rm "${active_window_path}" & ;;
       esac
     else
       notify_warn "Screenshot" "${active_window_class} not saved." "$(icon_img note.png)" "shot-notify"
@@ -35,8 +35,8 @@ notify_view() {
     "${sDIR}/sounds.sh" --screenshot
     resp=$(notify_action "Screenshot" "Captured by Swappy." "$iDIR/picture.png" "shot-notify" 10000 action1=Open action2=Delete)
     case "$resp" in
-      action1) swappy -f "$2" ;;
-      action2) rm "$2" ;;
+    action1) swappy -f "$2" ;;
+    action2) rm "$2" ;;
     esac
 
   else
@@ -45,8 +45,8 @@ notify_view() {
       "${sDIR}/sounds.sh" --screenshot
       resp=$(notify_action "Screenshot" "Saved." "$iDIR/picture.png" "shot-notify" 10000 action1=Open action2=Delete)
       case "$resp" in
-        action1) xdg-open "${check_file}" & ;;
-        action2) rm "${check_file}" & ;;
+      action1) xdg-open "${check_file}" & ;;
+      action2) rm "${check_file}" & ;;
       esac
     else
       notify_warn "Screenshot" "Not saved." "$(icon_img note.png)" "shot-notify"

@@ -25,8 +25,5 @@ window-width = 110
 # Theme switching (optional): managed by your theme changer (symlink or generated file).
 # config-file = ?~/.config/ghostty/theme.conf
 
-# Wallust (optional): wallust template should write Ghostty colors here; it will override theme colors.
-# config-file = ?~/.config/ghostty/wallust.conf
-
 # Noctalia (optional): if you have the noctalia theme installed, you can set it here to use its colors.
 theme = noctalia

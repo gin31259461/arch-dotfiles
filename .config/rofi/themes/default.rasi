@@ -16,8 +16,8 @@ configuration {
  me-accept-entry: "MousePrimary";
 }
 
-/* ---- Load wallust colors ---- */
-@theme "~/.config/rofi/wallust/colors-rofi.rasi"
+/* ---- Load Noctalia colors ---- */
+@theme "~/.config/rofi/noctalia/colors.rasi"
 
 /*****----- Global Properties -----*****/
 * {

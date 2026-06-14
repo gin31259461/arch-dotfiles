@@ -36,7 +36,6 @@ GDK_BACKEND=$BACKEND yad \
   " E" "File manager" "" \
   " N" "Obsidian" "" \
   " S" "Web search" "(rofi)" \
-  " T" "Global theme switcher" "(rofi)" \
   " SHIFT T" "Apply noctalia Material theme" "" \
   " CTRL S" "Window switcher" "(rofi)" \
   " ALT V" "Clipboard manager" "(cliphist)" \

@@ -56,7 +56,7 @@ function M.setup()
   end)
 
   hl.on("config.reloaded", function()
-    hl.exec_cmd(ctx.scripts_dir .. "/services/refresh-no-waybar.sh", {})
+    hl.exec_cmd(ctx.scripts_dir .. "/services/refresh.sh", {})
   end)
 
   hl.on("monitor.added", function()

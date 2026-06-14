@@ -67,6 +67,7 @@ paths = [
   ".config/waybar",
   ".config/noctalia",
   ".config/sunshine/sunshine.conf",
+  ".config/polychromatic/preferences.json"
 ]
 
 [systemd-user]

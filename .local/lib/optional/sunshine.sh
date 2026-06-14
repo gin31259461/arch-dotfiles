@@ -14,7 +14,6 @@ grant_sunshine_cap_sys_admin() {
   else
     if getcap "$sunshine_path" | grep -q "cap_sys_admin"; then
       ok "Sunshine already has cap_sys_admin permission"
-      return
     else
       note "Granting cap_sys_admin to Sunshine at $sunshine_path"
       sudo setcap cap_sys_admin+p "$sunshine_path" || {
@@ -22,13 +21,16 @@ grant_sunshine_cap_sys_admin() {
         return
       }
       ok "cap_sys_admin granted to Sunshine"
-      systemctl --user enable sunshine.service || {
-        warn "Failed to enable sunshine.service. You may need to run 'systemctl --user enable sunshine.service' manually."
-        return
-      }
-      ok "sunshine.service enabled"
     fi
+
+    systemctl --user enable sunshine.service || {
+      warn "Failed to enable sunshine.service. You may need to run 'systemctl --user enable sunshine.service' manually."
+      return
+    }
+    ok "sunshine.service enabled"
   fi
+
+  return
 }
 
 setup() {

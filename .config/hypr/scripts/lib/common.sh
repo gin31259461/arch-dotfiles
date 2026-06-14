@@ -181,3 +181,12 @@ reload_waybar() {
     pkill -SIGUSR2 waybar 2>/dev/null || true
   fi
 }
+
+start_waybar() {
+  command_exists waybar || return 0
+
+  waybar \
+    -c "$WAYBAR_CONFIG_DIR/config" \
+    -s "$WAYBAR_CONFIG_DIR/style.css" \
+    >/dev/null 2>&1 &
+}

@@ -1,0 +1,44 @@
+// ### RIGHT PANEL ### //
+
+{
+  "include": [
+    "$HOME/.config/waybar/modules/core-v1.jsonc",
+    "$HOME/.config/waybar/modules/workspaces-v1.jsonc",
+    "$HOME/.config/waybar/modules/custom-v1.jsonc",
+    "$HOME/.config/waybar/modules/groups-v1.jsonc",
+    "$HOME/.config/waybar/modules/user-v1.jsonc",
+    "$HOME/.config/waybar/modules/vertical-v1.jsonc"
+  ],
+  "layer": "top",
+  "position": "right",
+  "margin-top": 8,
+  "margin-bottom": 8,
+  //"margin-left": 3,
+  "margin-right": 3,
+  "spacing": 3,
+  "fixed-center": true,
+  "ipc": true,
+  //"gtk-layer-shell": true,
+
+  "modules-left": [
+    "clock#vertical",
+    "custom/light_dark"
+  ],
+
+  "modules-center": [
+    "idle_inhibitor",
+    "hyprland/workspaces"
+  ],
+
+  "modules-right": [
+    "mpris",
+    "tray",
+    "group/notify",
+    "backlight#vertical",
+    "pulseaudio#microphone_vertical",
+    "pulseaudio#vertical",
+    "custom/nightlight",
+    "custom/power_vertical",
+    "custom/menu"
+  ]
+}

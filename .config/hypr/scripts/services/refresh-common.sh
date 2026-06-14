@@ -44,10 +44,10 @@ refresh_restart_waybar() {
   sleep 0.2
   if [[ "$manage_with_systemd" -eq 1 ]]; then
     if ! systemctl --user start waybar.service >/dev/null 2>&1; then
-      waybar >/dev/null 2>&1 &
+      start_waybar
     fi
   else
-    waybar >/dev/null 2>&1 &
+    start_waybar
   fi
 }
 

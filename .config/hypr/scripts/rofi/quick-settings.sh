@@ -157,7 +157,7 @@ main() {
       if pgrep -x waybar >/dev/null; then
         kill_by_name waybar
       else
-        waybar &
+        start_waybar
       fi
       ;;
     *) return ;;

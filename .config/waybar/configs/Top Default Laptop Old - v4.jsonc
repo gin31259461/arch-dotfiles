@@ -1,0 +1,55 @@
+// ### DEFAULT (Laptop) - Top (old v4) ### //
+{
+  "include": [
+    "$HOME/.config/waybar/modules/core-v1.jsonc",
+    "$HOME/.config/waybar/modules/workspaces-v1.jsonc",
+    "$HOME/.config/waybar/modules/custom-v1.jsonc",
+    "$HOME/.config/waybar/modules/groups-v1.jsonc",
+    "$HOME/.config/waybar/modules/user-v1.jsonc"
+  ],
+  "layer": "top",
+  //"mode": "dock",
+  "exclusive": true,
+  "passthrough": false,
+  "position": "top",
+  "spacing": 3,
+  "fixed-center": true,
+  "ipc": true,
+  "margin-top": 3,
+  "margin-left": 8,
+  "margin-right": 8,
+
+  "modules-left": [
+    "group/app_drawer",
+    "custom/separator#dot-line",
+    "group/mobo_drawer",
+    "custom/separator#blank",
+    "group/laptop",
+    "custom/separator#line",
+    "custom/weather"
+  ],
+
+  "modules-center": [
+    "group/notify",
+    "custom/cava_mviz",
+    "custom/separator#dot-line",
+    "clock",
+    "custom/separator#line",
+    "hyprland/workspaces#kanji",
+    "custom/separator#dot-line",
+    "idle_inhibitor",
+    "custom/hint"
+  ],
+
+  "modules-right": [
+    "network#speed",
+    "group/connections",
+    "custom/separator#line",
+    "tray",
+    "mpris",
+    "group/audio",
+    "custom/nightlight",
+    "custom/separator#dot-line",
+    "group/status"
+  ]
+}

@@ -1,39 +1,38 @@
-
 // ### Minimal -SHORT ### //
 
 {
-"include": [
- "$HOME/.config/waybar/modules.jsonc",
- "$HOME/.config/waybar/modules-workspaces.jsonc",
- "$HOME/.config/waybar/modules-custom.jsonc",
- "$HOME/.config/waybar/modules-groups.jsonc",
- "$HOME/.config/waybar/user-modules.jsonc",
- ],
-"layer": "top",
-"position": "top",
-"width": 1050,
-"margin-top": 3,
+  "include": [
+    "$HOME/.config/waybar/modules.jsonc",
+    "$HOME/.config/waybar/modules-workspaces.jsonc",
+    "$HOME/.config/waybar/modules-custom.jsonc",
+    "$HOME/.config/waybar/modules-groups.jsonc",
+    "$HOME/.config/waybar/user-modules.jsonc"
+  ],
+  "layer": "top",
+  "position": "top",
+  "width": 1050,
+  "margin-top": 3,
 
-"modules-left": [
-	"clock",
-	"custom/weather",
-	],
+  "modules-left": [
+    "clock",
+    "custom/weather"
+  ],
 
-"modules-center": [
-	"hyprland/workspaces#roman"
-	],
+  "modules-center": [
+    "hyprland/workspaces#roman"
+  ],
 
-"modules-right": [
-	"custom/menu",
-	"tray",
-	"group/notify",
-	"mpris",
-	"network",
-	"bluetooth",
-	"backlight",
-	"pulseaudio",
-	"battery",
-	"custom/nightlight",
-	"custom/power"],
+  "modules-right": [
+    "custom/menu",
+    "tray",
+    "group/notify",
+    "mpris",
+    "network",
+    "bluetooth",
+    "backlight",
+    "pulseaudio",
+    "battery",
+    "custom/nightlight",
+    "custom/power"
+  ]
 }
-

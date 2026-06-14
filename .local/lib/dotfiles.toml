@@ -24,9 +24,7 @@ paths = [
   ".gitignore",
   ".editorconfig",
   ".agents",
-  ".claude/skills",
   "AGENTS.md",
-  "CLAUDE.md",
 ]
 
 [zsh]

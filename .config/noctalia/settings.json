@@ -106,14 +106,39 @@
             ],
             "left": [
                 {
-                    "colorizeDistroLogo": false,
-                    "colorizeSystemIcon": "none",
+                    "colorizeSystemIcon": "primary",
                     "colorizeSystemText": "none",
-                    "customIconPath": "",
-                    "enableColorization": false,
-                    "icon": "noctalia",
-                    "id": "ControlCenter",
-                    "useDistroLogo": true
+                    "generalTooltipText": "",
+                    "hideMode": "alwaysExpanded",
+                    "icon": "apps",
+                    "iconPosition": "left",
+                    "id": "CustomButton",
+                    "ipcIdentifier": "",
+                    "leftClickExec": "qs -c noctalia-shell ipc call launcher toggle",
+                    "leftClickUpdateText": false,
+                    "maxTextLength": {
+                        "horizontal": 10,
+                        "vertical": 10
+                    },
+                    "middleClickExec": "",
+                    "middleClickUpdateText": false,
+                    "parseJson": false,
+                    "rightClickExec": "",
+                    "rightClickUpdateText": false,
+                    "showExecTooltip": true,
+                    "showIcon": true,
+                    "showTextTooltip": true,
+                    "textCollapse": "",
+                    "textCommand": "",
+                    "textIntervalMs": 3000,
+                    "textStream": false,
+                    "wheelDownExec": "",
+                    "wheelDownUpdateText": false,
+                    "wheelExec": "",
+                    "wheelMode": "unified",
+                    "wheelUpExec": "",
+                    "wheelUpUpdateText": false,
+                    "wheelUpdateText": false
                 },
                 {
                     "characterCount": 2,
@@ -225,39 +250,14 @@
                     "showPowerProfiles": false
                 },
                 {
+                    "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "primary",
                     "colorizeSystemText": "none",
-                    "generalTooltipText": "",
-                    "hideMode": "alwaysExpanded",
+                    "customIconPath": "",
+                    "enableColorization": true,
                     "icon": "hyprland",
-                    "iconPosition": "left",
-                    "id": "CustomButton",
-                    "ipcIdentifier": "",
-                    "leftClickExec": "qs -c noctalia-shell ipc call launcher toggle",
-                    "leftClickUpdateText": false,
-                    "maxTextLength": {
-                        "horizontal": 10,
-                        "vertical": 10
-                    },
-                    "middleClickExec": "",
-                    "middleClickUpdateText": false,
-                    "parseJson": false,
-                    "rightClickExec": "",
-                    "rightClickUpdateText": false,
-                    "showExecTooltip": true,
-                    "showIcon": true,
-                    "showTextTooltip": true,
-                    "textCollapse": "",
-                    "textCommand": "",
-                    "textIntervalMs": 3000,
-                    "textStream": false,
-                    "wheelDownExec": "",
-                    "wheelDownUpdateText": false,
-                    "wheelExec": "",
-                    "wheelMode": "unified",
-                    "wheelUpExec": "",
-                    "wheelUpUpdateText": false,
-                    "wheelUpdateText": false
+                    "id": "ControlCenter",
+                    "useDistroLogo": false
                 }
             ]
         }

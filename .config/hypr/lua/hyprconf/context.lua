@@ -1,9 +1,7 @@
 local M = {}
 
-local home = os.getenv("HOME") or "/home/abner"
-
-M.home = home
-M.config_dir = home .. "/.config/hypr"
+M.home = os.getenv("HOME")
+M.config_dir = M.home .. "/.config/hypr"
 M.scripts_dir = M.config_dir .. "/scripts"
 M.main_mod = "SUPER"
 M.term = "kitty"

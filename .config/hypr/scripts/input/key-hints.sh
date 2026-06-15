@@ -39,8 +39,6 @@ GDK_BACKEND=$BACKEND yad \
   " SHIFT T" "Apply noctalia Material theme" "" \
   " CTRL S" "Window switcher" "(rofi)" \
   " ALT V" "Clipboard manager" "(cliphist)" \
-  " ALT C" "Calculator" "(qalc)" \
-  " SHIFT M" "Online music" "(mpv)" \
   " SHIFT O" "Change oh-my-zsh theme" "" \
   "" "" "" \
   " Q" "Close active window" "" \
@@ -84,9 +82,6 @@ GDK_BACKEND=$BACKEND yad \
   " U" "Toggle special workspace" "scratchpad" \
   " SHIFT U" "Send window to special workspace" "" \
   " CTRL F9-F12" "Send workspace to monitor" "l / r / u / d" \
-  "" "" "" \
-  "ALT_L -> SHIFT_L" "Switch keyboard layout globally" "" \
-  "SHIFT_L -> ALT_L" "Switch keyboard layout per-window" "" \
   "" "" "" \
   " ALT O" "Toggle blur" "" \
   " CTRL O" "Toggle window opacity" "active window" \

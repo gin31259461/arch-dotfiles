@@ -68,11 +68,6 @@ local function applications()
     "$scriptsDir/rofi/rofi-theme-selector.sh"
   )
   bind_exec(mod .. " + N", "open obsidian", "obsidian")
-  bind_exec(
-    mod .. " + SHIFT + M",
-    "online music",
-    "$scriptsDir/media/rofi-beats.sh"
-  )
   bind(
     mod .. " + CTRL + O",
     raw_dispatch("setprop", "active opaque toggle"),
@@ -92,18 +87,6 @@ local function applications()
     mod .. " + SHIFT + O",
     "change oh-my-zsh theme",
     "$scriptsDir/display/zsh-change-theme.sh"
-  )
-  bind_exec(
-    "ALT_L + SHIFT_L",
-    "switch keyboard layout globally",
-    "$scriptsDir/input/keyboard-layout.sh switch",
-    { locked = true, non_consuming = true }
-  )
-  bind_exec(
-    "SHIFT_L + ALT_L",
-    "switch keyboard layout per-window",
-    "$scriptsDir/input/tak0-per-window-switch.sh",
-    { locked = true, non_consuming = true }
   )
 end
 

@@ -24,12 +24,20 @@ function M.file_exists(path)
 end
 
 function M.expand(command)
-  return command
-    :gsub("%$HOME", ctx.home)
-    :gsub("%$scriptsDir", ctx.scripts_dir)
-    :gsub("%$term", ctx.term)
-    :gsub("%$files", ctx.files)
-    :gsub("%$Search_Engine", ctx.search_engine)
+  local replacements = {
+    HOME = ctx.home,
+    configDir = ctx.config_dir,
+    hyprLua = ctx.hypr_lua,
+    term = ctx.term,
+    files = ctx.files,
+    Search_Engine = ctx.search_engine,
+  }
+
+  return (
+    command:gsub("%$([%w_]+)", function(name)
+      return replacements[name] or ("$" .. name)
+    end)
+  )
 end
 
 function M.exec(command)

@@ -22,71 +22,39 @@ local function applications()
     "qs -c noctalia-shell ipc call launcher toggle"
   )
   bind_exec(mod .. " + B", "open default browser", [[xdg-open "https://"]])
-  bind_exec(
-    mod .. " + A",
-    "desktop overview",
-    "$scriptsDir/session/overview-toggle.sh"
-  )
+  bind_exec(mod .. " + A", "desktop overview", "$hyprLua overview")
   bind_exec(mod .. " + Return", "open terminal", "$term")
   bind_exec(mod .. " + E", "file manager", "$files")
   bind_exec(
     mod .. " + SHIFT + T",
     "apply noctalia material theme",
-    "$scriptsDir/display/noctalia-theme.sh"
+    "$hyprLua noctalia-theme"
   )
-  bind_exec(mod .. " + H", "cheat sheet", "$scriptsDir/input/key-hints.sh")
-  bind_exec(
-    mod .. " + SHIFT + E",
-    "quick settings",
-    "$scriptsDir/rofi/quick-settings.sh"
-  )
-  bind_exec(mod .. " + S", "web search", "$scriptsDir/rofi/rofi-search.sh")
+  bind_exec(mod .. " + H", "cheat sheet", "$hyprLua key-hints")
+  bind_exec(mod .. " + SHIFT + E", "quick settings", "$hyprLua quick-settings")
+  bind_exec(mod .. " + S", "web search", "$hyprLua rofi-search")
   bind_exec(mod .. " + CTRL + S", "window switcher", "rofi -show window")
-  bind_exec(
-    mod .. " + ALT + O",
-    "toggle blur",
-    "$scriptsDir/display/change-blur.sh"
-  )
-  bind_exec(
-    mod .. " + SHIFT + G",
-    "toggle game mode",
-    "$scriptsDir/session/game-mode.sh"
-  )
-  bind_exec(
-    mod .. " + ALT + L",
-    "toggle layout",
-    "$scriptsDir/display/change-layout.sh"
-  )
-  bind_exec(
-    mod .. " + ALT + V",
-    "clipboard manager",
-    "$scriptsDir/rofi/clip-manager.sh"
-  )
-  bind_exec(
-    mod .. " + CTRL + R",
-    "rofi theme selector",
-    "$scriptsDir/rofi/rofi-theme-selector.sh"
-  )
+  bind_exec(mod .. " + ALT + O", "toggle blur", "$hyprLua change-blur")
+  bind_exec(mod .. " + SHIFT + G", "toggle game mode", "$hyprLua game-mode")
+  bind_exec(mod .. " + ALT + L", "toggle layout", "$hyprLua change-layout")
+  bind_exec(mod .. " + ALT + V", "clipboard manager", "$hyprLua clip-manager")
+  bind_exec(mod .. " + CTRL + R", "rofi theme selector", "$hyprLua rofi-theme")
   bind_exec(mod .. " + N", "open obsidian", "obsidian")
   bind(
     mod .. " + CTRL + O",
     raw_dispatch("setprop", "active opaque toggle"),
     "toggle active window opacity"
   )
-  bind_exec(
-    mod .. " + SHIFT + K",
-    "search keybinds",
-    "$scriptsDir/input/keybinds.sh"
-  )
+  bind_exec(mod .. " + SHIFT + K", "search keybinds", "$hyprLua keybinds")
   bind_exec(
     mod .. " + SHIFT + A",
     "profile selector",
-    "$scriptsDir/profile-selector/select.sh"
+    "$hyprLua profile-selector"
   )
   bind_exec(
     mod .. " + SHIFT + O",
     "change oh-my-zsh theme",
-    "$scriptsDir/display/zsh-change-theme.sh"
+    "$hyprLua zsh-theme"
   )
 end
 
@@ -105,11 +73,7 @@ local function windows()
   )
   bind("CTRL + ALT + Delete", hl.dsp.exit(), "exit hyprland")
   bind(mod .. " + Q", hl.dsp.window.close(), "close window")
-  bind_exec(
-    mod .. " + SHIFT + Q",
-    "kill process",
-    "$scriptsDir/session/kill-active-process.sh"
-  )
+  bind_exec(mod .. " + SHIFT + Q", "kill process", "$hyprLua kill-active")
   bind_exec(
     "CTRL + ALT + L",
     "session menu",
@@ -408,71 +372,61 @@ local function devices()
   )
   bind_exec("XF86Sleep", "sleep", "systemctl suspend", { locked = true })
   bind_exec(
-    "XF86RFKill",
-    "airplane mode",
-    "$scriptsDir/session/airplane-mode.sh",
-    { locked = true }
-  )
-  bind_exec(
     "XF86AudioPause",
     "pause",
-    "$scriptsDir/media/media-ctrl.sh --pause",
+    "qs -c noctalia-shell ipc call media playPause",
     { locked = true }
   )
   bind_exec(
     "XF86AudioPlay",
     "play",
-    "$scriptsDir/media/media-ctrl.sh --pause",
+    "qs -c noctalia-shell ipc call media playPause",
     { locked = true }
   )
   bind_exec(
     "XF86AudioNext",
     "next track",
-    "$scriptsDir/media/media-ctrl.sh --nxt",
+    "qs -c noctalia-shell ipc call media next",
     { locked = true }
   )
   bind_exec(
     "XF86AudioPrev",
     "prev track",
-    "$scriptsDir/media/media-ctrl.sh --prv",
+    "qs -c noctalia-shell ipc call media previous",
     { locked = true }
   )
   bind_exec(
     "XF86AudioStop",
     "stop",
-    "$scriptsDir/media/media-ctrl.sh --stop",
+    "qs -c noctalia-shell ipc call media stop",
     { locked = true }
   )
 
-  bind_exec(
-    mod .. " + Print",
-    "screenshot now",
-    "$scriptsDir/session/screenshot.sh --now"
-  )
+  bind_exec(mod .. " + Print", "screenshot now", "$hyprLua screenshot --now")
   bind_exec(
     mod .. " + SHIFT + Print",
     "screenshot area",
-    "$scriptsDir/session/screenshot.sh --area"
+    "$hyprLua screenshot --area"
   )
   bind_exec(
     mod .. " + CTRL + Print",
     "screenshot in 5s",
-    "$scriptsDir/session/screenshot.sh --in5"
+    "$hyprLua screenshot --in5"
   )
   bind_exec(
     mod .. " + CTRL + SHIFT + Print",
     "screenshot in 10s",
-    "$scriptsDir/session/screenshot.sh --in10"
+    "$hyprLua screenshot --in10"
   )
   bind_exec(
     "ALT + Print",
     "screenshot active window",
-    "$scriptsDir/session/screenshot.sh --active"
+    "$hyprLua screenshot --active"
   )
   bind_exec(
     mod .. " + SHIFT + S",
     "screenshot (swappy)",
-    "$scriptsDir/session/screenshot.sh --swappy"
+    "$hyprLua screenshot --swappy"
   )
 
   bind_exec(
@@ -490,24 +444,12 @@ local function devices()
   bind_exec("XF86Launch1", nil, "rog-control-center")
   bind_exec("XF86Launch3", nil, "asusctl led-mode -n")
   bind_exec("XF86Launch4", nil, "asusctl profile -n")
-  bind_exec("XF86TouchpadToggle", nil, "$scriptsDir/services/touchpad.sh")
-  bind_exec(mod .. " + F6", nil, "$scriptsDir/session/screenshot.sh --now")
-  bind_exec(
-    mod .. " + SHIFT + F6",
-    nil,
-    "$scriptsDir/session/screenshot.sh --area"
-  )
-  bind_exec(
-    mod .. " + CTRL + F6",
-    nil,
-    "$scriptsDir/session/screenshot.sh --in5"
-  )
-  bind_exec(
-    mod .. " + ALT + F6",
-    nil,
-    "$scriptsDir/session/screenshot.sh --in10"
-  )
-  bind_exec("ALT + F6", nil, "$scriptsDir/session/screenshot.sh --active")
+  bind_exec("XF86TouchpadToggle", nil, "$hyprLua touchpad")
+  bind_exec(mod .. " + F6", nil, "$hyprLua screenshot --now")
+  bind_exec(mod .. " + SHIFT + F6", nil, "$hyprLua screenshot --area")
+  bind_exec(mod .. " + CTRL + F6", nil, "$hyprLua screenshot --in5")
+  bind_exec(mod .. " + ALT + F6", nil, "$hyprLua screenshot --in10")
+  bind_exec("ALT + F6", nil, "$hyprLua screenshot --active")
 end
 
 function M.setup()

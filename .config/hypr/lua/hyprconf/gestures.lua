@@ -25,9 +25,7 @@ function M.setup()
   hl.gesture({
     fingers = 3,
     direction = "up",
-    action = util.dispatch_exec(
-      ctx.scripts_dir .. "/session/overview-toggle.sh"
-    ),
+    action = util.dispatch_exec(ctx.hypr_lua .. " overview"),
   })
 end
 

@@ -1,41 +1,23 @@
 local ctx = require("hyprconf.context")
+local toml = require("hyprconf.toml")
 
 local M = {}
 
-local vesktop_cmd = {
-  "vesktop",
-  "--start-minimized",
-  "--enable-features=UseOzonePlatform",
-  "--ozone-platform-hint=wayland",
-  "--enable-wayland-ime",
-}
+local autostart_config = ctx.config_dir .. "/lua/config/autostart.toml"
 
-local commands = {
-  "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-  "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-  "uwsm app -- rog-control-center",
-  "uwsm app -- mcontrolcenter",
-  "uwsm app -- polychromatic-tray-applet",
-  ctx.scripts_dir .. "/services/polkit.sh",
-  "uwsm app -- nm-applet --indicator",
-  "uwsm app -- blueman-applet",
-  "ags",
-  "qs -c overview",
-  "wl-paste --type text --watch cliphist store",
-  "wl-paste --type image --watch cliphist store",
-  "uwsm app -- fcitx5",
-  "sleep 3; uwsm app -- " .. table.concat(vesktop_cmd, " "),
-  "uwsm app -- remmina -i",
-  "uwsm app -- tailscale systray",
-  ctx.scripts_dir .. "/input/keybinds-layout-init.sh",
-  ctx.scripts_dir .. "/display/change-layout.sh init",
-  ctx.scripts_dir .. "/display/rainbow-border.sh",
-}
+local function expand(command)
+  return command:gsub("%$configDir", ctx.config_dir)
+end
 
 local function autostart_commands()
   local result = {}
-  for _, command in ipairs(commands) do
-    result[#result + 1] = command
+  local ok, data = pcall(toml.read, autostart_config)
+  if ok then
+    for _, item in ipairs(data.command or {}) do
+      if item.enabled ~= false and item.run then
+        result[#result + 1] = expand(item.run)
+      end
+    end
   end
 
   local noctalia = ctx.noctalia_shell or {}
@@ -48,14 +30,13 @@ end
 
 function M.setup()
   hl.on("hyprland.start", function()
-    hl.exec_cmd(ctx.config_dir .. "/initial-boot.sh", {})
     for _, command in ipairs(autostart_commands()) do
       hl.exec_cmd(command, {})
     end
   end)
 
   hl.on("config.reloaded", function()
-    hl.exec_cmd(ctx.scripts_dir .. "/services/refresh.sh", {})
+    hl.exec_cmd(ctx.hypr_lua .. " refresh", {})
   end)
 
   hl.on("monitor.added", function()

@@ -2,7 +2,7 @@ local profile = require("hyprconf.profile")
 
 local M = {}
 
-M.setup = function()
+function M.setup()
   profile.load("monitor")
 end
 

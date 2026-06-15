@@ -22,6 +22,8 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── colors.lua            # Noctalia color loader
 │   ├── color.lua             # Hex color helpers and palette generation
 │   └── util.lua              # Shared Lua helpers
+├── lua/bin/hypr.lua          # Lua runtime actions and menus
+├── lua/config/               # TOML data for repeated runtime config
 ├── lua/user/                 # Active user profile snippets
 │   ├── monitors.lua          # Active monitor profile
 │   └── animations.lua        # Active animation profile
@@ -29,10 +31,7 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 │   ├── monitor/
 │   └── animation/
 ├── effects/                  # Generated color/effect state
-├── scripts/                  # Helper scripts and menus
 ├── hyprlock.conf
-├── hypridle.conf
-└── initial-boot.sh
 ```
 
 ## Editing
@@ -42,10 +41,12 @@ Personal Hyprland configuration for Hyprland 0.55+ using Lua.
 - Keybinds: `lua/hyprconf/binds.lua`
 - Autostart: `lua/hyprconf/autostart.lua`
 - Appearance/input/layout/misc: `lua/hyprconf/options.lua`
+- Runtime menus/actions: `lua/bin/hypr.lua`
+- Repeated menu/startup data: `lua/config/*.toml`
 - Window and layer rules: `lua/hyprconf/rules.lua`
 - Active profiles: `lua/user/`
 - Profile presets: `profiles/`
-- Profile selector: `scripts/profile-selector/select.sh`
+- Profile selector: `lua/bin/hypr.lua profile-selector`
 - Noctalia theme generation: `lua/hyprconf/theme/noctalia.lua` writes quickshell, rofi, Hyprland, and `effects/colors-hyprland.conf`
 
 Run validation with:

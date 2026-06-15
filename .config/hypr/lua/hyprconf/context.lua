@@ -1,8 +1,12 @@
 local M = {}
 
-M.home = os.getenv("HOME")
-M.config_dir = M.home .. "/.config/hypr"
-M.scripts_dir = M.config_dir .. "/scripts"
+local function shell_quote(value)
+  return "'" .. tostring(value):gsub("'", "'\\''") .. "'"
+end
+
+M.home = os.getenv("HOME") or ""
+M.config_dir = os.getenv("HYPR_CONFIG_DIR") or (M.home .. "/.config/hypr")
+M.hypr_lua = "lua " .. shell_quote(M.config_dir .. "/lua/bin/hypr.lua")
 M.main_mod = "SUPER"
 M.term = "kitty"
 M.files = "thunar"

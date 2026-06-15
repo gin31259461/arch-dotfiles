@@ -40,7 +40,6 @@ local function applications()
     "quick settings",
     "$scriptsDir/rofi/quick-settings.sh"
   )
-  bind_exec(mod .. " + ALT + E", "emoji menu", "$scriptsDir/rofi/rofi-emoji.sh")
   bind_exec(mod .. " + S", "web search", "$scriptsDir/rofi/rofi-search.sh")
   bind_exec(mod .. " + CTRL + S", "window switcher", "rofi -show window")
   bind_exec(
@@ -106,7 +105,6 @@ local function applications()
     "$scriptsDir/input/tak0-per-window-switch.sh",
     { locked = true, non_consuming = true }
   )
-  bind_exec(mod .. " + ALT + C", "calculator", "$scriptsDir/rofi/rofi-calc.sh")
 end
 
 local function windows()
@@ -121,11 +119,6 @@ local function windows()
     mod .. " + ALT + SPACE",
     raw_dispatch("workspaceopt", "allfloat"),
     "float all windows"
-  )
-  bind_exec(
-    mod .. " + SHIFT + Return",
-    "dropdown terminal",
-    "$scriptsDir/services/dropterminal.sh $term"
   )
   bind("CTRL + ALT + Delete", hl.dsp.exit(), "exit hyprland")
   bind(mod .. " + Q", hl.dsp.window.close(), "close window")

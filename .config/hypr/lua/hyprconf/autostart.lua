@@ -27,7 +27,6 @@ local commands = {
   "sleep 3; uwsm app -- " .. table.concat(vesktop_cmd, " "),
   "uwsm app -- remmina -i",
   "uwsm app -- tailscale systray",
-  ctx.scripts_dir .. "/services/dropterminal.sh kitty &",
   ctx.scripts_dir .. "/input/keybinds-layout-init.sh",
   ctx.scripts_dir .. "/display/change-layout.sh init",
   ctx.scripts_dir .. "/display/rainbow-border.sh",

@@ -31,4 +31,4 @@ else
   exit 1
 fi
 
-notify_success "System Update" "$distro_name has been updated." "$(icon_img ja.png)" "system-update"
+notify_success "System Update" "$distro_name has been updated." "$NOTIFY_FALLBACK_ICON" "system-update"

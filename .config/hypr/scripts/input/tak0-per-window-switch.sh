@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 source "$SCRIPT_DIR/lib/notify.sh"
 
 OPTIONS_FILE="$HYPR_CONFIG_DIR/lua/hyprconf/options.lua"
-ICON="$(icon_img ja.png)"
+ICON="$NOTIFY_FALLBACK_ICON"
 SCRIPT_NAME="$(basename "$0")"
 
 touch "$MAP_FILE"
@@ -98,9 +98,9 @@ if ! pgrep -f "$SCRIPT_NAME.*--listener" >/dev/null; then
 fi
 
 case "$1" in
-  toggle | "") cmd_toggle ;;
-  *)
-    echo "Usage: $SCRIPT_NAME [toggle]" >&2
-    exit 1
-    ;;
+toggle | "") cmd_toggle ;;
+*)
+  echo "Usage: $SCRIPT_NAME [toggle]" >&2
+  exit 1
+  ;;
 esac

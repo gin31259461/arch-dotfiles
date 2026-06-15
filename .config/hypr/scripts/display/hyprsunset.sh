@@ -31,17 +31,17 @@ icon_off() {
 
 icon_on() {
   case "$ICON_MODE" in
-    sunset)
-      # sunset emoji (falls back to tofu if no emoji font)
-      printf "🌇"
-      ;;
-    blue)
-      # no color in text; rely on CSS .on to style if desired
-      printf "☀"
-      ;;
-    *)
-      printf "☀"
-      ;;
+  sunset)
+    # sunset emoji (falls back to tofu if no emoji font)
+    printf "🌇"
+    ;;
+  blue)
+    # no color in text; rely on CSS .on to style if desired
+    printf "☀"
+    ;;
+  *)
+    printf "☀"
+    ;;
   esac
 }
 
@@ -64,14 +64,14 @@ cmd_toggle() {
       sleep 0.3 && pkill -x hyprsunset || true
     fi
     echo off >"$STATE_FILE"
-    notify_info "Hyprsunset" "Disabled" "$(icon_img note.png)" "hyprsunset"
+    notify_info "Hyprsunset" "Disabled" "$NOTIFY_FALLBACK_ICON" "hyprsunset"
   else
     # Turning ON: start hyprsunset at target temp in background
     if command -v hyprsunset >/dev/null 2>&1; then
       nohup hyprsunset -t "$TARGET_TEMP" >/dev/null 2>&1 &
     fi
     echo on >"$STATE_FILE"
-    notify_success "Hyprsunset" "Enabled at ${TARGET_TEMP}K" "$(icon_img ja.png)" "hyprsunset"
+    notify_success "Hyprsunset" "Enabled at ${TARGET_TEMP}K" "$NOTIFY_FALLBACK_ICON" "hyprsunset"
   fi
 }
 
@@ -108,11 +108,11 @@ cmd_init() {
 }
 
 case "${1:-}" in
-  toggle) cmd_toggle ;;
-  status) cmd_status ;;
-  init) cmd_init ;;
-  *)
-    echo "usage: $0 [toggle|status|init]" >&2
-    exit 2
-    ;;
+toggle) cmd_toggle ;;
+status) cmd_status ;;
+init) cmd_init ;;
+*)
+  echo "usage: $0 [toggle|status|init]" >&2
+  exit 2
+  ;;
 esac

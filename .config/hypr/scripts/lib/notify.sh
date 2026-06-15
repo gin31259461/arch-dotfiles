@@ -8,10 +8,10 @@ unset _notify_lib_dir
 
 NOTIFY_APP_NAME="${NOTIFY_APP_NAME:-Hyprland}"
 NOTIFY_DEFAULT_TIMEOUT="${NOTIFY_DEFAULT_TIMEOUT:-3000}"
-NOTIFY_INFO_ICON="${NOTIFY_INFO_ICON:-$(icon_img info.png)}"
-NOTIFY_SUCCESS_ICON="${NOTIFY_SUCCESS_ICON:-$(icon_img ja.png)}"
-NOTIFY_WARN_ICON="${NOTIFY_WARN_ICON:-$(icon_img note.png)}"
-NOTIFY_ERROR_ICON="${NOTIFY_ERROR_ICON:-$(icon_img error.png)}"
+NOTIFY_INFO_ICON="${NOTIFY_INFO_ICON:-""}"
+NOTIFY_SUCCESS_ICON="${NOTIFY_SUCCESS_ICON:-""}"
+NOTIFY_WARN_ICON="${NOTIFY_WARN_ICON:-""}"
+NOTIFY_ERROR_ICON="${NOTIFY_ERROR_ICON:-""}"
 
 _notify_send_raw() {
   if notify-send -e "$@" 2>/dev/null; then

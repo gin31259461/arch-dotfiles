@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
 source "$SCRIPT_DIR/lib/notify.sh"
 
-music_icon="$(icon_symbol music.png)"
+music_icon="$NOTIFY_FALLBACK_ICON"
 
 # Play the next track
 play_next() {
@@ -46,20 +46,20 @@ show_music_notification() {
 
 # Get media control action from command line argument
 case "$1" in
-  "--nxt")
-    play_next
-    ;;
-  "--prv")
-    play_previous
-    ;;
-  "--pause")
-    toggle_play_pause
-    ;;
-  "--stop")
-    stop_playback
-    ;;
-  *)
-    echo "Usage: $0 [--nxt|--prv|--pause|--stop]"
-    exit 1
-    ;;
+"--nxt")
+  play_next
+  ;;
+"--prv")
+  play_previous
+  ;;
+"--pause")
+  toggle_play_pause
+  ;;
+"--stop")
+  stop_playback
+  ;;
+*)
+  echo "Usage: $0 [--nxt|--prv|--pause|--stop]"
+  exit 1
+  ;;
 esac

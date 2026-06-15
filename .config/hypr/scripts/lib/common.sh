@@ -3,27 +3,11 @@
 
 HYPR_SCRIPTS_DIR="${HYPR_SCRIPTS_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)}"
 HYPR_CONFIG_DIR="${HYPR_CONFIG_DIR:-$(cd -- "$HYPR_SCRIPTS_DIR/.." && pwd -P)}"
-HYPR_RUNTIME_ENV="${HYPR_RUNTIME_ENV:-$HYPR_CONFIG_DIR/.hypr-runtime.env}"
 ROFI_CONFIG_DIR="${ROFI_CONFIG_DIR:-$HOME/.config/rofi}"
-NOTIFICATION_ASSET_DIR="${NOTIFICATION_ASSET_DIR:-$HYPR_CONFIG_DIR/assets/notifications}"
-NOTIFICATION_IMAGE_DIR="${NOTIFICATION_IMAGE_DIR:-$NOTIFICATION_ASSET_DIR/images}"
-NOTIFICATION_ICON_DIR="${NOTIFICATION_ICON_DIR:-$NOTIFICATION_ASSET_DIR/icons}"
 EFFECTS_DIR="${EFFECTS_DIR:-$HYPR_CONFIG_DIR/effects}"
 RAINBOW_BORDER_MODE_FILE="${RAINBOW_BORDER_MODE_FILE:-$EFFECTS_DIR/rainbow-border-mode}"
 
 NOCTALIA_SHELL_ENABLED="${NOCTALIA_SHELL_ENABLED:-1}"
-if [[ -r "$HYPR_RUNTIME_ENV" ]]; then
-  # shellcheck source=/dev/null
-  source "$HYPR_RUNTIME_ENV"
-fi
-
-icon_img() {
-  printf '%s/%s\n' "$NOTIFICATION_IMAGE_DIR" "$1"
-}
-
-icon_symbol() {
-  printf '%s/%s\n' "$NOTIFICATION_ICON_DIR" "$1"
-}
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1

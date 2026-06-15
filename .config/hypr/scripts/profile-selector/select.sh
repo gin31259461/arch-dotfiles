@@ -41,9 +41,9 @@ target_for_category() {
   local category="$1"
 
   case "$category" in
-    animation) printf '%s/animations.lua\n' "$USER_DIR" ;;
-    monitor) printf '%s/monitors.lua\n' "$USER_DIR" ;;
-    *) printf '%s/%s.lua\n' "$USER_DIR" "$category" ;;
+  animation) printf '%s/animations.lua\n' "$USER_DIR" ;;
+  monitor) printf '%s/monitors.lua\n' "$USER_DIR" ;;
+  *) printf '%s/%s.lua\n' "$USER_DIR" "$category" ;;
   esac
 }
 
@@ -59,9 +59,9 @@ theme_for_category() {
   local category="$1"
 
   case "$category" in
-    animation) printf '%s/config-animations.rasi\n' "$ROFI_CONFIG_DIR" ;;
-    monitor) printf '%s/config-monitors.rasi\n' "$ROFI_CONFIG_DIR" ;;
-    *) printf '%s/config-edit.rasi\n' "$ROFI_CONFIG_DIR" ;;
+  animation) printf '%s/config-animations.rasi\n' "$ROFI_CONFIG_DIR" ;;
+  monitor) printf '%s/config-monitors.rasi\n' "$ROFI_CONFIG_DIR" ;;
+  *) printf '%s/config-edit.rasi\n' "$ROFI_CONFIG_DIR" ;;
   esac
 }
 
@@ -172,7 +172,7 @@ select_profile() {
     if [[ "${labels[i]}" == "$selected" ]]; then
       write_active_profile "${profiles[i]}" "$active_profile"
       remember_selected_profile "$category" "${profiles[i]}"
-      notify_success "$(category_title "$category") Profile" "$selected loaded" "$(icon_img ja.png)" "$category-profile"
+      notify_success "$(category_title "$category") Profile" "$selected loaded" "$NOTIFY_FALLBACK_ICON" "$category-profile"
       reload_hyprland
       return 0
     fi

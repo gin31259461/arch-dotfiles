@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
 source "$SCRIPT_DIR/lib/notify.sh"
 
-notif="$(icon_img ja.png)"
+notif="$NOTIFY_FALLBACK_ICON"
 scriptsDir="$SCRIPT_DIR"
 
 HYPRGAMEMODE=$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')

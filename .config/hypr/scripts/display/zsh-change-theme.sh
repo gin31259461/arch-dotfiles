@@ -28,16 +28,16 @@ main() {
     themes_only=("${themes_array[@]:1}")
     random_theme="${themes_only[$((RANDOM % ${#themes_only[@]}))]}"
     theme_to_set="$random_theme"
-    notify_info "Zsh Theme" "Random: $random_theme" "$(icon_img ja.png)" "zsh-theme"
+    notify_info "Zsh Theme" "Random: $random_theme" "$NOTIFY_FALLBACK_ICON" "zsh-theme"
   else
     theme_to_set="$choice"
-    notify_info "Zsh Theme" "Selected: $choice" "$(icon_img ja.png)" "zsh-theme"
+    notify_info "Zsh Theme" "Selected: $choice" "$NOTIFY_FALLBACK_ICON" "zsh-theme"
   fi
 
   if [[ -f "$zsh_path" ]]; then
     safe_theme=$(printf '%s' "$theme_to_set" | sed 's/[\/&]/\\&/g')
     sed -i "s/^ZSH_THEME=.*/ZSH_THEME=\"${safe_theme}\"/" "$zsh_path"
-    notify_success "OMZ Theme" "Applied. Restart your terminal." "$(icon_img ja.png)" "zsh-theme"
+    notify_success "OMZ Theme" "Applied. Restart your terminal." "$NOTIFY_FALLBACK_ICON" "zsh-theme"
   else
     notify_error "OMZ Theme" "~/.zshrc file not found." "" "zsh-theme"
   fi

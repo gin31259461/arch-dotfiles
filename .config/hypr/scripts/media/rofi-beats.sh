@@ -16,15 +16,15 @@ rofi_theme="$ROFI_CONFIG_DIR/config-beats.rasi"
 rofi_theme_menu="$ROFI_CONFIG_DIR/config-beats-menu.rasi"
 
 notify_beats() {
-  notify_info "${1:-Rofi Beats}" "${2:-}" "$(icon_symbol music.png)" "rofi-beats"
+  notify_info "${1:-Rofi Beats}" "${2:-}" "$NOTIFY_FALLBACK_ICON" "rofi-beats"
 }
 
 notify_beats_warn() {
-  notify_warn "Rofi Beats" "$1" "$(icon_symbol music.png)" "rofi-beats"
+  notify_warn "Rofi Beats" "$1" "$NOTIFY_FALLBACK_ICON" "rofi-beats"
 }
 
 notify_beats_error() {
-  notify_error "Rofi Beats" "$1" "$(icon_img error.png)" "rofi-beats"
+  notify_error "Rofi Beats" "$1" "$NOTIFY_FALLBACK_ICON" "rofi-beats"
 }
 
 ensure_music_list() {
@@ -213,14 +213,14 @@ manage_music() {
   local sub_choice
 
   sub_choice="$(
-    printf '%s\n' "Add Music" "Remove Music" "View List" \
-      | select_from_lines "$rofi_theme_menu" "Manage music list"
+    printf '%s\n' "Add Music" "Remove Music" "View List" |
+      select_from_lines "$rofi_theme_menu" "Manage music list"
   )" || return 0
 
   case "$sub_choice" in
-    "Add Music") add_online_music ;;
-    "Remove Music") remove_online_music ;;
-    "View List") view_online_music ;;
+  "Add Music") add_online_music ;;
+  "Remove Music") remove_online_music ;;
+  "View List") view_online_music ;;
   esac
 }
 
@@ -236,16 +236,16 @@ main() {
       "Play from Music directory" \
       "Shuffle Play from Music directory" \
       "Stop Rofi Beats" \
-      "Manage Music List" \
-      | select_from_lines "$rofi_theme_menu" "Rofi Beats"
+      "Manage Music List" |
+      select_from_lines "$rofi_theme_menu" "Rofi Beats"
   )" || exit 0
 
   case "$choice" in
-    "Play from Online Stations") play_online_music ;;
-    "Play from Music directory") play_local_music ;;
-    "Shuffle Play from Music directory") shuffle_local_music ;;
-    "Stop Rofi Beats") music_playing && stop_music ;;
-    "Manage Music List") manage_music ;;
+  "Play from Online Stations") play_online_music ;;
+  "Play from Music directory") play_local_music ;;
+  "Shuffle Play from Music directory") shuffle_local_music ;;
+  "Stop Rofi Beats") music_playing && stop_music ;;
+  "Manage Music List") manage_music ;;
   esac
 }
 

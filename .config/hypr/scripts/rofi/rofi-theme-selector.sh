@@ -49,7 +49,7 @@ canonical_theme_name() {
   name="${name//_/-}"
 
   case "$name" in
-    lonerorz) name="loner-orz" ;;
+  lonerorz) name="loner-orz" ;;
   esac
 
   printf '%s.rasi\n' "$name"
@@ -85,7 +85,7 @@ apply_rofi_theme() {
   local theme_path theme_ref temp_file
 
   theme_path="$(theme_path_for_name "$theme_name")" || {
-    notify_error "Rofi Theme" "Theme file not found: $theme_name" "$(icon_img error.png)" "rofi-theme"
+    notify_error "Rofi Theme" "Theme file not found: $theme_name" "$NOTIFY_FALLBACK_ICON" "rofi-theme"
     return 1
   }
   theme_ref="$(theme_config_path "$theme_path")"
@@ -194,13 +194,13 @@ main() {
   require_command rofi "Install rofi first." || exit 1
 
   if [[ ! -f "$rofi_config_file" ]]; then
-    notify_error "Rofi Theme" "Rofi config not found: $rofi_config_file" "$(icon_img error.png)" "rofi-theme"
+    notify_error "Rofi Theme" "Rofi config not found: $rofi_config_file" "$NOTIFY_FALLBACK_ICON" "rofi-theme"
     exit 1
   fi
 
   load_available_themes
   if ((${#available_theme_names[@]} == 0)); then
-    notify_error "Rofi Theme" "No .rasi themes found." "$(icon_img error.png)" "rofi-theme"
+    notify_error "Rofi Theme" "No .rasi themes found." "$NOTIFY_FALLBACK_ICON" "rofi-theme"
     exit 1
   fi
 
@@ -222,25 +222,25 @@ main() {
     chosen_index="${selection#*:}"
 
     case "$rofi_status" in
-      0)
-        valid_index "$chosen_index" && current_index="$chosen_index"
-        ;;
-      1 | 65)
-        # notify_info "Rofi Theme" "Selection cancelled. Reverted original theme." "$(icon_img note.png)" "rofi-theme"
-        exit 0
-        ;;
-      10)
-        valid_index "$chosen_index" && current_index="$chosen_index"
-        preview_name="${available_theme_names[current_index]}"
-        apply_rofi_theme "$preview_name"
-        committed=1
-        notify_success "Rofi Theme Applied" "${preview_name%.rasi}" "$(icon_img ja.png)" "rofi-theme"
-        exit 0
-        ;;
-      *)
-        # notify_error "Rofi Theme" "Unexpected rofi exit: $rofi_status" "$(icon_img error.png)" "rofi-theme"
-        exit 1
-        ;;
+    0)
+      valid_index "$chosen_index" && current_index="$chosen_index"
+      ;;
+    1 | 65)
+      # notify_info "Rofi Theme" "Selection cancelled. Reverted original theme." "$NOTIFY_FALLBACK_ICON" "rofi-theme"
+      exit 0
+      ;;
+    10)
+      valid_index "$chosen_index" && current_index="$chosen_index"
+      preview_name="${available_theme_names[current_index]}"
+      apply_rofi_theme "$preview_name"
+      committed=1
+      notify_success "Rofi Theme Applied" "${preview_name%.rasi}" "$NOTIFY_FALLBACK_ICON" "rofi-theme"
+      exit 0
+      ;;
+    *)
+      # notify_error "Rofi Theme" "Unexpected rofi exit: $rofi_status" "$NOTIFY_FALLBACK_ICON" "rofi-theme"
+      exit 1
+      ;;
     esac
   done
 }

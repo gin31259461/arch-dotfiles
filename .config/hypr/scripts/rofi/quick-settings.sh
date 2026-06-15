@@ -20,7 +20,7 @@ msg='Choose a setting'
 marker="›"
 
 show_info() {
-  notify_info "Quick Settings" "$1" "$(icon_img info.png)" "quick-settings"
+  notify_info "Quick Settings" "$1" "$NOTIFY_FALLBACK_ICON" "quick-settings"
 }
 
 rainbow_borders_menu() {

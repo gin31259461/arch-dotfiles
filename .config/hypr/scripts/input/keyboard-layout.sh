@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
 source "$SCRIPT_DIR/lib/notify.sh"
 
-notif_icon="$(icon_img ja.png)"
+notif_icon="$NOTIFY_FALLBACK_ICON"
 scriptsDir="$SCRIPT_DIR"
 
 ignore_patterns=(
@@ -34,17 +34,17 @@ get_current_layout_info() {
     if ! is_ignored "$name"; then
       found_kb=true
       local layout_mapping_str
-      layout_mapping_str=$(hyprctl devices -j \
-        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).layout')
+      layout_mapping_str=$(hyprctl devices -j |
+        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).layout')
       IFS="," read -r -a layout_mapping <<<"$layout_mapping_str"
 
       local variant_mapping_str
-      variant_mapping_str=$(hyprctl devices -j \
-        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).variant')
+      variant_mapping_str=$(hyprctl devices -j |
+        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).variant')
       IFS="," read -r -a variant_mapping <<<"$variant_mapping_str"
 
-      layout_index=$(hyprctl devices -j \
-        | jq -r --arg name "$name" '.keyboards[] | select(.name==$name).active_layout_index')
+      layout_index=$(hyprctl devices -j |
+        jq -r --arg name "$name" '.keyboards[] | select(.name==$name).active_layout_index')
       break
     fi
   done <<<"$(get_keyboard_names)"

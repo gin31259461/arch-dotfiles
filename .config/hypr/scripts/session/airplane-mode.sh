@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 # shellcheck source=../lib/notify.sh
 source "$SCRIPT_DIR/lib/notify.sh"
 
-notif="$(icon_img ja.png)"
+notif="$NOTIFY_FALLBACK_ICON"
 
 # Check if any wireless device is blocked
 wifi_blocked=$(rfkill list wifi | grep -o "Soft blocked: yes")

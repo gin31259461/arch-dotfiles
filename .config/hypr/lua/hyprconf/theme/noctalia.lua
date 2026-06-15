@@ -283,16 +283,71 @@ return {
   )
 end
 
-local function current_wallpaper()
-  local file = io.open(paths.wallpapers, "r")
-  if not file then
+local function focused_monitor()
+  local handle = io.popen("hyprctl monitors -j 2>/dev/null")
+  if not handle then
     return nil
   end
 
-  local content = file:read("*a")
-  file:close()
-  return json.object_string_field(content, "wallpapers", "")
-    or json.object_string_field(content, "wallpapers", "HDMI-A-1")
+  local content = handle:read("*a")
+  handle:close()
+
+  local ok, monitors = pcall(json.decode, content)
+  if not ok or type(monitors) ~= "table" then
+    return nil
+  end
+
+  for _, monitor in ipairs(monitors) do
+    if monitor.focused and monitor.name then
+      return monitor.name
+    end
+  end
+
+  return nil
+end
+
+local function wallpaper_path(value)
+  if type(value) == "string" then
+    return value
+  end
+
+  if type(value) ~= "table" then
+    return nil
+  end
+
+  return value.dark or value.light or value.path or value[1]
+end
+
+local function first_wallpaper(wallpapers)
+  for _, value in pairs(wallpapers) do
+    local path = wallpaper_path(value)
+    if path then
+      return path
+    end
+  end
+
+  return nil
+end
+
+local function current_wallpaper()
+  local ok, data = pcall(function()
+    return json.decode(json.read(paths.wallpapers))
+  end)
+
+  if not ok or type(data) ~= "table" then
+    return nil
+  end
+
+  local wallpapers = data.wallpapers
+  if type(wallpapers) ~= "table" then
+    return wallpaper_path(data.defaultWallpaper)
+  end
+
+  local monitor = focused_monitor()
+  return (monitor and wallpaper_path(wallpapers[monitor]))
+    or wallpaper_path(wallpapers[""])
+    or first_wallpaper(wallpapers)
+    or wallpaper_path(data.defaultWallpaper)
 end
 
 local function sync_wallpaper_cache(colors)
@@ -321,16 +376,16 @@ local function sync_wallpaper_cache(colors)
       .. shell_quote(paths.effects_cache .. "/wallpaper-current")
   )
 
-  local cmd = table.concat({
-    "magick",
-    shell_quote(wallpaper),
-    "-blur 0x18",
-    "-fill " .. shell_quote(colors.mSurface),
-    "-colorize 30",
-    "-quality 90",
-    shell_quote(paths.effects_cache .. "/wallpaper-modified"),
-  }, " ")
-  os.execute(cmd .. " >/dev/null 2>&1 || true")
+  -- local cmd = table.concat({
+  --   "magick",
+  --   shell_quote(wallpaper),
+  --   "-blur 0x18",
+  --   "-fill " .. shell_quote(colors.mSurface),
+  --   "-colorize 30",
+  --   "-quality 90",
+  --   shell_quote(paths.effects_cache .. "/wallpaper-modified"),
+  -- }, " ")
+  -- os.execute(cmd .. " >/dev/null 2>&1 || true")
 end
 
 function M.apply()

@@ -15,4 +15,4 @@ test:
 	@echo "===> Validation"
 	hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 
-pr-ready: fmt lint test
+ready: fmt lint test

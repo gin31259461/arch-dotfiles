@@ -376,16 +376,16 @@ local function sync_wallpaper_cache(colors)
       .. shell_quote(paths.effects_cache .. "/wallpaper-current")
   )
 
-  -- local cmd = table.concat({
-  --   "magick",
-  --   shell_quote(wallpaper),
-  --   "-blur 0x18",
-  --   "-fill " .. shell_quote(colors.mSurface),
-  --   "-colorize 30",
-  --   "-quality 90",
-  --   shell_quote(paths.effects_cache .. "/wallpaper-modified"),
-  -- }, " ")
-  -- os.execute(cmd .. " >/dev/null 2>&1 || true")
+  local cmd = table.concat({
+    "magick",
+    shell_quote(wallpaper),
+    "-blur 0x18",
+    "-fill " .. shell_quote(colors.mSurface),
+    "-colorize 30",
+    "-quality 90",
+    shell_quote(paths.effects_cache .. "/wallpaper-modified"),
+  }, " ")
+  os.execute(cmd .. " >/dev/null 2>&1 || true")
 end
 
 function M.apply()

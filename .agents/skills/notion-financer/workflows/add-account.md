@@ -1,6 +1,6 @@
 # Workflow C: Add an Account
 
-**Pre-requisite**: Pre-flight completed (`$accountsDS` resolved).
+Pre-requisite: Pre-flight completed (`$accountsDS` resolved).
 
 ## Step 1 — Parse input
 

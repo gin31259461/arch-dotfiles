@@ -178,5 +178,3 @@ After creating a skill, verify:
 ## References
 
 - [Agent Skills Specification](https://agentskills.io/specification)
-- [Repository README](../../README.md)
-- [Contributing Guidelines](../../CONTRIBUTING.md)

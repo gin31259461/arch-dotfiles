@@ -7,7 +7,7 @@ description: Manages the Financer Notion workspace — recording transactions, m
 
 Provides a complete workflow for interacting with the Financer Notion workspace. Five linked databases — Transactions, Categories, Accounts, Fixed Expenses, Monthly Report.
 
-**Critical**: Do NOT hardcode any IDs (data source, template, or page). Always discover them dynamically via the Pre-flight workflow.
+Critical: Do NOT hardcode any IDs (data source, template, or page). Always discover them dynamically via the Pre-flight workflow.
 
 ## When to Use
 
@@ -26,11 +26,9 @@ Provides a complete workflow for interacting with the Financer Notion workspace.
 
 ## Timezone Rules
 
-- **Workspace timezone**: GMT+8 (Asia/Taipei)
-- **Datetime values** (time included): append `+08:00`
-  - Correct: `"2026-06-05T09:00:00+08:00"`
-- **Date-only values**: bare ISO date, no offset, `is_datetime` = `0`
-  - Correct: `"2026-06-05"`
+- Workspace timezone: GMT+8 (Asia/Taipei)
+- Datetime values (time included): append `+08:00`, correct is `"2026-06-05T09:00:00+08:00"`
+- Date-only values: bare ISO date, no offset, `is_datetime` = `0`, correct is `"2026-06-05"`
 
 ## Workflow Index
 
@@ -44,7 +42,7 @@ Provides a complete workflow for interacting with the Financer Notion workspace.
 | Batch Migration | `workflows/migration.md` | Bulk import |
 | Create Monthly Report | `workflows/monthly-report.md` | End-of-period report |
 
-**Always start by reading `workflows/preflight.md`** to discover database IDs and template. Results are stored as variables used by all other workflows.
+Always start by reading `workflows/preflight.md` to discover database IDs and template. Results are stored as variables used by all other workflows.
 
 ## Reference Files
 

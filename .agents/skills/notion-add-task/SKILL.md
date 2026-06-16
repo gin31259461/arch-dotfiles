@@ -29,7 +29,7 @@ Resolves user input into one or more structured task entries and writes them to 
 
 ## Timezone Rules
 
-- **Workspace timezone**: GMT+8 (Asia/Taipei)
+- Workspace timezone: GMT+8 (Asia/Taipei)
 - When setting a datetime (time included): **always** append `+08:00` to the ISO string.
   - Correct: `"2026-06-05T09:00:00+08:00"`
   - Wrong: `"2026-06-05T09:00:00"` (Notion treats bare times as UTC → displays 8 h ahead)

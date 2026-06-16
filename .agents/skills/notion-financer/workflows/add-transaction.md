@@ -1,6 +1,6 @@
 # Workflow A: Add a Transaction (Income or Expense)
 
-**Pre-requisite**: Pre-flight completed (`$transactionsDS`, `$categoriesDS`, `$accountsDS` resolved).
+Pre-requisite: Pre-flight completed (`$transactionsDS`, `$categoriesDS`, `$accountsDS` resolved).
 
 ## Step 1 — Parse input
 

@@ -1,8 +1,8 @@
 # Workflow B: Add a Fixed Expense
 
-Use for **recurring** bills (subscriptions, loans, taxes). One entry per expense type — not per billing period.
+Use for recurring bills (subscriptions, loans, taxes). One entry per expense type — not per billing period.
 
-**Pre-requisite**: Pre-flight completed (`$fixedExpensesDS`, `$categoriesDS` resolved).
+Pre-requisite: Pre-flight completed (`$fixedExpensesDS`, `$categoriesDS` resolved).
 
 ## Step 1 — Parse input
 
@@ -19,22 +19,22 @@ Extract:
 
 Use a two-pass approach since `data_source_url` scoped search is unreliable:
 
-**Pass 1** — Try scoped search:
+- Pass 1: Try scoped search:
 
-```
-notion_notion-search(
-  query = "<item name>",
-  data_source_url = $fixedExpensesDS
-)
-```
+  ```
+  notion_notion-search(
+    query = "<item name>",
+    data_source_url = $fixedExpensesDS
+  )
+  ```
 
-**Pass 2** — If Pass 1 returns zero results or `type` is `workspace_search`, fall back to workspace search + ancestor-path verification:
+- Pass 2: If Pass 1 returns zero results or `type` is `workspace_search`, fall back to workspace search + ancestor-path verification:
 
-```
-notion_notion-search(query = "<item name>")
-# For each result, fetch and check:
-# <parent-data-source url="collection://<matches $fixedExpensesDS>" name="Fixed Expenses DB"/>
-```
+  ```
+  notion_notion-search(query = "<item name>")
+  # For each result, fetch and check:
+  # <parent-data-source url="collection://<matches $fixedExpensesDS>" name="Fixed Expenses DB"/>
+  ```
 
 If an entry with the same name already exists, **update** it instead of creating a duplicate.
 

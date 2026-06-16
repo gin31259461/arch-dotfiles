@@ -1,6 +1,6 @@
 # Workflow D: Query / Summarize
 
-**Pre-requisite**: Pre-flight completed (relevant DBs resolved).
+Pre-requisite: Pre-flight completed (relevant DBs resolved).
 
 ## Spending by category (current month)
 

@@ -1,88 +1,55 @@
 # Arch Linux and Hyprland Dotfiles
 
-Bare git repo, working tree is `$HOME`, bare repo at `~/.dotfiles/`.
+Bare git repo, used for managing dotfiles in `$HOME` with a separate git directory at `~/.dotfiles/`.
 
 ```bash
 alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 ```
 
-## Rules
-
-- Use `dot` instead of `git` in `$HOME`
-- `dot status` hides untracked files by design
-- Commit always without co-author trailers
-
 ## Scripts (`~/.local/bin/`)
 
-| Script | Purpose |
-| ------ | ------- |
-| `dotfiles.sh [-m "msg"]`              | Stage all tracked files, commit, push to `origin main`         |
-| `bootstrap.sh [--yes] [--repo <url>]` | Fresh-machine setup: prereqs → clone → OMZ → packages          |
-| `installer.sh [-y]`                   | fzf group-select installer; calls `setup_<pkg>()` post-install |
-| `cleanup.sh [-y]`                     | fzf task-select cleanup (pacman cache, orphans, journal, etc.) |
+- dotfiles.sh: for managing dotfiles
+- bootstrap.sh: for fresh machine setup
+- installer.sh: for installing packages from config
+- cleanup.sh: for system maintenance tasks
 
-## Library Namespace (`~/.local/lib/dotfiles-arch/`)
+## Library of Scripts (`~/.local/lib/dotfiles-arch/`)
 
-| Path | Purpose |
-| ---- | ------- |
-| `config/dotfiles.toml`       | tracked path groups for `dotfiles.sh`           |
-| `config/cleanup.toml`        | cleanup task labels, details, requirements      |
-| `config/packages.d/*.toml`   | package group definitions for `installer.sh`    |
-| `dotfiles-config.py`         | central TOML parser for scripts                 |
-| `tui.sh`                     | shared terminal UI helpers                      |
-| `core/*.sh`, `optional/*.sh` | package setup hooks with `setup()` functions    |
+- config/dotfiles.toml: path groups for `dotfiles.sh`
+- config/cleanup.toml: cleanup task labels, details, requirements
+- config/packages.d/*.toml: package group definitions for `installer.sh`
+- dotfiles-config.py: central toml parser for scripts
+- tui.sh: shared terminal ui helpers
+- core/*.sh, optional/*.sh: package setup hooks with `setup()` functions
 
-## Packages (`~/.local/lib/dotfiles-arch/config/packages.d/*.toml`)
+## Commit Rules
 
-Groups: core, shell, cli-tools, terminal, dm, files, audio, network, capture,
-theming, fonts, input, gtk, utils, sync, self-hosted, apps, neovim, noctalia,
-razer, amd, dev, docker, asus, msi.
+- Structure: header, body (optional), footer (optional).
 
-TOML format:
+    ```plain
+    type(scope): subject -> header
 
-```toml
-[key]
-label = "Display Label"
-official = ["pacman-package"]
-aur = ["aur-package"]
-```
+    - content -> body
+    - content
+    - content
 
-## Package Setup Functions (`~/.local/lib/dotfiles-arch/{core,optional}/*.sh`)
+    footer
+    ```
 
-Auto-discovered by `installer.sh`.
+- Rules:
+  - header is brief, 50 chars or less, imperative mood, no period at end
+  - body 72 chars wrapped, optional
+  - footer for co-authors, references, etc., optional (this project not allow co-authors trailers)
+  - do not add any co-authors trailers
 
-Rules:
-
-- Filename must match the package key (e.g. `sunshine.sh` → `setup()`).
-- Setup packages via `*.sh -> setup()` after install for that package.
-
-## Commit Convention
-
-Structure: Header, optional Body, optional Footer.
-
-```plain
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-Rules:
-
-- Header is brief, 50 chars or less, imperative mood, no period at end
-- Body 72 chars wrapped, optional
-- Footer for co-authors, references, etc., optional (this project not allow co-authors trailers)
-
-Types:
-
-- feat: new feature
-- fix: bug fix
-- docs: documentation only changes
-- style: code formatting, no logic changes
-- refactor: code refactoring
-- perf: performance improvement
-- test: test changes
-- build: build system changes
-- ci: CI configuration changes
-- chore: other changes
+- Types:
+  - feat: new feature
+  - fix: bug fix
+  - docs: documentation only changes
+  - style: code formatting, no logic changes
+  - refactor: code refactoring
+  - perf: performance improvement
+  - test: test changes
+  - build: build system changes
+  - ci: CI configuration changes
+  - chore: other changes

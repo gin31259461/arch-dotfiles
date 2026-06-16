@@ -1,5 +1,5 @@
 [theming]
-label = "Qt Theming"
+label = "Themes"
 official = [
   "kvantum",
   "kvantum-qt5",
@@ -10,6 +10,9 @@ official = [
   "nwg-displays",
   "papirus-icon-theme",
   "gtk-engine-murrine",
+  "adwaita-icon-theme",
+  "adwaita-cursors",
+  "adw-gtk-theme",
 ]
 
 [fonts]
@@ -25,6 +28,7 @@ official = [
   "ttf-droid",
   "ttf-fira-code",
   "ttf-jetbrains-mono",
+  "adwaita-fonts",
 ]
 aur = [
   "ttf-victor-mono",
@@ -39,10 +43,4 @@ official = [
   "fcitx5-gtk",
   "fcitx5-qt",
   "fcitx5-configtool",
-]
-
-[gtk]
-label = "GTK Theme & Cursor"
-aur = [
-  "adw-gtk-theme",
 ]

@@ -3,7 +3,7 @@
 #  tui.sh  ·  Shared terminal UI helpers for dotfile scripts
 #
 #  Source this file; do not execute it directly:
-#    source "$HOME/.local/lib/arch-dotfiles/tui.sh"
+#    source "$HOME/.local/lib/dotfiles-arch/tui.sh"
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Palette ──────────────────────────────────────────────────────────────────

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  bootstrap  ·  New machine setup for arch-dotfiles
+#  bootstrap  ·  New machine setup for dotfiles-arch
 #  Arch Linux + Hyprland
 #
 #  Usage:
-#    bash <(curl -fsSL https://raw.githubusercontent.com/gin31259461/arch-dotfiles/main/.local/bin/bootstrap.sh)
+#    bash <(curl -fsSL https://raw.githubusercontent.com/gin31259461/dotfiles-arch/main/.local/bin/bootstrap.sh)
 #    bootstrap.sh [--yes|-y] [--repo <ssh-url>]
 #
 #    --yes              non-interactive — accept all defaults (skip optional steps)
@@ -24,8 +24,8 @@
 set -euo pipefail
 
 # ── Constants & defaults ──────────────────────────────────────────────────────
-DEFAULT_REPO_SSH="git@github.com:gin31259461/arch-dotfiles.git"
-DEFAULT_REPO_HTTPS="https://github.com/gin31259461/arch-dotfiles.git"
+DEFAULT_REPO_SSH="git@github.com:gin31259461/dotfiles-arch.git"
+DEFAULT_REPO_HTTPS="https://github.com/gin31259461/dotfiles-arch.git"
 DOTFILES_DIR="$HOME/.dotfiles"
 DOTFILES_REPO_FILE="$HOME/.dotfiles-repo" # remembers current SSH remote URL
 OPT_YES=false
@@ -35,11 +35,11 @@ REPO_SSH="$DEFAULT_REPO_SSH"
 REPO_HTTPS="$DEFAULT_REPO_HTTPS"
 
 # ── Bootstrap tui.sh if not yet deployed ─────────────────────────────────────
-DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/dotfiles-arch}"
 
 if [[ ! -f "$DOTFILES_LIB_DIR/tui.sh" ]]; then
   _raw="${DEFAULT_REPO_HTTPS%.git}"
-  _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/arch-dotfiles/tui.sh"
+  _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/dotfiles-arch/tui.sh"
   mkdir -p "$DOTFILES_LIB_DIR"
   curl -fsSL "$_raw" -o "$DOTFILES_LIB_DIR/tui.sh" ||
     {
@@ -48,7 +48,7 @@ if [[ ! -f "$DOTFILES_LIB_DIR/tui.sh" ]]; then
     }
   unset _raw
 fi
-# shellcheck source=../.local/lib/arch-dotfiles/tui.sh
+# shellcheck source=../.local/lib/dotfiles-arch/tui.sh
 source "$DOTFILES_LIB_DIR/tui.sh"
 
 # ── Argument parsing ──────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ prompt_repo() {
   if command -v gum &>/dev/null; then
     printf '\n'
     gum input \
-      --placeholder "git@github.com:youruser/arch-dotfiles.git  or  user/repo" \
+      --placeholder "git@github.com:youruser/dotfiles-arch.git  or  user/repo" \
       --header "Your dotfiles SSH URL" \
       --width 70
   else

@@ -311,7 +311,7 @@ Run the bootstrap script to deploy dotfiles, install Oh My Zsh, and optionally
 install all dependencies in one step:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/arch-dotfiles"
+repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
 curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh" | bash
 ```
 

@@ -8,7 +8,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/dotfiles-arch}"
 
 source "$DOTFILES_LIB_DIR/tui.sh"
 

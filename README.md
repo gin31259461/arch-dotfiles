@@ -141,7 +141,7 @@ Cleanup task labels and descriptions are defined in
 Run the bootstrap script on a fresh Arch Linux install:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/arch-dotfiles"
+repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
 bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh")
 ```
 
@@ -169,9 +169,9 @@ Pass your SSH remote URL if you are not the default repo owner or want to
 manage a personal fork:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/arch-dotfiles"
+repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
 bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh") \
-  --repo git@github.com:youruser/arch-dotfiles.git
+  --repo git@github.com:youruser/dotfiles-arch.git
 ```
 
 On first setup, the script clones the default repo over HTTPS, sets your SSH
@@ -181,14 +181,14 @@ the selected remote to `~/.dotfiles-repo`.
 After pushing those changes, later machines can use your fork directly:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/youruser/arch-dotfiles"
+repo_url="https://raw.githubusercontent.com/youruser/dotfiles-arch"
 bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh")
 ```
 
 The short `user/repo` form is also accepted:
 
 ```bash
-bootstrap.sh --repo youruser/arch-dotfiles
+bootstrap.sh --repo youruser/dotfiles-arch
 ```
 
 `~/.dotfiles-repo` is written by `bootstrap.sh` after each successful clone.
@@ -201,7 +201,7 @@ Use these steps if you prefer not to run the bootstrap script:
 
 ```bash
 git clone --separate-git-dir="$HOME/.dotfiles" \
-  git@github.com:gin31259461/arch-dotfiles.git tmpdotfiles
+  git@github.com:gin31259461/dotfiles-arch.git tmpdotfiles
 
 rsync --recursive --verbose --exclude '.git' tmpdotfiles/ "$HOME/"
 rm -rf tmpdotfiles

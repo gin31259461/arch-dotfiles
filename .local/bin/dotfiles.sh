@@ -6,9 +6,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/dotfiles-arch}"
 
-# shellcheck source=../.local/lib/arch-dotfiles/tui.sh
+# shellcheck source=../.local/lib/dotfiles-arch/tui.sh
 source "$DOTFILES_LIB_DIR/tui.sh"
 
 dot() { git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"; }

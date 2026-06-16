@@ -2,6 +2,7 @@
 label = "Qt Theming"
 official = [
   "kvantum",
+  "kvantum-qt5",
   "qt5ct",
   "qt6ct",
   "qt6-5compat",

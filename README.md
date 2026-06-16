@@ -26,9 +26,29 @@ alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 - **Apps:** Discord, Vesktop, Noctalia, and selected app settings
 - **Sync:** OneDrive config and sync list
 - **Scripts:** bootstrap, dotfiles sync, package install, and cleanup scripts
-- **Packages:** package groups and setup hooks under `.local/lib/`
+- **Packages:** package groups and setup hooks under `.local/lib/dotfiles-arch/`
 - **Self-hosted:** Sunshine config
 - **Docs:** installation, maintenance, hardware, VM, and app notes
+
+## Local Script Layout
+
+Executable entrypoints live in `~/.local/bin/`. Shared implementation files,
+TOML configuration, and setup hooks live under the `dotfiles-arch` namespace:
+
+```text
+~/.local/bin/
+  bootstrap.sh
+  cleanup.sh
+  dotfiles.sh
+  installer.sh
+
+~/.local/lib/dotfiles-arch/
+  config/
+  core/
+  optional/
+  dotfiles-config.py
+  tui.sh
+```
 
 ## First-Time Setup
 
@@ -81,20 +101,22 @@ dot push origin main
 
 ## Installing Packages
 
-`~/.local/bin/install-packages.sh` installs dotfile dependencies on a fresh
+`~/.local/bin/installer.sh` installs dotfile dependencies on a fresh
 Arch Linux system. It groups packages by purpose, checks what is already
 installed, and presents an interactive selection menu with `fzf` when
 available.
 
 ```bash
-install-packages.sh
-install-packages.sh --yes
+installer.sh
+installer.sh --yes
 ```
 
-Package groups are defined in `~/.local/lib/packages.d/*.toml` and loaded by
-`~/.local/lib/packages.sh` at runtime. Per-package setup hooks live in
-`~/.local/lib/core/` and `~/.local/lib/optional/`; the installer runs matching
-`setup()` functions after installation.
+Package groups are defined in
+`~/.local/lib/dotfiles-arch/config/packages.d/*.toml` and loaded by the
+central parser at `~/.local/lib/dotfiles-arch/dotfiles-config.py`. Per-package
+setup hooks live in `~/.local/lib/dotfiles-arch/core/` and
+`~/.local/lib/dotfiles-arch/optional/`; the installer runs matching `setup()`
+functions after installation.
 
 AUR packages are installed via `yay`. If `yay` is not found, the script builds
 and installs it automatically.
@@ -110,7 +132,8 @@ cleanup.sh --yes
 ```
 
 Cleanup task labels and descriptions are defined in
-`~/.local/lib/cleanup.toml`. The actual runners live in
+`~/.local/lib/dotfiles-arch/config/cleanup.toml` and parsed by
+`~/.local/lib/dotfiles-arch/dotfiles-config.py`. The actual runners live in
 `~/.local/bin/cleanup.sh`.
 
 ## Setting Up a New Machine
@@ -131,7 +154,7 @@ bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh")
 1. Adds the `dot` alias to `.zshrc` if missing.
 1. Initializes all git submodules.
 1. Offers to install Oh My Zsh, plugins, and Powerlevel10k.
-1. Offers to run `install-packages.sh`.
+1. Offers to run `installer.sh`.
 
 Supported flags:
 

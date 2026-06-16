@@ -18,22 +18,38 @@ alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 | ------ | ------- |
 | `dotfiles.sh [-m "msg"]`              | Stage all tracked files, commit, push to `origin main`         |
 | `bootstrap.sh [--yes] [--repo <url>]` | Fresh-machine setup: prereqs → clone → OMZ → packages          |
-| `install-packages.sh [-y]`            | fzf group-select installer; calls `setup_<pkg>()` post-install |
+| `installer.sh [-y]`                   | fzf group-select installer; calls `setup_<pkg>()` post-install |
 | `cleanup.sh [-y]`                     | fzf task-select cleanup (pacman cache, orphans, journal, etc.) |
 
-- To track a new file: add it to the `dot add` block in `dotfiles.sh`.
+## Library Namespace (`~/.local/lib/dotfiles-arch/`)
 
-## Packages (`~/.local/lib/packages.sh`)
+| Path | Purpose |
+| ---- | ------- |
+| `config/dotfiles.toml`       | tracked path groups for `dotfiles.sh`           |
+| `config/cleanup.toml`        | cleanup task labels, details, requirements      |
+| `config/packages.d/*.toml`   | package group definitions for `installer.sh`    |
+| `dotfiles-config.py`         | central TOML parser for scripts                 |
+| `tui.sh`                     | shared terminal UI helpers                      |
+| `core/*.sh`, `optional/*.sh` | package setup hooks with `setup()` functions    |
 
-many groups: core, shell, terminal, bar, audio, network, capture, theming, fonts,
-input, utils, wallpaper, dm, session, gtk, sync, self-hosted, apps, neovim,
-noctalia, razer, amd, dev, docker, asus, msi, files, cleanup, etc.
+## Packages (`~/.local/lib/dotfiles-arch/config/packages.d/*.toml`)
 
-Format: `"key|Label|official pkgs|AUR pkgs"`
+Groups: core, shell, cli-tools, terminal, dm, files, audio, network, capture,
+theming, fonts, input, gtk, utils, sync, self-hosted, apps, neovim, noctalia,
+razer, amd, dev, docker, asus, msi.
 
-## Package Setup Functions (`~/.local/lib/{core,optional}/*.sh`)
+TOML format:
 
-Auto-discovered by `install-packages.sh`.
+```toml
+[key]
+label = "Display Label"
+official = ["pacman-package"]
+aur = ["aur-package"]
+```
+
+## Package Setup Functions (`~/.local/lib/dotfiles-arch/{core,optional}/*.sh`)
+
+Auto-discovered by `installer.sh`.
 
 Rules:
 

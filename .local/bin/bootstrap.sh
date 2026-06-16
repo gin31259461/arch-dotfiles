@@ -35,19 +35,21 @@ REPO_SSH="$DEFAULT_REPO_SSH"
 REPO_HTTPS="$DEFAULT_REPO_HTTPS"
 
 # ── Bootstrap tui.sh if not yet deployed ─────────────────────────────────────
-if [[ ! -f "$HOME/.local/lib/tui.sh" ]]; then
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+
+if [[ ! -f "$DOTFILES_LIB_DIR/tui.sh" ]]; then
   _raw="${DEFAULT_REPO_HTTPS%.git}"
-  _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/tui.sh"
-  mkdir -p "$HOME/.local/lib"
-  curl -fsSL "$_raw" -o "$HOME/.local/lib/tui.sh" ||
+  _raw="https://raw.githubusercontent.com/${_raw#https://github.com/}/main/.local/lib/arch-dotfiles/tui.sh"
+  mkdir -p "$DOTFILES_LIB_DIR"
+  curl -fsSL "$_raw" -o "$DOTFILES_LIB_DIR/tui.sh" ||
     {
       printf 'ERROR: failed to fetch tui.sh from %s\n' "$_raw" >&2
       exit 1
     }
   unset _raw
 fi
-# shellcheck source=../.local/lib/tui.sh
-source "$HOME/.local/lib/tui.sh"
+# shellcheck source=../.local/lib/arch-dotfiles/tui.sh
+source "$DOTFILES_LIB_DIR/tui.sh"
 
 # ── Argument parsing ──────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
@@ -323,12 +325,12 @@ main() {
 
   # ── Packages ────────────────────────────────────────────────────────────────
   section "Install packages"
-  if [[ -f "$HOME/.local/bin/install-packages.sh" ]] && confirm "Run install-packages now?"; then
-    "$HOME/.local/bin/install-packages.sh"
-  elif [[ ! -f "$HOME/.local/bin/install-packages.sh" ]]; then
-    note "install-packages.sh not found — skipping"
+  if [[ -f "$HOME/.local/bin/installer.sh" ]] && confirm "Run installer now?"; then
+    "$HOME/.local/bin/installer.sh"
+  elif [[ ! -f "$HOME/.local/bin/installer.sh" ]]; then
+    note "installer.sh not found — skipping"
   else
-    note "Run install-packages.sh later to install dotfile dependencies"
+    note "Run installer.sh later to install dotfile dependencies"
   fi
 
   # ── Done ────────────────────────────────────────────────────────────────────

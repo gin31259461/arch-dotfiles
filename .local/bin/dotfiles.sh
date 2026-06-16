@@ -6,8 +6,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-# shellcheck source=../.local/lib/tui.sh
-source "$HOME/.local/lib/tui.sh"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+
+# shellcheck source=../.local/lib/arch-dotfiles/tui.sh
+source "$DOTFILES_LIB_DIR/tui.sh"
 
 dot() { git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"; }
 
@@ -46,20 +48,21 @@ cd "$HOME"
 
 # ── Stage files ───────────────────────────────────────────────────────────────
 
-DOTFILES_CONFIG="${DOTFILES_CONFIG:-$HOME/.local/lib/dotfiles.toml}"
-DOTFILES_LOADER="${DOTFILES_LOADER:-$HOME/.local/lib/read-dotfiles-toml.py}"
+DOTFILES_CONFIG="${DOTFILES_CONFIG:-$DOTFILES_LIB_DIR/config/dotfiles.toml}"
+DOTFILES_CONFIG_PARSER="${DOTFILES_CONFIG_PARSER:-$DOTFILES_LIB_DIR/dotfiles-config.py}"
 
 [[ -f "$DOTFILES_CONFIG" ]] || die "Dotfiles config not found: $DOTFILES_CONFIG"
-[[ -f "$DOTFILES_LOADER" ]] || die "Dotfiles TOML loader not found: $DOTFILES_LOADER"
+[[ -f "$DOTFILES_CONFIG_PARSER" ]] || die "Config parser not found: $DOTFILES_CONFIG_PARSER"
+command -v python3 &>/dev/null || die "python3 is required to read dotfiles TOML"
 
-if ! DOTFILE_RECORDS="$(python3 "$DOTFILES_LOADER" "$DOTFILES_CONFIG")"; then
+if ! DOTFILE_RECORDS="$(python3 "$DOTFILES_CONFIG_PARSER" dotfiles "$DOTFILES_CONFIG")"; then
   exit 1
 fi
 
 mapfile -t DOTFILE_PATHS <<<"$DOTFILE_RECORDS"
 [[ ${#DOTFILE_PATHS[@]} -gt 0 ]] || die "No dotfile paths configured"
 
-dot add -- "${DOTFILE_PATHS[@]}"
+dot add --all -- "${DOTFILE_PATHS[@]}"
 
 # ── Commit and push ───────────────────────────────────────────────────────────
 

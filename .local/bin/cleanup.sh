@@ -8,13 +8,15 @@
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-# shellcheck source=../.local/lib/tui.sh
-source "$HOME/.local/lib/tui.sh"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+
+# shellcheck source=../.local/lib/arch-dotfiles/tui.sh
+source "$DOTFILES_LIB_DIR/tui.sh"
 
 strip_ansi() { sed 's/\x1b\[[0-9;]*m//g' <<<"$1"; }
 
-CLEANUP_CONFIG="${CLEANUP_CONFIG:-$HOME/.local/lib/cleanup.toml}"
-CLEANUP_LOADER="${CLEANUP_LOADER:-$HOME/.local/lib/read-cleanup-toml.py}"
+CLEANUP_CONFIG="${CLEANUP_CONFIG:-$DOTFILES_LIB_DIR/config/cleanup.toml}"
+DOTFILES_CONFIG_PARSER="${DOTFILES_CONFIG_PARSER:-$DOTFILES_LIB_DIR/dotfiles-config.py}"
 
 # ── Options ───────────────────────────────────────────────────────────────────
 OPT_YES=false
@@ -160,10 +162,11 @@ declare -A CLEANUP_TASK_SUDO=()
 
 load_cleanup_tasks() {
   [[ -f "$CLEANUP_CONFIG" ]] || die "Cleanup config not found: $CLEANUP_CONFIG"
-  [[ -f "$CLEANUP_LOADER" ]] || die "Cleanup TOML loader not found: $CLEANUP_LOADER"
+  [[ -f "$DOTFILES_CONFIG_PARSER" ]] || die "Config parser not found: $DOTFILES_CONFIG_PARSER"
+  command -v python3 &>/dev/null || die "python3 is required to read cleanup TOML"
 
   local records
-  if ! records="$(python3 "$CLEANUP_LOADER" "$CLEANUP_CONFIG")"; then
+  if ! records="$(python3 "$DOTFILES_CONFIG_PARSER" cleanup "$CLEANUP_CONFIG")"; then
     exit 1
   fi
 

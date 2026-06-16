@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  install-packages  ·  Interactive dotfile dependency installer
+#  installer  ·  Interactive dotfile dependency installer
 #  Arch Linux + Hyprland
 #
-#  Usage: install-packages.sh [--yes]
+#  Usage: installer.sh [--yes]
 #    --yes   skip the final confirmation prompt
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-source "$HOME/.local/lib/tui.sh"
-source "$HOME/.local/lib/packages.sh"
+DOTFILES_LIB_DIR="${DOTFILES_LIB_DIR:-$HOME/.local/lib/arch-dotfiles}"
+
+source "$DOTFILES_LIB_DIR/tui.sh"
+
+PACKAGES_DIR="${PACKAGES_DIR:-$DOTFILES_LIB_DIR/config/packages.d}"
+DOTFILES_CONFIG_PARSER="${DOTFILES_CONFIG_PARSER:-$DOTFILES_LIB_DIR/dotfiles-config.py}"
 
 # ── Package helpers ───────────────────────────────────────────────────────────
 is_installed() { pacman -Qi "$1" &>/dev/null; }
@@ -61,6 +65,27 @@ color_ratio() {
 strip_ansi() { sed 's/\x1b\[[0-9;]*m//g' <<<"$1"; }
 
 # ── Group lookups ─────────────────────────────────────────────────────────────
+declare -a PKG_GROUPS=()
+
+load_package_groups() {
+  [[ -d "$PACKAGES_DIR" ]] || die "Package config directory not found: $PACKAGES_DIR"
+  [[ -f "$DOTFILES_CONFIG_PARSER" ]] || die "Config parser not found: $DOTFILES_CONFIG_PARSER"
+  command -v python3 &>/dev/null || die "python3 is required to read package TOML files"
+
+  local records
+  if ! records="$(python3 "$DOTFILES_CONFIG_PARSER" packages "$PACKAGES_DIR")"; then
+    exit 1
+  fi
+
+  local key label official aur
+  while IFS='|' read -r key label official aur; do
+    [[ -n "$key" ]] || continue
+    PKG_GROUPS+=("$key|$label|$official|$aur")
+  done <<<"$records"
+
+  [[ ${#PKG_GROUPS[@]} -gt 0 ]] || die "No package groups configured"
+}
+
 _group_field() {
   local key="$1" field="$2" # field: 1=key 2=label 3=official 4=aur
   for g in "${PKG_GROUPS[@]}"; do
@@ -322,7 +347,7 @@ show_summary() {
 
 setup_file_for_key() {
   local key="$1" file
-  for file in "$HOME/.local/lib/core/$key.sh" "$HOME/.local/lib/optional/$key.sh"; do
+  for file in "$DOTFILES_LIB_DIR/core/$key.sh" "$DOTFILES_LIB_DIR/optional/$key.sh"; do
     [[ -f "$file" ]] && {
       printf '%s\n' "$file"
       return
@@ -438,6 +463,7 @@ done
 # ── Main ──────────────────────────────────────────────────────────────────────
 main() {
   print_banner
+  load_package_groups
   ensure_yay
   select_groups
 

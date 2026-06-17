@@ -1,108 +1,76 @@
-# Workflow F: Create a Monthly Report
+# Monthly Report
 
-One row per month. All fixed expenses and month transactions are auto-linked dynamically — no manual relation setup.
+Use one row per month. Reuse an existing row for the same month when present.
+Relations drive the computed totals; do not write rollups or formulas.
 
-Pre-requisite: Pre-flight completed (`$monthlyReportDS`, `$fixedExpensesDS`, `$transactionsDS` resolved).
+Prerequisite: Pre-flight resolved `$monthlyReportID`, `$monthlyReportDS`,
+`$fixedExpensesDS`, and `$transactionsDS`.
 
-## Step 1 — Link All Fixed Expenses (Monthly Amortization > 0)
+## Find Or Create Report
 
-Do not rely solely on `data_source_url` in `notion_notion-search` — use a two-pass approach:
+Search for the target `YYYY-MM` month in Monthly Report. Verify candidates by
+ancestor path when scoped search is incomplete.
 
-- Pass 1: Try scoped search (fast path):
+Create the row only when no verified report exists:
 
-  ```
-  notion_notion-search(
-    query = "",
-    data_source_url = $fixedExpensesDS,
-    page_size = 25
-  )
-  ```
-
-  If it returns pages with `type: "page"`, verify each via ancestor-path check, then collect.
-
-- Pass 2: Fall back to workspace search + verification if Pass 1 returned zero results or `type` is `workspace_search`:
-
-  Search the workspace broadly for known fixed expense names (e.g. "貸款", "電信", "Copilot", "燃料", "牌照"). For each candidate, fetch the page and inspect its `<ancestor-path>`:
-
-  ```
-  notion_notion-fetch(id = "<candidate page url>")
-  # Check if response contains:
-  # <parent-data-source url="collection://<matches $fixedExpensesDS>" name="Fixed Expenses DB"/>
-  ```
-
-- Only include pages that pass this verification.
-
-  For each verified Fixed Expense page, compute Monthly Amortization:
-
-  - `Monthly` cycle → MA = `Amount` (> 0 if Amount > 0)
-  - `Annually` cycle → MA = `round(Amount / 12)` (> 0 if Amount > 0)
-
-- Only link fixed expenses where Monthly Amortization > 0.** (If Amount is 0 or null, skip it.)
-
-  Collect all qualifying page URLs and link them to the report:
-
-  ```
-  notion_notion-update-page(
-    page_id = "<report page id>",
-    command = "update_properties",
-    properties = {
-      "Fixed Expenses": "[\"<url 1>\", \"<url 2>\", ...]"
+```text
+notion_notion-create-pages(
+  parent = { data_source_id: $monthlyReportID },
+  pages = [{
+    properties: {
+      "Month": "YYYY-MM",
+      "date:Period Start:start": "YYYY-MM-01",
+      "date:Period Start:is_datetime": 0
     }
-  )
-  ```
+  }]
+)
+```
 
-## Step 2 — Link All Month Transactions
+## Link Fixed Expenses
 
-- Pass 1: Search by data source (fast path):**
+Collect verified Fixed Expenses pages. Include only rows with positive monthly
+amortization:
 
-  Use the semantic search scoped to the Transactions DB with the month as query:
+- Monthly cycle: `Amount`
+- Annual cycle: `round(Amount / 12)`
 
-  ```
-  notion_notion-search(
-    query = "YYYY-MM",
-    data_source_url = $transactionsDS,
-    page_size = 25
-  )
-  ```
+Use scoped search first. Fall back to workspace search plus ancestor-path
+verification when results are empty, incomplete, or typed as workspace search.
 
-  Collect all returned pages. If results seem incomplete, proceed to Pass 2.
+```text
+notion_notion-update-page(
+  page_id = "<report page id>",
+  command = "update_properties",
+  properties = {
+    "Fixed Expenses": "[\"<url 1>\", \"<url 2>\"]"
+  }
+)
+```
 
-- Pass 2: Workspace search + verification (fallback):**
+## Link Transactions
 
-  Fall back to workspace search with ancestor-path verification:
+Search Transactions for the target month. Fetch and verify candidates, then
+link every transaction in that month. If none are found, leave the relation
+empty.
 
-  ```
-  notion_notion-search(query = "YYYY-MM")
-  ```
+```text
+notion_notion-update-page(
+  page_id = "<report page id>",
+  command = "update_properties",
+  properties = {
+    "Transactions": "[\"<tx url 1>\", \"<tx url 2>\"]"
+  }
+)
+```
 
-  For each candidate result, fetch the page and inspect its `<ancestor-path>` or `<parent-data-source>` to confirm it belongs to the Transactions DB. Only include pages that pass verification.
+## Confirm
 
-- Final Step: Link to Report
+After relations update, computed properties refresh automatically:
 
-  Collect all verified transaction page URLs and link them to the report:
+- `Total Income`: sum of linked income transactions.
+- `Variable Spending`: sum of linked expense transactions.
+- `Fixed Burden`: sum of linked fixed expense amortization.
+- `Total Spending`: variable spending plus fixed burden.
+- `Net`: total income minus total spending.
 
-  ```
-  notion_notion-update-page(
-    page_id = "<report page id>",
-    command = "update_properties",
-    properties = {
-      "Transactions": "[\"<tx url 1>\", \"<tx url 2>\", ...]"
-    }
-  )
-  ```
-
-  If the fetched transaction list is completely empty for the target month, simply skip the linking process.
-
-## Step 3 — Computed Properties Auto-update
-
-Once relations are set, all aggregates update automatically:
-
-- `Total Income` = sum of Income transactions
-- `Variable Spending` = sum of Expense transactions
-- `Fixed Burden` = sum of Monthly Amortization from all linked Fixed Expenses
-- `Total Spending` = Variable Spending + Fixed Burden
-- `Net` = Total Income − Total Spending
-
-## Step 4 — Confirm
-
-Reply with the month, Total Income, Total Spending, Net, the full Fixed Burden breakdown (each expense + amount), and the Notion URL of the report page.
+Reply with month, income, spending, net, fixed burden breakdown, and Notion URL.

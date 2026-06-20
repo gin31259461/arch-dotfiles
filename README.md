@@ -10,7 +10,7 @@ alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 ## Preview
 
-![Hyprland desktop preview](./assets/swappy-20260409-185633.png)
+![Hyprland desktop preview](./assets/preview.png)
 
 ## What Is Included
 

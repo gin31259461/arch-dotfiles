@@ -14,7 +14,7 @@ alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 ## What Is Included
 
-- Hyprland desktop config with Waybar, Rofi, SwayNC, Quickshell, and Noctalia
+- Hyprland desktop config with Rofi, Quickshell, and Noctalia
 - Zsh, Oh My Zsh, Powerlevel10k, terminal, Git, and editor defaults
 - Kitty and Ghostty terminal configuration
 - GTK, Qt, Kvantum, Wallust, icon, cursor, font, and theme settings

@@ -69,6 +69,10 @@ Avoid sentence-final periods in bullet and numbered list items unless needed for
 
 Use code fences for commands and examples. Prefer copyable command blocks over prose-heavy explanations
 
+## Validation
+
+use markdownlint-cli2
+
 ## Reference Files
 
 Read [references/triggers.md](references/triggers.md) when refining when this skill should apply or interpreting explicit trigger phrases

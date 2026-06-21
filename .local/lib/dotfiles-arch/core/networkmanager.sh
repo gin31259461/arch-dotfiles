@@ -3,12 +3,7 @@
 NETWORK_MANAGER_CONFIG_DIR="/etc/NetworkManager/conf.d"
 
 setup() {
-  if [[ -d "$NETWORK_MANAGER_CONFIG_DIR" ]]; then
-    if grep -q "dns=dnsmasq" "$NETWORK_MANAGER_CONFIG_DIR"/* 2>/dev/null; then
-      ok "NetworkManager is already configured to use dnsmasq"
-      return
-    fi
-  else
+  if ! [[ -d "$NETWORK_MANAGER_CONFIG_DIR" ]]; then
     note "Creating NetworkManager configuration directory at '$NETWORK_MANAGER_CONFIG_DIR'"
     sudo mkdir -p "$NETWORK_MANAGER_CONFIG_DIR"
   fi
@@ -55,11 +50,21 @@ EOF
   nmcli con modify Arch-Hyprland wifi.mode ap
   nmcli con modify Arch-Hyprland ipv4.method shared
   nmcli con modify Arch-Hyprland ipv4.addresses 192.168.10.1/24
-  nmcli con modify Arch-Hyprland ipv4.gateway 192.168.10.1
+  # nmcli con modify Arch-Hyprland ipv4.gateway 192.168.10.1
+  nmcli con modify Arch-Hyprland \
+    wifi.band bg \
+    wifi.channel 6 \
+    802-11-wireless-security.proto rsn \
+    802-11-wireless-security.pairwise ccmp \
+    802-11-wireless-security.group ccmp \
+    802-11-wireless-security.pmf 1 \
+    ipv4.never-default yes \
+    ipv6.method ignore
 
   note "Hotspot connection profile 'Arch-Hyprland' created successfully"
   note "You'll need to check Wi-Fi adapter name with 'ip a'"
-  note "Then change 'wlan0' to your adapter name in the above nmcli commands or via NetworkManager GUI"
+  note "Then change 'wlan0' to your adapter name in the above nmcli commands"
+  note "E.g. 'nmcli con modify Arch-Hyprland ifname <your_adapter_name>'"
   note "Use 'nmcli con up Arch-Hyprland' to activate the hotspot connection"
 
   ok "NetworkManager setup completed successfully"

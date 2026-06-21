@@ -29,12 +29,13 @@ official = [
 label = "Network & Bluetooth"
 official = [
   "networkmanager",
+  "networkmanager-openconnect",
+  "networkmanager-openvpn",
   "network-manager-applet",
+  "nm-connection-editor",
   "bluez",
   "bluez-utils",
   "blueman",
-  "networkmanager-openconnect",
-  "networkmanager-openvpn",
   "dnsmasq",
   "hostapd",
 ]

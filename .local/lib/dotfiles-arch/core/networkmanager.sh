@@ -57,5 +57,10 @@ EOF
   nmcli con modify Arch-Hyprland ipv4.addresses 192.168.10.1/24
   nmcli con modify Arch-Hyprland ipv4.gateway 192.168.10.1
 
+  note "Hotspot connection profile 'Arch-Hyprland' created successfully"
+  note "You'll need to check Wi-Fi adapter name with 'ip a'"
+  note "Then change 'wlan0' to your adapter name in the above nmcli commands or via NetworkManager GUI"
+  note "Use 'nmcli con up Arch-Hyprland' to activate the hotspot connection"
+
   ok "NetworkManager configured successfully"
 }

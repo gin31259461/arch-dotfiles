@@ -57,10 +57,10 @@ Item {
         const sess = activeProvider.todaySessions;
         const tokens = mainInstance?.formatTokenCount(activeProvider.todayTotalTokens) ?? "0";
         let tip = name + " \u2014 Today: " + prompts + " prompts, " + sess + " sessions, " + tokens + " tokens";
-        
+
         const rl = activeProvider.rateLimitPercent;
         const rl2 = activeProvider.secondaryRateLimitPercent;
-        
+
         if (rl >= 0) {
             tip += " \u00b7 " + activeProvider.rateLimitLabel + ": " + Math.round(rl * 100) + "%";
             if (rl2 >= 0) {
@@ -126,7 +126,7 @@ Item {
                     icon: root.activeProvider?.providerIcon ?? "ai"
                     pointSize: root.barFontSize
                     applyUiScale: false
-                    color: Color.mPrimary
+                    color: mouseArea.containsMouse ? Color.mSurface : Color.mPrimary
                     Layout.alignment: Qt.AlignVCenter
                 }
 
@@ -135,7 +135,7 @@ Item {
                     pointSize: root.barFontSize
                     applyUiScale: false
                     font.weight: Style.fontWeightSemiBold
-                    color: Color.mOnSurface
+                    color: mouseArea.containsMouse ? Color.mSurface : Color.mOnSurface
                     Layout.alignment: Qt.AlignVCenter
                 }
             }
@@ -149,7 +149,7 @@ Item {
                     icon: root.activeProvider?.providerIcon ?? "ai"
                     pointSize: root.barFontSize
                     applyUiScale: false
-                    color: Color.mPrimary
+                    color: mouseArea.containsMouse ? Color.mSurface : Color.mPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
 
@@ -158,7 +158,7 @@ Item {
                     pointSize: root.barFontSize
                     applyUiScale: false
                     font.weight: Style.fontWeightSemiBold
-                    color: Color.mOnSurface
+                    color: mouseArea.containsMouse ? Color.mSurface : Color.mOnSurface
                     Layout.alignment: Qt.AlignHCenter
                 }
             }

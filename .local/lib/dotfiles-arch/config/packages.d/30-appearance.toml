@@ -19,6 +19,7 @@ official = [
 label = "Fonts"
 official = [
   "noto-fonts",
+  "noto-fonts-cjk",
   "noto-fonts-emoji",
   "otf-font-awesome",
   "ttf-jetbrains-mono-nerd",
@@ -29,6 +30,7 @@ official = [
   "ttf-fira-code",
   "ttf-jetbrains-mono",
   "adwaita-fonts",
+  "inter-font",
 ]
 aur = [
   "ttf-victor-mono",

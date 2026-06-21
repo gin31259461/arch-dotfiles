@@ -62,5 +62,5 @@ EOF
   note "Then change 'wlan0' to your adapter name in the above nmcli commands or via NetworkManager GUI"
   note "Use 'nmcli con up Arch-Hyprland' to activate the hotspot connection"
 
-  ok "NetworkManager configured successfully"
+  ok "NetworkManager setup completed successfully"
 }

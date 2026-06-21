@@ -35,6 +35,8 @@ official = [
   "blueman",
   "networkmanager-openconnect",
   "networkmanager-openvpn",
+  "dnsmasq",
+  "hostapd",
 ]
 
 [capture]

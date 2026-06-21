@@ -705,9 +705,9 @@
     },
     "ui": {
         "boxBorderEnabled": false,
-        "fontDefault": "Adwaita Sans",
+        "fontDefault": "Noto Sans TC Medium",
         "fontDefaultScale": 1,
-        "fontFixed": "Adwaita Mono",
+        "fontFixed": "Noto Sans Mono",
         "fontFixedScale": 1,
         "panelBackgroundOpacity": 0.6,
         "panelsAttachedToBar": true,

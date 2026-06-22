@@ -37,6 +37,19 @@ EOF
     ok "NetworkManager service started"
   fi
 
+  note "Configuring sysctl settings"
+
+  cat <<EOF | sudo tee /etc/sysctl.d/99-sysctl.conf >/dev/null
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+net.ipv4.ip_forward = 1
+net.ipv6.conf.all.forwarding = 1
+EOF
+
+  note "Applying sysctl settings"
+  sudo sysctl --system >/dev/null
+  note "Sysctl settings applied successfully"
+
   note "Creating hotspot connection profile"
 
   if nmcli con show Arch-Hyprland &>/dev/null; then

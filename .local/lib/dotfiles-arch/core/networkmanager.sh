@@ -58,21 +58,35 @@ EOF
   fi
 
   nmcli con add con-name Arch-Hyprland ifname wlan0 type wifi ssid Arch-Hyprland
-  nmcli con modify Arch-Hyprland wifi-sec.key-mgmt wpa-psk
-  nmcli con modify Arch-Hyprland wifi-sec.psk "ilovearchlinux"
-  nmcli con modify Arch-Hyprland wifi.mode ap
-  nmcli con modify Arch-Hyprland ipv4.method shared
-  nmcli con modify Arch-Hyprland ipv4.addresses 192.168.10.1/24
-  # nmcli con modify Arch-Hyprland ipv4.gateway 192.168.10.1
+
+  # [wifi]
   nmcli con modify Arch-Hyprland \
     wifi.band bg \
     wifi.channel 6 \
-    802-11-wireless-security.proto rsn \
-    802-11-wireless-security.pairwise ccmp \
-    802-11-wireless-security.group ccmp \
-    802-11-wireless-security.pmf 1 \
-    ipv4.never-default yes \
-    ipv6.method ignore
+    wifi.mode ap
+
+  # [wifi-security]
+  nmcli con modify Arch-Hyprland \
+    wifi-sec.key-mgmt wpa-psk \
+    wifi-sec.psk "ilovearchlinux" \
+    802-11-wireless-security.pmf 1
+
+  # [ipv4]
+  nmcli con modify Arch-Hyprland \
+    ipv4.addresses 192.168.10.1/24 \
+    ipv4.method shared \
+    ipv4.never-default yes
+
+  # [ipv6]
+  nmcli con modify Arch-Hyprland \
+    ipv6.method shared \
+    ipv6.addr-gen-mode default
+
+  # strict security settings
+  # nmcli con modify Arch-Hyprland \
+  #   802-11-wireless-security.proto rsn \
+  #   802-11-wireless-security.pairwise ccmp \
+  #   802-11-wireless-security.group ccmp \
 
   note "Hotspot connection profile 'Arch-Hyprland' created successfully"
   note "You'll need to check Wi-Fi adapter name with 'ip a'"

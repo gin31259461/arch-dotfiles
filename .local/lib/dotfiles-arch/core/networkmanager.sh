@@ -83,10 +83,11 @@ EOF
     ipv6.addr-gen-mode default
 
   # strict security settings
-  # nmcli con modify Arch-Hyprland \
-  #   802-11-wireless-security.proto rsn \
-  #   802-11-wireless-security.pairwise ccmp \
-  #   802-11-wireless-security.group ccmp \
+  # WPA2-PSK with AES-CCMP encryption
+  nmcli con modify Arch-Hyprland \
+    802-11-wireless-security.proto rsn \
+    802-11-wireless-security.pairwise ccmp \
+    802-11-wireless-security.group ccmp \
 
   note "Hotspot connection profile 'Arch-Hyprland' created successfully"
   note "You'll need to check Wi-Fi adapter name with 'ip a'"

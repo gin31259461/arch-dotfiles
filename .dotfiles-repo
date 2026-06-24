@@ -1,1 +1,2 @@
-git@github.com:gin31259461/dotfiles-arch.git
+repo = "git@github.com:gin31259461/dotfiles-arch.git"
+branch = "main"

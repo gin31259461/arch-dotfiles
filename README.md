@@ -1,245 +1,154 @@
-# Arch Linux Hyprland Dotfiles
+# Arch Hyprland Dotfiles
 
-Personal Arch Linux dotfiles for a Hyprland desktop, managed as a bare Git
-repository in `~/.dotfiles` with `$HOME` as the work tree. Files live in their
-normal locations, so there is no symlink farm to maintain.
+Personal Arch Linux dotfiles for a Hyprland desktop, managed with
+[Homebase](https://github.com/gin31259461/homebase) configuration in a bare Git
+repository.
 
-Runtime setup is handled by **Homebase** (`hb`), a Go CLI that bootstraps the
-machine, installs package groups, runs cleanup tasks, and syncs configured
-dotfile paths.
+![Desktop preview](assets/preview.png)
 
-```bash
-alias dot='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-```
+This repository tracks the user-facing configuration needed to rebuild and
+maintain the workstation: shell startup, desktop theming, Hyprland/Neovim
+submodules, app settings, Homebase package groups, cleanup tasks, and setup
+notes.
 
-## Preview
+> [!NOTE]
+> `$HOME` is the work tree and `~/.dotfiles/` is the Git directory. Use the
+> `dot` alias from `.zshrc`, or pass `--git-dir` and `--work-tree` explicitly.
 
-![Hyprland desktop preview](./assets/preview.png)
+## What It Manages
 
-## What Is Included
-
-- Hyprland desktop config with Rofi, Quickshell, and Noctalia
-- Zsh, Oh My Zsh, Powerlevel10k, terminal, Git, and editor defaults
-- Kitty and Ghostty terminal configuration
-- GTK, Qt, Kvantum, icon, cursor, font, and theme settings
-- App config for btop, cava, fastfetch, swappy, Vesktop, Sunshine, and OneDrive
-- Neovim and Hyprland config tracked as Git submodules
-- Homebase bootstrap and management flow through `hb`
-- TOML-backed package groups, cleanup tasks, and sync path groups
-- Install, maintenance, hardware, virtual machine, and app notes in `doc/`
+- **Homebase platform config** in `.config/homebase/`, with `archlinux` selected
+  automatically for Arch and Manjaro hosts.
+- **Package groups** for Hyprland, shell tools, desktop apps, theming, fonts,
+  input methods, AMD GPU support, Docker, Razer/MSI hardware, and development
+  tooling.
+- **Desktop configuration** for Kitty, Ghostty, GTK, Qt, Kvantum, Rofi,
+  Quickshell, Noctalia, Cava, btop, Fastfetch, Swappy, Vesktop, Sunshine, and
+  related app settings.
+- **Shell setup** for Zsh, Oh My Zsh, Powerlevel10k, fzf, `lsd`, and a `dot`
+  helper alias for the bare repository.
+- **Submodules** for `.config/hypr` and `.config/nvim`.
+- **Agent configuration** under `.agents/skills` and `.codex/agents`.
 
 ## Requirements
 
-These dotfiles target Arch Linux. The remote bootstrap script installs only the
-minimum needed to build and run Homebase:
+- Arch Linux or Manjaro
+- `git`, `rsync`, `base-devel`, `go`, `ca-certificates`, `lsd`, `zsh`, and
+  `openssh` for initial bootstrap
+- `~/.local/bin/hb`, installed from the Homebase bootstrap flow
 
-- `git`
-- `base-devel`
-- `go`
-- `rsync`
-- `ca-certificates`
+The Homebase platform file defines `pacman` as the official package manager and
+`yay` for AUR packages.
 
-Homebase is cloned to `~/.local/lib/homebase`, built as `~/.local/bin/hb`, and
-then takes over the remaining bootstrap and install tasks.
+## Get Started
 
-## Fresh Install
-
-Run the bootstrap script from a fresh Arch Linux session:
+On a fresh Arch-family machine, install Homebase and bootstrap this dotfiles
+repo:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
-bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh")
+url=https://raw.githubusercontent.com/gin31259461/homebase/main/bootstrap
+curl -fsSL "$url/archlinux.sh" | \
+  bash -s -- --repo gin31259461/dotfiles-arch
 ```
 
-The bootstrap flow:
-
-1. Installs the basic Arch packages needed to build Homebase
-2. Clones or updates Homebase in `~/.local/lib/homebase`
-3. Builds `~/.local/bin/hb`
-4. Runs `hb bootstrap`
-5. Clones the dotfiles as a bare repository into `~/.dotfiles`
-6. Deploys tracked files into `$HOME`
-7. Seeds `~/.config/homebase` when it is missing or empty
-8. Hides untracked files from `dot status`
-9. Adds the `dot` alias to `.zshrc` when needed
-10. Initializes Git submodules
-11. Offers to install Oh My Zsh, plugins, and Powerlevel10k
-
-For a non-interactive bootstrap:
+Bootstrap and install every configured package group:
 
 ```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
-bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh") --yes
+url=https://raw.githubusercontent.com/gin31259461/homebase/main/bootstrap
+curl -fsSL "$url/archlinux.sh" | \
+  bash -s -- --repo gin31259461/dotfiles-arch --yes --install
 ```
 
-To run package installation immediately after bootstrap:
-
-```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
-bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh") --yes --install
-```
-
-Use a fork or private remote with `--repo`:
-
-```bash
-repo_url="https://raw.githubusercontent.com/gin31259461/dotfiles-arch"
-bash <(curl -fsSL "$repo_url/main/.local/bin/bootstrap.sh") \
-  --repo git@github.com:youruser/dotfiles-arch.git
-```
-
-The short GitHub form is accepted too:
-
-```bash
-hb bootstrap --repo youruser/dotfiles-arch
-```
-
-The selected remote is saved to `~/.dotfiles-repo`:
-
-```toml
-repo = "git@github.com:gin31259461/dotfiles-arch.git"
-branch = "main"
-```
-
-## Homebase Commands
-
-Homebase exposes one binary:
+Once `hb` is installed, bootstrap directly:
 
 ```bash
 hb bootstrap
-hb install
-hb cleanup
-hb sync
-hb config init
 ```
 
-Interactive commands use Bubble Tea and Lip Gloss. Automation should pass
-explicit selections with `--yes`:
+Install configured packages:
 
 ```bash
-hb install --group core --group shell --yes
-hb install --all --yes
-hb cleanup --task pacman-cache --task journal --yes
-hb cleanup --all --yes
+hb install --all
 ```
 
-## Configuration
-
-Homebase copies default config from `~/.local/lib/homebase/config` to
-`~/.config/homebase` when the config directory is missing or empty.
-
-```text
-~/.config/homebase/
-|-- config.toml
-|-- sync.toml
-|-- cleanup.toml
-`-- packages.d/
-    |-- 10-system.toml
-    |-- 20-desktop.toml
-    |-- 30-appearance.toml
-    |-- 40-apps.toml
-    `-- 50-hardware-dev.toml
-```
-
-`config.toml` stores the Homebase clone location, dotfiles repo settings,
-package manager choices, and bootstrap basics. `pacman` is used for official
-packages and `yay` is the default AUR helper.
-
-## Daily Use
-
-Use `dot` for normal Git operations:
-
-```bash
-dot status
-dot diff
-dot add ~/.config/hypr/hyprland.conf
-dot commit -m "feat(hypr): update monitor layout"
-dot push origin main
-```
-
-Use `hb sync` to stage configured paths, commit, and push:
-
-```bash
-hb sync
-hb sync -m "chore: sync dotfiles"
-hb sync -m "chore: sync dotfiles" --no-push
-```
-
-The staged path groups are defined in `~/.config/homebase/sync.toml`.
-
-## Install Packages
-
-`hb install` installs selected package groups on Arch Linux. It skips packages
-that are already installed and uses a Bubble Tea selector by default.
-
-```bash
-hb install
-hb install --group core --group shell
-hb install --group desktop --yes
-hb install --all --yes
-```
-
-Package groups are defined in `~/.config/homebase/packages.d/*.toml`.
-
-AUR packages are installed with the configured helper. The default is `yay`;
-when `yay` is missing, Homebase builds it from the AUR.
-
-Post-install setup that used to live in shell hooks is now implemented in Go:
-
-- SDDM
-- NetworkManager and dnsmasq
-- Docker
-- Razer/OpenRazer
-- Sunshine
-- tty1 autologin
-
-## Clean System
-
-`hb cleanup` runs configurable cleanup tasks:
+Review and run cleanup tasks:
 
 ```bash
 hb cleanup
-hb cleanup --task pacman-cache --task journal
-hb cleanup --all --yes
 ```
 
-Tasks are defined in `~/.config/homebase/cleanup.toml` and include:
+Sync tracked dotfiles:
 
-- Pacman package cache with `paccache -r`
-- AUR build cache under `~/.cache/yay`
-- Orphaned packages with `pacman -Rns`
-- Systemd journal entries older than two weeks
-- npm cache when `npm` is installed
-- Thumbnail cache under `~/.cache/thumbnails`
+```bash
+hb sync -m "Update dotfiles"
+```
+
+For unattended runs, pass `--yes` with an explicit `--group`, `--task`, or
+`--all` selection.
+
+> [!IMPORTANT]
+> `hb sync` stages every path configured in
+> `.config/homebase/platforms/archlinux/sync.toml`, including deletions. Review
+> the bare-repo status before syncing.
+
+## Daily Workflow
+
+Check repository state:
+
+```bash
+git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME status --short
+```
+
+Use the shell alias after loading `.zshrc`:
+
+```bash
+dot status --short
+```
+
+Inspect Homebase commands:
+
+```bash
+hb --help
+```
+
+Install one package group:
+
+```bash
+hb install --group apps
+```
+
+Run one cleanup task:
+
+```bash
+hb cleanup --task journal
+```
+
+Sync without pushing:
+
+```bash
+hb sync -m "Update local config" --no-push
+```
 
 ## Repository Layout
 
-```text
-.
-|-- README.md
-|-- AGENTS.md
-|-- assets/
-|-- doc/
-|-- .config/
-|-- .dotfiles-repo
-`-- .local/bin/
-    `-- bootstrap.sh
-```
+| Path | Purpose |
+| --- | --- |
+| `.config/homebase/` | Homebase platform selection, package groups, cleanup tasks, and sync path groups |
+| `.config/hypr` | Hyprland submodule |
+| `.config/nvim` | Neovim submodule |
+| `.config/quickshell/`, `.config/noctalia/` | Shell, overview, and Noctalia configuration |
+| `.config/kitty/`, `.config/ghostty/`, `.config/rofi/` | Terminal and launcher configuration |
+| `.agents/`, `.codex/agents/` | Local agent skills and Codex agent profiles |
+| `doc/` | Arch install, maintenance, networking, VM, GPU, and disk notes |
+| `assets/` | README preview assets |
 
-Homebase source is intentionally separate from the dotfiles repo:
+## Notes
 
-```text
-~/.local/lib/homebase/
-|-- cmd/hb/
-|-- internal/
-|-- config/
-|-- go.mod
-`-- go.sum
-```
-
-## Documentation
-
-- [Arch install](doc/arch-install.md): dual-boot Arch Linux installation
-- [Live USB](doc/live-usb.md): download, verify, and write an Arch ISO
-- [AMD GPU](doc/amd-gpu.md): drivers, Vulkan, VA-API, and Hyprland variables
-- [Disk migration](doc/disk-migration.md): move an install to a new drive
-- [Disk expansion](doc/disk-expand.md): grow a partition online
+- Homebase runtime files live outside this repo at `~/.local/bin/hb` and
+  `~/.local/lib/homebase/`.
+- The current workflow is `hb bootstrap`, `hb install`, `hb cleanup`, and
+  `hb sync`.
+- Older notes may mention previous helper scripts; prefer the current `hb`
+  commands when workflows conflict.
+- Keep secrets, generated state, caches, and account-specific tokens out of the
+  tracked sync groups unless intentionally adding them.

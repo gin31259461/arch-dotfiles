@@ -16,4 +16,7 @@ basics = [
   "base-devel",
   "go",
   "ca-certificates",
+  "lsd",
+  "zsh",
+  "openssh",
 ]

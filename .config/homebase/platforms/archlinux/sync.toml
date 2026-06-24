@@ -4,13 +4,13 @@ paths = [
   ".dotfiles-repo",
   "doc",
   "assets",
-  ".local/bin/bootstrap.sh",
   ".gitconfig",
   ".gitattributes",
   ".gitmodules",
   ".gitignore",
   ".editorconfig",
   ".agents",
+  ".codex/agents",
   "AGENTS.md",
 ]
 
@@ -28,7 +28,6 @@ paths = [
 
 [gtk]
 paths = [
-  ".local/share/icons/Bibata-Modern-Ice",
   ".config/gtk-3.0",
   ".config/gtk-4.0",
 ]

@@ -14,12 +14,14 @@ pacman = [
   "adwaita-cursors",
   "adw-gtk-theme",
 ]
+aur = [
+  "bibata-cursor-theme-bin",
+]
 
 [fonts]
 label = "Fonts"
 pacman = [
   "noto-fonts",
-  "noto-fonts-cjk",
   "noto-fonts-emoji",
   "otf-font-awesome",
   "ttf-jetbrains-mono-nerd",

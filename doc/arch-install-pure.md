@@ -1,25 +1,25 @@
-# Arch Linux Installation (Dual Boot)
+# Arch Linux Installation (Pure Arch)
 
-Step-by-step guide for installing Arch Linux alongside Windows on a UEFI/GPT
-system.
+Step-by-step guide for installing Arch Linux as the only operating system on a
+UEFI/GPT machine.
 
 References:
 
 - [Arch Linux installation guide][arch-install]
-- [ArchWiki dual boot with Windows][arch-dual-boot]
 - [ArchWiki GRUB][arch-grub]
+- [ArchWiki EFI system partition][arch-esp]
 
 ## Prerequisites
 
-- Windows is already installed in UEFI mode on a GPT disk.
+- UEFI boot mode, not legacy BIOS.
 - Secure Boot is disabled before booting the Arch ISO.
-- Windows Fast Startup and hibernation are disabled before resizing or sharing
-  disks.
-- BitLocker or Device Encryption recovery keys are saved before changing
-  firmware, Secure Boot, or partition settings.
+- The target disk can be erased.
+- One EFI system partition (ESP), mounted at `/efi`.
 - One dedicated partition for Arch root (`/`).
-- Reuse the existing Windows EFI system partition (ESP), mounted at `/efi`.
 - Use a swap file instead of a swap partition.
+
+> This guide destroys the existing partition table on the target disk. Back up
+> anything important before continuing.
 
 ## Download ISO
 
@@ -27,36 +27,6 @@ Get the latest ISO from [archlinux.org/download][arch-download].
 Use a mirror close to you, such as Tsinghua, BFSU, or NetEase.
 
 If possible, verify the ISO signature before writing the installer USB.
-
-## Prepare Windows
-
-From Windows:
-
-1. Confirm **BIOS Mode** is `UEFI` in `msinfo32`.
-1. Save the BitLocker or Device Encryption recovery key, if encryption is
-   enabled.
-1. Disable Fast Startup and hibernation:
-
-   ```powershell
-   powercfg /H off
-   ```
-
-1. Use **Windows Disk Management** to shrink an existing volume and leave
-   unallocated free space for Arch.
-
-Do not delete Windows recovery, EFI, Microsoft Reserved, or Windows data
-partitions.
-
-Recommended layout:
-
-| Mount | Filesystem | Notes |
-| --- | --- | --- |
-| `/efi` | FAT32 | Existing Windows EFI system partition |
-| `/` | ext4 | New partition from free space, such as 250 GB |
-| swap | - | Swap file on `/`, not a separate partition |
-
-The Windows ESP is often small. Mounting it at `/efi` keeps the Arch kernel and
-initramfs in `/boot` on the root filesystem instead of filling the ESP.
 
 ## Create Bootable USB
 
@@ -71,9 +41,7 @@ Reboot into BIOS, such as **F12** on Dell, with the USB plugged in:
 
 1. Disable **Secure Boot**.
 1. If the target disk is not visible in Linux because the firmware uses RAID/RST,
-   prepare Windows for AHCI first, then switch the disk controller mode to
-   **AHCI**. Changing this setting without preparing Windows can make Windows
-   fail to boot.
+   switch the disk controller mode to **AHCI**.
 1. Boot the USB drive in UEFI mode.
 
 Save, exit, and boot into the Arch ISO.
@@ -140,40 +108,64 @@ Check current layout:
 lsblk -f
 ```
 
-Identify:
+Identify the target disk, such as `/dev/nvme0n1` or `/dev/sda`. Do not continue
+until the target disk is certain.
 
-- The new Arch root partition, such as `/dev/nvme0n1p5`.
-- The existing Windows ESP, usually a small FAT32 partition such as
-  `/dev/nvme0n1p1` or `/dev/nvme0n1p2`.
-
-If the Arch root partition does not exist yet, create it from the unallocated
-free space:
+Set variables for the target disk and the two partitions you are about to
+create:
 
 ```bash
-cfdisk /dev/nvme0n1
+DISK=/dev/nvme0n1
+EFI_PART=/dev/nvme0n1p1
+ROOT_PART=/dev/nvme0n1p2
 ```
 
-Adjust the device name to match your disk. Select **New**, enter a size such as
-`250G`, then select **Write**, type `yes`, and select **Quit**.
+Adjust these values before running any destructive command. For SATA disks,
+partition names look like `/dev/sda1` and `/dev/sda2`.
 
-Format only the new Arch root partition:
+Create a new GPT partition table and partitions:
 
 ```bash
-mkfs.ext4 /dev/nvme0n1p5
+cfdisk --zero "$DISK"
 ```
 
-Do not format the existing Windows ESP.
+In `cfdisk`:
+
+1. Select **gpt** for the label type.
+1. Create a `1G` partition and set its type to **EFI System**.
+1. Create a second partition using the remaining space and keep its type as
+   **Linux filesystem**.
+1. Select **Write**, type `yes`, and select **Quit**.
+
+Recommended layout:
+
+| Mount | Filesystem | Size | Notes |
+| --- | --- | --- | --- |
+| `/efi` | FAT32 | 1 GiB | EFI system partition |
+| `/` | ext4 | Remaining | Arch root filesystem |
+| swap | - | 4 GiB | Swap file on `/` |
+
+Format the new partitions:
+
+Recheck the variables before formatting:
+
+```bash
+echo "$DISK" "$EFI_PART" "$ROOT_PART"
+```
+
+```bash
+mkfs.fat -F 32 "$EFI_PART"
+mkfs.ext4 "$ROOT_PART"
+```
 
 Mount the partitions:
 
 ```bash
-mount /dev/nvme0n1p5 /mnt
+mount "$ROOT_PART" /mnt
 
 mkdir /mnt/efi
-mount /dev/nvme0n1p2 /mnt/efi
+mount "$EFI_PART" /mnt/efi
 ```
-
-Adjust both partition numbers to match `lsblk -f`.
 
 ## Install Base System
 
@@ -268,8 +260,8 @@ EDITOR=nano visudo
 Install required packages:
 
 ```bash
-pacman -S grub efibootmgr os-prober mtools dosfstools ntfs-3g fuse3 \
-  base-devel linux-headers reflector git
+pacman -S grub efibootmgr mtools dosfstools base-devel linux-headers \
+  reflector git
 ```
 
 Install CPU microcode for the processor type:
@@ -284,32 +276,11 @@ pacman -S amd-ucode
 
 Run only the command that matches the CPU.
 
-Enable `os-prober` so GRUB can detect Windows:
-
-```bash
-nano /etc/default/grub
-# Add or uncomment this active line:
-# GRUB_DISABLE_OS_PROBER=false
-```
-
-The final line must not start with `#`:
-
-```text
-GRUB_DISABLE_OS_PROBER=false
-```
-
 Install GRUB and generate the config:
 
 ```bash
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Arch
 grub-mkconfig -o /boot/grub/grub.cfg
-```
-
-The `grub-mkconfig` output should mention Windows Boot Manager. If it does not,
-finish the install, boot Arch, confirm `/efi` is mounted, then run:
-
-```bash
-sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
 ### Enable Network
@@ -429,7 +400,7 @@ hb install --all --yes
 ```
 
 [arch-download]: https://archlinux.org/download/
-[arch-dual-boot]: https://wiki.archlinux.org/title/Dual_boot_with_Windows
+[arch-esp]: https://wiki.archlinux.org/title/EFI_system_partition
 [arch-grub]: https://wiki.archlinux.org/title/GRUB
 [arch-install]: https://wiki.archlinux.org/title/Installation_guide
 [rufus]: https://rufus.ie

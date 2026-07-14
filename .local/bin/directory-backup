@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+readonly config_file="${XDG_CONFIG_HOME:-${HOME}/.config}/directory-backup/config.sh"
+
+if [[ ! -r "${config_file}" ]]; then
+  printf 'Backup configuration is not readable: %s\n' "${config_file}" >&2
+  exit 1
+fi
+
+declare BACKUP_TARGET=''
+declare -i BACKUP_RETENTION_DAYS=7
+declare -A BACKUP_SOURCES=()
+
+# shellcheck source=/dev/null
+source "${config_file}"
+
+if [[ -z "${BACKUP_TARGET}" ]]; then
+  printf 'BACKUP_TARGET is not configured in %s\n' "${config_file}" >&2
+  exit 1
+fi
+
+if (( BACKUP_RETENTION_DAYS < 0 )); then
+  printf 'BACKUP_RETENTION_DAYS must be zero or greater\n' >&2
+  exit 1
+fi
+
+if (( ${#BACKUP_SOURCES[@]} == 0 )); then
+  printf 'No BACKUP_SOURCES are configured in %s\n' "${config_file}" >&2
+  exit 1
+fi
+
+mkdir -p "${BACKUP_TARGET}"
+
+readonly timestamp="$(date '+%Y%m%d-%H%M%S')"
+readonly retention_minutes=$((BACKUP_RETENTION_DAYS * 24 * 60))
+declare -a partial_archives=()
+
+cleanup_partial_archives() {
+  local partial_archive
+
+  for partial_archive in "${partial_archives[@]}"; do
+    rm -f -- "${partial_archive}"
+  done
+}
+trap cleanup_partial_archives EXIT
+
+backup_source() {
+  local name="$1"
+  local source_dir="$2"
+  local archive partial_archive
+
+  if [[ ! "${name}" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+    printf 'Invalid backup name %q; use letters, numbers, dots, underscores, or hyphens\n' "${name}" >&2
+    return 1
+  fi
+
+  if [[ ! -d "${source_dir}" ]]; then
+    printf 'Backup source does not exist for %s: %s\n' "${name}" "${source_dir}" >&2
+    return 1
+  fi
+
+  if [[ "${source_dir}" == '/' ]]; then
+    printf 'Refusing to back up the filesystem root for %s\n' "${name}" >&2
+    return 1
+  fi
+
+  archive="${BACKUP_TARGET}/${name}-backup-${timestamp}.tar.gz"
+  partial_archive="${archive}.partial"
+  partial_archives+=("${partial_archive}")
+
+  if ! tar -C "$(dirname "${source_dir}")" -czf "${partial_archive}" "$(basename "${source_dir}")"; then
+    printf 'Failed to create backup for %s\n' "${name}" >&2
+    return 1
+  fi
+
+  mv -- "${partial_archive}" "${archive}"
+
+  find "${BACKUP_TARGET}" -maxdepth 1 -type f \
+    -name "${name}-backup-*.tar.gz" \
+    -mmin "+${retention_minutes}" \
+    -delete
+
+  printf 'Created backup for %s: %s\n' "${name}" "${archive}"
+}
+
+status=0
+for name in "${!BACKUP_SOURCES[@]}"; do
+  backup_source "${name}" "${BACKUP_SOURCES[${name}]}" || status=1
+done
+
+exit "${status}"

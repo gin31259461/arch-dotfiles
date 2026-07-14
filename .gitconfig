@@ -34,7 +34,7 @@
 
   # enable the fsmonitor feature to improve performance by monitoring file system changes,
   # reducing the need for Git to scan the entire working directory for changes
-  fsmonitor = true
+  fsmonitor = false
 
   # enable support for symbolic links on Windows,
   # allowing git to track and manage symbolic links in the repository

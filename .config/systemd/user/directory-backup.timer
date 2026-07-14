@@ -1,0 +1,10 @@
+[Unit]
+Description=Run configured directory backups daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=directory-backup.service
+
+[Install]
+WantedBy=timers.target

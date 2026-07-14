@@ -58,6 +58,10 @@ paths = [
 [systemd-user]
 paths = [
   ".config/systemd/user/sunshine.service.d",
+  ".config/systemd/user/directory-backup.service",
+  ".config/systemd/user/directory-backup.timer",
+  ".config/directory-backup",
+  ".local/bin/directory-backup",
 ]
 
 [onedrive]

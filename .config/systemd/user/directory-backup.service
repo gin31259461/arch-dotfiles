@@ -1,0 +1,6 @@
+[Unit]
+Description=Back up configured directories
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/directory-backup

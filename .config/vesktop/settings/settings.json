@@ -242,9 +242,6 @@
         "KeepCurrentChannel": {
             "enabled": false
         },
-        "LastFMRichPresence": {
-            "enabled": false
-        },
         "LoadingQuotes": {
             "enabled": false
         },
@@ -550,6 +547,9 @@
         },
         "NoMiddleClickPaste": {
             "enabled": false
+        },
+        "MusicRichPresence": {
+            "enabled": false
         }
     },
     "uiElements": {
@@ -566,7 +566,7 @@
         "authenticated": false,
         "url": "https://api.vencord.dev/",
         "settingsSync": false,
-        "settingsSyncVersion": 1781450746882
+        "settingsSyncVersion": 1784161217756
     },
     "windowsMaterial": "none"
 }

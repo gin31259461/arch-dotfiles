@@ -1,0 +1,60 @@
+[browser]
+label = "Web Browser"
+aur = [
+  "zen-browser-bin",
+]
+
+[communication]
+label = "Communication"
+aur = [
+  "vesktop-bin",
+]
+
+[graphics]
+label = "Graphics"
+pacman = [
+  "gimp",
+  "imagemagick",
+  "loupe",
+]
+
+[media]
+label = "Media Playback"
+pacman = [
+  "mpv",
+  "mpv-mpris",
+  "vlc",
+  "yt-dlp",
+]
+
+[productivity]
+label = "Notes & Office"
+pacman = [
+  "obsidian",
+]
+aur = [
+  "onlyoffice-bin",
+]
+
+[recording]
+label = "Recording"
+pacman = [
+  "obs-studio",
+]
+aur = [
+  "obs-pipewire-audio-capture",
+]
+
+[remote-desktop]
+label = "Remote Desktop & Streaming"
+pacman = [
+  "remmina",
+  "freerdp",
+  "sunshine",
+]
+
+[sync]
+label = "Cloud Sync"
+aur = [
+  "onedrive-abraunegg",
+]

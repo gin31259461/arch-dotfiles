@@ -1,0 +1,23 @@
+[core]
+label = "Core Hyprland"
+pacman = [
+  "hyprland",
+  "hyprpolkitagent",
+  "hyprlock",
+  "hypridle",
+  "hyprsunset",
+  "xdg-desktop-portal-hyprland",
+  "xdg-desktop-portal-gtk",
+  "uwsm",
+  "libnewt",
+]
+aur = [
+  "noctalia-git",
+]
+
+[sddm]
+label = "Display Manager"
+manual = true
+pacman = [
+  "sddm",
+]

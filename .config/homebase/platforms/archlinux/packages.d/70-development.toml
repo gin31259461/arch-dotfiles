@@ -1,0 +1,31 @@
+[dev]
+label = "Development Fundamentals"
+pacman = [
+  "git",
+  "gnupg",
+  "npm",
+  "pass",
+]
+aur = [
+  "git-credential-manager-bin",
+]
+
+[docker]
+label = "Docker"
+manual = true
+pacman = [
+  "docker",
+  "docker-compose",
+  "docker-buildx",
+]
+aur = [
+  "lazydocker-bin",
+]
+
+[neovim]
+label = "Neovim Editor"
+pacman = [
+  "lazygit",
+  "neovim",
+  "tree-sitter-cli",
+]

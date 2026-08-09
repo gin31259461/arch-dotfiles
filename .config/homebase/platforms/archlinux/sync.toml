@@ -68,3 +68,9 @@ paths = [
   ".config/onedrive/config",
   ".config/onedrive/sync_list",
 ]
+
+[desktop]
+paths = [
+  ".local/state/noctalia/settings.toml",
+  "Pictures/Wallpapers",
+]

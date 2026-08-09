@@ -1,0 +1,66 @@
+[audio]
+label = "Audio Services"
+pacman = [
+  "pipewire",
+  "pipewire-alsa",
+  "pipewire-audio",
+  "pipewire-pulse",
+  "wireplumber",
+  "pavucontrol",
+  "playerctl",
+]
+
+[bluetooth]
+label = "Bluetooth"
+pacman = [
+  "bluez",
+  "bluez-utils",
+  "blueman",
+]
+
+[network]
+label = "NetworkManager"
+pacman = [
+  "networkmanager",
+  "network-manager-applet",
+  "nm-connection-editor",
+]
+
+[network-tools]
+label = "Network Sharing & Diagnostics"
+pacman = [
+  "dnsmasq",
+  "hostapd",
+  "mtr",
+  "ufw",
+]
+
+[realtime]
+label = "Realtime Audio"
+pacman = [
+  "realtime-privileges",
+  "rt-tests",
+  "rtirq",
+  "schedtool",
+  "tuna",
+]
+
+[system-tools]
+label = "System Utilities"
+pacman = [
+  "pacman-contrib",
+  "nvtop",
+  "baobab",
+  "inxi",
+]
+aur = [
+  "octopi",
+]
+
+[vpn]
+label = "VPN"
+pacman = [
+  "networkmanager-openconnect",
+  "networkmanager-openvpn",
+  "tailscale",
+]

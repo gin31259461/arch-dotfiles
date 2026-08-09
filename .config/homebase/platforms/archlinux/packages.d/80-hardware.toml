@@ -1,0 +1,44 @@
+[amd]
+label = "AMD GPU Support"
+pacman = [
+  "vulkan-radeon",
+  "lib32-vulkan-radeon",
+  "libva-utils",
+  # "libva-mesa-driver",
+  "amd-ucode",
+  "amdgpu_top",
+  "vulkan-tools",
+]
+
+[asus]
+label = "ASUS ROG Devices"
+manual = true
+aur = [
+  "asusctl",
+  "rog-control-center",
+  "supergfxctl",
+]
+
+[cyberpower]
+label = "CyberPower UPS"
+aur = [
+  "powerpanel",
+]
+
+[msi]
+label = "MSI Devices"
+manual = true
+aur = [
+  "msi-ec-git",
+  "mcontrolcenter-bin",
+]
+
+[razer]
+label = "Razer Devices"
+pacman = [
+  "openrazer-daemon",
+  "openrazer-driver-dkms",
+]
+aur = [
+  "polychromatic",
+]

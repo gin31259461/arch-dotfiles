@@ -1,0 +1,41 @@
+[files]
+label = "File Manager"
+pacman = [
+  "thunar",
+  "thunar-archive-plugin",
+  "thunar-volman",
+  "tumbler",
+  "gvfs",
+  "gvfs-mtp",
+  "ffmpegthumbnailer",
+  "xarchiver",
+]
+
+[capture]
+label = "Screenshot & Clipboard"
+pacman = [
+  "grim",
+  "slurp",
+  "swappy",
+  "cliphist",
+  "wl-clipboard",
+  "libnotify",
+]
+
+[desktop-tools]
+label = "Desktop Utilities"
+pacman = [
+  "brightnessctl",
+  "xdg-user-dirs",
+  "yad",
+  "rofi",
+  "xdotool",
+  "qalculate-gtk",
+  "power-profiles-daemon",
+]
+
+[quickshell]
+label = "Quickshell"
+aur = [
+  "quickshell-overview-git",
+]

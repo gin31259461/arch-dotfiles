@@ -1,20 +1,3 @@
-[core]
-label = "Core Hyprland"
-pacman = [
-  "hyprland",
-  "hyprpolkitagent",
-  "hyprlock",
-  "hypridle",
-  "hyprsunset",
-  "xdg-desktop-portal-hyprland",
-  "xdg-desktop-portal-gtk",
-  "uwsm",
-  "libnewt",
-]
-aur = [
-  "noctalia-git",
-]
-
 [shell]
 label = "Shell & Prompt"
 pacman = [
@@ -37,7 +20,15 @@ pacman = [
   "tar",
   "curl",
   "git-delta",
-  "gimp",
+  "btop",
+  "cava",
+  "bc",
+  "jq",
+  "chafa",
+  "rsync",
+  "wget",
+  "unzip",
+  "7zip",
 ]
 
 [terminal]
@@ -46,9 +37,3 @@ pacman = [
   "kitty",
   "ghostty",
 ]
-
-# [dm]
-# label = "Display Manager"
-# pacman = [
-#   "sddm",
-# ]

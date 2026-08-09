@@ -136,7 +136,7 @@ hb sync -m "Update local config" --no-push
 | `.config/homebase/` | Homebase platform selection, package groups, cleanup tasks, and sync path groups |
 | `.config/hypr` | Hyprland submodule |
 | `.config/nvim` | Neovim submodule |
-| `.config/quickshell/`, `.config/noctalia/` | Shell, overview, and Noctalia configuration |
+| `.config/quickshell/`, `.local/state/noctalia/settings.toml` | Shell, overview, and Noctalia configuration |
 | `.config/kitty/`, `.config/ghostty/`, `.config/rofi/` | Terminal and launcher configuration |
 | `.agents/`, `.codex/agents/` | Local agent skills and Codex agent profiles |
 | `doc/` | Arch install, maintenance, networking, VM, GPU, and disk notes |

@@ -52,9 +52,7 @@ pacman = [
   "nvtop",
   "baobab",
   "inxi",
-]
-aur = [
-  "octopi",
+  "i2c-tools",
 ]
 
 [vpn]
@@ -63,4 +61,15 @@ pacman = [
   "networkmanager-openconnect",
   "networkmanager-openvpn",
   "tailscale",
+]
+
+[monitor]
+label = "Monitor"
+pacman = [
+  # NOTE: this util needs i2c-tools to get work.
+  # i2c-tools will auto-load the i2c-dev module.
+  # refs:
+  # https://wiki.archlinux.org/title/I2C
+  # https://bugs.archlinux.org/task/76233
+  "ddcutil",
 ]

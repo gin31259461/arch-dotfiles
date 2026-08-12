@@ -32,10 +32,15 @@ thickness = 36
     enabled = true
     fill = "surface_variant"
     id = "g2"
-    members = [ "launcher", "wallpaper" ]
+    members = [ "launcher", "wallpaper", "mpvpaper" ]
     opacity = 1.0
     padding = 14.0
     widget_spacing = 14
+
+[brightness]
+enable_ddcutil = true
+minimum_brightness = 0.19999999552965164
+sync_all_monitors = true
 
 [desktop_widgets]
 schema_version = 2
@@ -129,6 +134,15 @@ keyboard_layout = false
 lock_keys = false
 media = false
 
+[plugin_settings."noctalia/mpvpaper"]
+extract_last_frame = false
+picker_placement = "floating"
+picker_position = "center"
+video_directory = "/home/abnertu/Videos/Wallpapers"
+
+[plugins]
+enabled = [ "noctalia/mpvpaper" ]
+
 [shell.panel]
 clipboard_position = "auto"
 control_center_placement = "floating"
@@ -142,6 +156,8 @@ wallpaper_position = "center"
 [theme]
 builtin = "Tokyo-Night"
 community_palette = "Tokyo Night Moon"
+mode = "dark"
+source = "builtin"
 wallpaper_scheme = "soft"
 
     [theme.templates]
@@ -149,13 +165,16 @@ wallpaper_scheme = "soft"
     community_ids = [ "zen-browser", "rofi", "bat", "discord", "lazygit", "steam", "hyprtoolkit" ]
 
 [wallpaper.default]
-path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-3.png"
+path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-5.png"
 
 [wallpaper.last]
-path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-3.png"
+path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-5.png"
+
+[wallpaper.monitors.FALLBACK]
+path = "/home/abnertu/.cache/noctalia/mpvpaper/_home_abnertu_Videos_Wallpapers_arch_building_girl_gwr_video_seamless_mp4.jpg"
 
 [wallpaper.monitors.HDMI-A-1]
-path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-3.png"
+path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-5.png"
 
 [widget.clock]
 format = "{:%D  %H:%M}"
@@ -165,3 +184,6 @@ glyph = "hyprland"
 
 [widget.launcher]
 glyph = "apps-filled"
+
+[widget.mpvpaper]
+type = "noctalia/mpvpaper:mpvpaper"

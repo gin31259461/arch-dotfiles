@@ -141,7 +141,7 @@ picker_position = "center"
 video_directory = "/home/abnertu/Videos/Wallpapers"
 
 [plugins]
-enabled = [ "noctalia/mpvpaper" ]
+enabled = []
 
 [shell.panel]
 clipboard_position = "auto"

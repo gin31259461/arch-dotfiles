@@ -39,7 +39,6 @@ paths = [
   ".config/hypr",
   ".config/Kvantum",
   ".config/quickshell",
-  ".config/rofi",
   ".config/btop",
   ".config/fastfetch",
   ".config/qt5ct",
@@ -52,11 +51,22 @@ paths = [
   ".config/ghostty",
   ".config/sunshine/sunshine.conf",
   ".config/polychromatic/preferences.json",
+  ".config/openrazer",
 ]
 
 [systemd-user]
 paths = [
+  ".config/autostart/remmina-applet.desktop",
   ".config/systemd/user/sunshine.service.d",
+  ".config/systemd/user/openrazer-daemon.service.d/delay.conf",
+  ".config/systemd/user/noctalia.service",
+  ".config/systemd/user/quickshell-overview.service",
+  ".config/systemd/user/polychromatic-tray.service",
+  ".config/systemd/user/keepassxc.service",
+  ".config/systemd/user/keepassxc-tray-refresh.service",
+  ".config/systemd/user/remmina-applet.service",
+  ".config/systemd/user/tailscale-systray.service",
+  ".config/systemd/user/vesktop.service",
   ".config/systemd/user/directory-backup.service",
   ".config/systemd/user/directory-backup.timer",
   ".config/directory-backup",

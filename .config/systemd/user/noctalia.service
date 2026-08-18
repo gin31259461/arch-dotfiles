@@ -1,0 +1,17 @@
+[Unit]
+Description=Noctalia desktop shell
+Wants=keepassxc.service keepassxc-tray-refresh.service
+After=graphical-session.target keepassxc.service
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/noctalia
+
+[Service]
+ExecStart=/usr/bin/noctalia
+Restart=on-failure
+RestartSec=2s
+Slice=session-graphical.slice
+TimeoutStopSec=5s
+
+[Install]
+WantedBy=graphical-session.target

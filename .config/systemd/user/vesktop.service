@@ -1,0 +1,18 @@
+[Unit]
+Description=Vesktop communication client
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/vesktop
+
+[Service]
+Environment=ELECTRON_OZONE_PLATFORM_HINT=auto
+ExecStartPre=/usr/bin/sleep 3
+ExecStart=/usr/bin/vesktop --start-minimized --enable-features=UseOzonePlatform --ozone-platform-hint=wayland --enable-wayland-ime
+Restart=on-failure
+RestartSec=5s
+Slice=app-graphical.slice
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=graphical-session.target

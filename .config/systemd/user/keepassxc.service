@@ -1,0 +1,22 @@
+[Unit]
+Description=KeePassXC tray and Secret Service provider
+After=graphical-session.target
+Before=noctalia.service remmina-applet.service
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/keepassxc
+ConditionPathExists=%h/.local/share/keepassxc/credentials.kdbx
+ConditionPathExists=%h/.local/share/keepassxc/keepassxc-password.cred
+
+[Service]
+LoadCredentialEncrypted=keepassxc-password:%h/.local/share/keepassxc/keepassxc-password.cred
+ExecStart=/usr/bin/bash -c 'exec /usr/bin/keepassxc --minimized --pw-stdin "%h/.local/share/keepassxc/credentials.kdbx" < "%d/keepassxc-password"'
+ExecStartPost=/usr/bin/bash -c 'for _ in {1..150}; do /usr/bin/busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/collection/credentials org.freedesktop.Secret.Collection Locked 2>/dev/null | /usr/bin/grep -qx "b false" && exit 0; /usr/bin/sleep 0.1; done; exit 1'
+Restart=on-failure
+RestartSec=2s
+Slice=app-graphical.slice
+TimeoutStartSec=30s
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=graphical-session.target

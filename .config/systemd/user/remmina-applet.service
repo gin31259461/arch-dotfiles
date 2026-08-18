@@ -1,0 +1,16 @@
+[Unit]
+Description=Remmina tray applet
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/remmina
+
+[Service]
+ExecStart=/usr/bin/remmina -i
+Restart=on-failure
+RestartSec=2s
+Slice=app-graphical.slice
+TimeoutStopSec=5s
+
+[Install]
+WantedBy=graphical-session.target

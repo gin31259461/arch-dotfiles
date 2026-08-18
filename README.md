@@ -22,9 +22,11 @@ notes.
 - **Package groups** for Hyprland, shell tools, desktop apps, theming, fonts,
   input methods, AMD GPU support, Docker, Razer/MSI hardware, and development
   tooling.
-- **Desktop configuration** for Kitty, Ghostty, GTK, Qt, Kvantum, Rofi,
+- **Desktop configuration** for Kitty, Ghostty, GTK, Qt, Kvantum, Vicinae,
   Quickshell, Noctalia, Cava, btop, Fastfetch, Swappy, Vesktop, Sunshine, and
   related app settings.
+- **Graphical-session services** under `.config/systemd/user/`, with enablement
+  and conditional startup repaired through Homebase.
 - **Shell setup** for Zsh, Oh My Zsh, Powerlevel10k, fzf, `lsd`, and a `dot`
   helper alias for the bare repository.
 - **Submodules** for `.config/hypr` and `.config/nvim`.
@@ -71,6 +73,12 @@ Install configured packages:
 hb install --all
 ```
 
+Repair graphical-session service enablement:
+
+```bash
+hb setup --hook desktop-session --yes
+```
+
 Review and run cleanup tasks:
 
 ```bash
@@ -90,6 +98,66 @@ For unattended runs, pass `--yes` with an explicit `--group`, `--task`, or
 > `hb sync` stages every path configured in
 > `.config/homebase/platforms/archlinux/sync.toml`, including deletions. Review
 > the bare-repo status before syncing.
+
+## Graphical Session Startup
+
+UWSM starts Hyprland from `.zprofile` and exposes
+`graphical-session.target`. Application startup is split by owner to avoid
+duplicate processes:
+
+| Owner | Managed applications |
+| --- | --- |
+| Package user units | Vicinae and hyprpolkitagent |
+| Tracked user units | KeePassXC, desktop shells, tray apps, and Vesktop |
+| System XDG autostart | NetworkManager applet, Blueman applet, and fcitx5 |
+| Hyprland autostart | Rainbow border runtime effect only |
+
+`hb setup --hook desktop-session --yes` reloads the systemd user manager and
+reconciles the versioned inventory in
+`.config/homebase/platforms/archlinux/desktop-session.toml`. Required units
+must exist. When the graphical target is already active, Vicinae and
+hyprpolkitagent also start immediately and must become active. From a TTY they
+wait for the next graphical login; the tracked custom units are enable-only and
+join the next graphical session.
+
+Vicinae is the launcher, clipboard history, window switcher, file search, emoji
+picker, and dmenu frontend. This repository no longer manages a Rofi package,
+configuration, keybind, or Noctalia-to-Rasi theme conversion.
+
+KeePassXC provides the FreeDesktop Secret Service for Remmina, Noctalia, and
+other desktop clients. Its service starts minimized, opens
+`~/.local/share/keepassxc/credentials.kdbx`, unlocks it with the untracked
+systemd encrypted credential
+`~/.local/share/keepassxc/keepassxc-password.cred`, and waits for the
+`credentials` collection to report unlocked. Noctalia starts only after that
+readiness check. Once Noctalia's StatusNotifierWatcher is available, a one-shot
+helper restarts KeePassXC so its tray icon registers without racing the initial
+database unlock.
+
+The database, encrypted credential, and `.config/keepassxc/keepassxc.ini` are
+machine-local. Unattended Secret Service access requires
+`FdoSecrets/ConfirmAccessItem=false`; this removes KeePassXC's per-item access
+prompt, so expose only the database group that desktop clients need.
+
+Noctalia uses the default Secret Service storage key. Its clipboard history is
+disabled because Vicinae owns clipboard history. The retired, untracked
+`~/.local/share/noctalia/storage-key` may still be needed to recover data
+encrypted under the former file-key configuration and remains outside the
+repository.
+
+Remmina's tracked XDG desktop entry is marked hidden. This keeps Remmina from
+recreating a second XDG autostart path while `remmina-applet.service` owns its
+tray process.
+
+Inspect the resulting user services with:
+
+```bash
+systemctl --user is-enabled \
+  vicinae.service hyprpolkitagent.service keepassxc.service noctalia.service \
+  quickshell-overview.service polychromatic-tray.service \
+  remmina-applet.service tailscale-systray.service vesktop.service
+systemctl --user --failed
+```
 
 ## Daily Workflow
 
@@ -133,11 +201,13 @@ hb sync -m "Update local config" --no-push
 
 | Path | Purpose |
 | --- | --- |
-| `.config/homebase/` | Homebase platform selection, package groups, cleanup tasks, and sync path groups |
+| `.config/homebase/` | Homebase platform and workflow configuration |
 | `.config/hypr` | Hyprland submodule |
 | `.config/nvim` | Neovim submodule |
-| `.config/quickshell/`, `.local/state/noctalia/settings.toml` | Shell, overview, and Noctalia configuration |
-| `.config/kitty/`, `.config/ghostty/`, `.config/rofi/` | Terminal and launcher configuration |
+| `.config/quickshell/` | Shell and overview configuration |
+| `.local/state/noctalia/settings.toml` | Tracked Noctalia settings |
+| `.config/kitty/`, `.config/ghostty/` | Terminal configuration |
+| `.config/systemd/user/` | Custom session units and selected overrides |
 | `.agents/`, `.codex/agents/` | Local agent skills and Codex agent profiles |
 | `doc/` | Arch install, maintenance, networking, VM, GPU, and disk notes |
 | `assets/` | README preview assets |
@@ -146,8 +216,8 @@ hb sync -m "Update local config" --no-push
 
 - Homebase runtime files live outside this repo at `~/.local/bin/hb` and
   `~/.local/lib/homebase/`.
-- The current workflow is `hb bootstrap`, `hb install`, `hb cleanup`, and
-  `hb sync`.
+- The current workflow is `hb bootstrap`, `hb install`, `hb setup`,
+  `hb cleanup`, and `hb sync`.
 - Older notes may mention previous helper scripts; prefer the current `hb`
   commands when workflows conflict.
 - Keep secrets, generated state, caches, and account-specific tokens out of the

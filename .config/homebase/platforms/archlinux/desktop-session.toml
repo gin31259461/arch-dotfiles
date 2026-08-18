@@ -1,0 +1,59 @@
+schema_version = 1
+
+[[service]]
+unit = "hyprpolkitagent.service"
+provider = "package"
+package = "hyprpolkitagent"
+required = true
+start_when_graphical = true
+setup_keys = ["hyprpolkitagent"]
+
+[[service]]
+unit = "vicinae.service"
+provider = "package"
+package = "vicinae-bin"
+required = true
+start_when_graphical = true
+setup_keys = ["vicinae-bin"]
+
+[[service]]
+unit = "keepassxc.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["credentials"]
+
+[[service]]
+unit = "noctalia.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["core"]
+
+[[service]]
+unit = "quickshell-overview.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["quickshell"]
+
+[[service]]
+unit = "polychromatic-tray.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["razer"]
+
+[[service]]
+unit = "remmina-applet.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["remote-desktop"]
+
+[[service]]
+unit = "tailscale-systray.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["vpn"]
+
+[[service]]
+unit = "vesktop.service"
+provider = "dotfiles"
+required = true
+setup_keys = ["communication"]

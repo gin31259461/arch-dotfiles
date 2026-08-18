@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresh KeePassXC tray registration after Noctalia starts
+After=keepassxc.service noctalia.service
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/keepassxc
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/bash -c 'for _ in {1..100}; do /usr/bin/busctl --user get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems >/dev/null 2>&1 && /usr/bin/sleep 5 && exit 0; /usr/bin/sleep 0.1; done; exit 1'
+ExecStart=/usr/bin/systemctl --user --no-block restart keepassxc.service
+RemainAfterExit=yes
+Slice=session-graphical.slice
+TimeoutStartSec=20s

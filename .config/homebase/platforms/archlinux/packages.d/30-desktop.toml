@@ -28,7 +28,6 @@ pacman = [
   "brightnessctl",
   "xdg-user-dirs",
   "yad",
-  "rofi",
   "xdotool",
   "qalculate-gtk",
   "power-profiles-daemon",

@@ -10,6 +10,12 @@ pacman = [
   "playerctl",
 ]
 
+[credentials]
+label = "Credential Storage"
+pacman = [
+  "keepassxc",
+]
+
 [bluetooth]
 label = "Bluetooth"
 pacman = [

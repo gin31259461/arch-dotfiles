@@ -1,0 +1,17 @@
+[Unit]
+Description=Polychromatic tray applet
+After=graphical-session.target openrazer-daemon.service
+Wants=openrazer-daemon.service
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/polychromatic-tray-applet
+
+[Service]
+ExecStart=/usr/bin/polychromatic-tray-applet
+Restart=on-failure
+RestartSec=2s
+Slice=app-graphical.slice
+TimeoutStopSec=5s
+
+[Install]
+WantedBy=graphical-session.target

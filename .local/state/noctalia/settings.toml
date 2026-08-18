@@ -20,7 +20,7 @@ thickness = 36
     enabled = true
     fill = "surface_variant"
     id = "g1"
-    members = [ "clipboard", "notifications", "control-center", "session" ]
+    members = [ "notifications", "control-center", "session" ]
     opacity = 1.0
     padding = 14.0
     widget_spacing = 14
@@ -143,15 +143,18 @@ video_directory = "/home/abnertu/Videos/Wallpapers"
 [plugins]
 enabled = []
 
-[shell.panel]
-clipboard_position = "auto"
-control_center_placement = "floating"
-open_near_click_clipboard = true
-open_near_click_control_center = true
-open_near_click_session = true
-session_placement = "floating"
-wallpaper_placement = "floating"
-wallpaper_position = "center"
+[shell]
+clipboard_enabled = false
+
+    [shell.panel]
+    clipboard_position = "auto"
+    control_center_placement = "floating"
+    open_near_click_clipboard = true
+    open_near_click_control_center = true
+    open_near_click_session = true
+    session_placement = "floating"
+    wallpaper_placement = "floating"
+    wallpaper_position = "center"
 
 [theme]
 builtin = "Tokyo-Night"
@@ -162,7 +165,7 @@ wallpaper_scheme = "soft"
 
     [theme.templates]
     builtin_ids = [ "btop", "cava", "gtk3", "gtk4", "hyprland", "kitty", "qt" ]
-    community_ids = [ "zen-browser", "rofi", "bat", "discord", "lazygit", "steam", "hyprtoolkit" ]
+    community_ids = [ "zen-browser", "bat", "discord", "lazygit", "steam", "hyprtoolkit" ]
 
 [wallpaper.default]
 path = "/home/abnertu/Pictures/Wallpapers/arch-building-with-girl-5.png"

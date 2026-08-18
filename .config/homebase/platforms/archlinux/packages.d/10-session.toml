@@ -13,6 +13,7 @@ pacman = [
 ]
 aur = [
   "noctalia-git",
+  "vicinae-bin",
   "mpvpaper",
 ]
 

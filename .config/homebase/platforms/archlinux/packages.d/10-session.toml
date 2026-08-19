@@ -16,10 +16,3 @@ aur = [
   "vicinae-bin",
   "mpvpaper",
 ]
-
-[sddm]
-label = "Display Manager"
-manual = true
-pacman = [
-  "sddm",
-]

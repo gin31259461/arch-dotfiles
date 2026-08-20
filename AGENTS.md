@@ -1,149 +1,133 @@
-# AGENTS.md
+# AGENTS Instructions
 
-## Project Overview
+## Project overview
 
 This is a personal Arch Linux dotfiles repository for a Hyprland desktop.
-`$HOME` is the work tree and `~/.dotfiles/` is the bare Git directory.
+`$HOME` is its worktree and `~/.dotfiles` is the bare Git directory. Git is
+configured not to enumerate the rest of the home directory as untracked files.
 
-The repository owns the complete Homebase runtime configuration and its
-workstation policy. It does not contain Homebase source code, and Homebase must
-not seed or refresh these runtime files.
+The repository owns the complete Homebase runtime configuration and workstation
+policy. Homebase source lives at `~/.local/lib/homebase` and owns only the core
+CLI engine and platform mechanisms.
 
-Read the relevant owner documentation before editing:
+Read the document owned by the task before editing:
 
-- `README.md` for the operator workflow and repository overview.
-- `doc/graphical-session.md` for session ownership and credential-sensitive
-  startup behavior.
+- `README.md` for operator workflows and current public behavior.
+- `doc/graphical-session.md` for non-trivial session ownership and
+  credential-sensitive startup behavior.
 - `~/.local/lib/homebase/AGENTS.md` before changing Homebase source.
+- The nested `AGENTS.md` inside `.config/hypr` or `.config/nvim` before editing
+  either submodule.
 
-## Repository Commands
+## Ownership seam
 
-Use the bare repository explicitly when the shell alias is unavailable:
+| Owner | Source of truth |
+| --- | --- |
+| Runtime identity and package managers | `.config/homebase/config.toml` |
+| Install groups and package inventory | `.config/homebase/install.d/*.toml` |
+| Setup hook wiring | `.config/homebase/setup.toml` |
+| Setup policy | `.local/libexec/homebase/setup/` |
+| Cleanup task wiring | `.config/homebase/cleanup.toml` |
+| Cleanup policy | `.local/libexec/homebase/cleanup/` |
+| Sync paths | `.config/homebase/sync.toml` |
+| Session inventory | Setup policy's `desktop-session.sh` |
+| Custom user units | `.config/systemd/user/` |
+
+Homebase executes configured commands but must not know workstation hook or
+task keys, service identities, profile policy, package inventory, or deletion
+targets. Do not mirror dotfiles policy into Homebase Go code, defaults,
+examples, or documentation.
+
+## Worktree and tracking rules
+
+Use the bare repository explicitly when the `dot` alias is unavailable:
 
 ```bash
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME status --short
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME ls-files
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME submodule status
+git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" \
+  status --short --untracked-files=no
+git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" ls-files
+git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" submodule status
 ```
 
-After `.zshrc` loads, `dot` supplies the same Git context.
+- Preserve unrelated dirty files and submodules. Stage exact paths only.
+- Do not scan all untracked files under `$HOME`; inspect intended paths
+  explicitly.
+- Treat `.config/homebase/sync.toml` as the only sync-path source of truth.
+- `hb sync` stages configured deletions. Inspect the catalog and repository
+  status before running it.
+- Keep credentials, tokens, caches, browser profiles, generated state, and
+  machine-local application data outside tracked groups unless explicitly
+  requested.
+- Do not track generated `graphical-session.target.wants/` symlinks.
 
-## Ownership and Important Paths
+Hyprland and Neovim are submodules at `.config/hypr` and `.config/nvim`. Commit
+inside the submodule first, then stage only the updated gitlink in this bare
+repository. Never flatten a submodule into ordinary tracked files.
 
-- `.config/homebase/config.toml` defines platform selection, repository,
-  package-manager roles, and bootstrap package IDs.
-- `.config/homebase/install.d/` owns install groups and package inventory.
-- `.config/homebase/setup.toml` owns hook metadata, prerequisites, triggers,
-  and direct command steps.
-- `.config/homebase/cleanup.toml` owns task metadata, scanners, and direct
-  command steps.
-- `.config/homebase/sync.toml` is the only sync-path source of truth.
-- `.local/libexec/homebase/setup/` owns idempotent workstation setup policy and
-  its fake-command harness.
-- `.local/libexec/homebase/cleanup/` owns cleanup targets, scanners, destructive
-  behavior, and its fake-command harness.
-- `.config/systemd/user/` owns custom session units and selected overrides.
-- `.config/hypr` and `.config/nvim` are Git submodules.
+## Side-effect rules
 
-Homebase executes the configured commands but must not know their hook/task
-keys, service identities, registry paths, profile policy, or deletion targets.
-Do not mirror dotfiles policy into Homebase Go code or documentation.
-
-## Side-Effect Rules
-
-- Do not run `hb bootstrap`, `hb install`, configured setup hooks, cleanup
-  tasks, package managers, or `hb sync` unless the user explicitly requests
-  live workstation changes.
-- `hb validate` is read-only and is the preferred runtime-config check.
-- Use temporary homes and fake commands for setup and cleanup tests.
-- Do not reload or enable systemd user units merely to validate source or
-  documentation.
-- Do not change shell profiles, package databases, services, credentials, or
-  dotfiles remotes during non-mutating validation.
+- Do not run bootstrap scripts, `hb bootstrap`, `hb install`, configured setup
+  hooks, cleanup tasks, package managers, or `hb sync` unless the user
+  explicitly requests live workstation changes.
+- Treat setup hooks as live mutations and cleanup steps as destructive. Test
+  them through the dotfiles-owned fake-command harnesses.
+- Do not reload or enable services merely to validate source or documentation.
+- Do not change shell profiles, package databases, credentials, remotes, or
+  workstation state during validation.
 - Never print, replace, commit, or stage secrets, encrypted credentials,
   database contents, tokens, or private keys.
+- `hb validate` is read-only and is the preferred runtime-config check.
 
-## Runtime Configuration Rules
+## Runtime configuration rules
 
 - Keep the runtime tree flat: `config.toml`, `install.d/*.toml`, `setup.toml`,
   `cleanup.toml`, and `sync.toml` directly under `.config/homebase/`.
 - Preserve `schema_version = 1` in the root, setup, and cleanup catalogs.
-- Runtime decoding is strict. Do not restore `homebase.toml`, `platforms/`,
-  `packages.d`, `features`, or `actions`.
+- Keep decoding strict. Do not restore retired `homebase.toml`, `platforms/`,
+  `packages.d`, `features`, or `actions` shapes.
 - `default_selected` affects interactive selection only.
-- `explicit_only` install groups remain explicit opt-ins and cannot also be
+- `explicit_only` groups remain explicit opt-ins and cannot also be
   default-selected.
-- Setup and cleanup steps are argument vectors. Put non-trivial shell behavior
-  in versioned executables rather than TOML command strings.
-- Keep scripts idempotent, fail-fast, and safe to rerun.
-- Keep scanner operations read-only; cleanup scripts must validate exact
-  targets before deletion.
-- Run `hb validate` after changing any runtime TOML.
+- Keep setup and cleanup steps as argument vectors. Put non-trivial behavior in
+  versioned executables rather than TOML command strings.
+- Keep setup scripts idempotent and safe to rerun. Keep cleanup scanners
+  read-only and validate exact targets before deletion.
+- Run `hb validate` after changing runtime TOML.
 
-## Tracking Rules
+## Graphical-session rules
 
-Before `hb sync`, inspect both the configured paths and repository state:
+- Read `doc/graphical-session.md` before changing session startup behavior.
+- Keep `.zprofile` as the UWSM entrypoint for Hyprland.
+- Change service inventory only in
+  `.local/libexec/homebase/setup/desktop-session.sh`.
+- Give each application exactly one startup owner. Do not copy
+  package-provided units or add duplicate XDG, user-unit, and Hyprland paths.
+- Track custom unit sources, not generated enablement symlinks.
+- Preserve the KeePassXC, Secret Service, Noctalia, and tray-repair ordering
+  documented in the domain document.
+- Vicinae owns launching, clipboard history, window switching, file search,
+  emoji selection, and dmenu behavior. Do not restore Rofi policy.
 
-```bash
-sed -n '1,220p' ~/.config/homebase/sync.toml
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME status --short
-```
+KeePassXC databases, encrypted systemd credentials,
+`.config/keepassxc/keepassxc.ini`, and the retired Noctalia storage key are
+machine-local. The KeePassXC INI can contain KeeShare private key material;
+inspect only required keys and never print the whole file.
 
-`hb sync` stages configured deletions. Keep credentials, tokens, caches,
-browser profiles, generated state, and machine-specific application data out of
-tracked groups unless the user explicitly requests otherwise.
-
-Do not track generated `graphical-session.target.wants/` symlinks. Track custom
-unit sources and let the configured setup executable repair enablement.
-
-## Graphical Session Rules
-
-- `.zprofile` starts Hyprland through UWSM.
-- `.local/libexec/homebase/setup/desktop-session.sh` is the sole active service
-  inventory and reconciliation policy.
-- Homebase owns only generic setup dispatch and must not contain unit names.
-- Track custom unit sources; do not copy package-provided units into dotfiles.
-- Keep system XDG autostart, tracked user units, and Hyprland autostart roles
-  distinct so applications have one startup owner.
-- Vicinae replaces Rofi; do not restore Rofi packages, configuration, keybinds,
-  or theme-generation policy.
-
-KeePassXC databases, encrypted systemd credentials, and
-`.config/keepassxc/keepassxc.ini` are machine-local. The INI may contain
-KeeShare private key material: inspect only specific required settings and
-never print the full file. The retired Noctalia storage key is also untracked
-recovery material and must not be displayed, replaced, or committed.
-
-When changing session startup behavior, read `doc/graphical-session.md` and
-keep its ownership flow consistent with the unit sources and
-`desktop-session.sh`.
-
-## Submodule Rules
-
-Hyprland and Neovim are submodules at `.config/hypr` and `.config/nvim`.
-
-When changing either submodule:
-
-1. Commit inside the submodule repository.
-2. Return to `$HOME`.
-3. Stage the updated gitlink in the bare dotfiles repository.
-
-Do not flatten submodules into ordinary tracked files. Leave unrelated dirty
-submodule or worktree changes untouched.
-
-## Editing Guidance
+## Editing and documentation rules
 
 - Use `rg` for searches and `apply_patch` for manual edits.
 - Follow `.editorconfig`: UTF-8, LF, final newline, two-space defaults for
-  Markdown/TOML/JSON/YAML, and tabs where configured.
-- Keep documentation concise and factual. Use only compact, verified badges;
-  do not add decorative badges, marketing copy, fake links, or unsupported
-  commands.
-- Keep cleanup metadata and command wiring in `cleanup.toml`; keep target and
-  deletion policy in `.local/libexec/homebase/cleanup/`.
-- Change graphical-session inventory only in `desktop-session.sh`; update unit
-  sources and domain documentation when behavior changes.
-- Keep secrets and generated files outside tracked path groups.
+  Markdown, TOML, JSON, and YAML, with tabs where configured.
+- Keep badges compact and verified. Avoid decorative badges, marketing copy,
+  fake links, unsupported commands, and duplicated inventories.
+- Keep current operator behavior in `README.md`, agent decisions here, and
+  non-trivial session relationships in `doc/graphical-session.md`.
+- Update source/config first, then update only the documentation whose public
+  contract or ownership model changed.
+- Update Homebase source and schema documentation together with dotfiles when
+  changing their shared runtime contract.
+- Do not retain completed plans or retired workflows as parallel architecture
+  documentation.
 
 ## Verification
 
@@ -161,39 +145,30 @@ For runtime TOML changes:
 hb validate
 ```
 
-For dotfiles-owned setup and cleanup executables:
+For setup and cleanup executables:
 
 ```bash
 bash ~/.local/libexec/homebase/setup/test.sh
 bash ~/.local/libexec/homebase/cleanup/test.sh
 ```
 
-For graphical-session unit source changes, use the read-only verifier:
+For graphical-session unit changes, run the setup harness and the read-only
+unit verifier:
 
 ```bash
+bash ~/.local/libexec/homebase/setup/test.sh
 systemd-analyze --user verify ~/.config/systemd/user/*.service
-systemctl --user --failed
 ```
 
-Do not run the setup hook as a substitute for validation; it can reload the
-user manager and enable or start services.
+Do not run a live setup hook as a validation substitute. For Homebase source
+changes, follow its AGENTS instructions and required Makefile checks.
 
-For Homebase source changes, follow its AGENTS.md and run the repository's
-required `make check`, build, lint, and smoke targets as applicable.
+Tests must protect a stable contract, schema invariant, destructive safety, or
+non-trivial orchestration. Do not add coverage-only tests for trivial wrappers
+or deleted implementation details.
 
-## Agent skills
+## Agent infrastructure
 
-### Issue tracker
-
-Issues and PRDs are tracked in GitHub Issues. See
-`docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-Triage uses the five default canonical labels. See
-`docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Domain documentation uses the single-context layout. See
-`docs/agents/domain.md`.
+- Issues and PRDs use GitHub Issues; follow `docs/agents/issue-tracker.md`.
+- Triage label mappings live in `docs/agents/triage-labels.md`.
+- Domain-document discovery rules live in `docs/agents/domain.md`.

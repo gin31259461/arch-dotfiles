@@ -6,11 +6,10 @@ This is a personal Arch Linux dotfiles repository for a Hyprland desktop.
 It uses a bare Git repository: `$HOME` is the work tree and `~/.dotfiles/` is
 the Git directory.
 
-The repo stores the sole copy of Homebase platform runtime configuration,
+The repo stores the sole copy of Homebase runtime configuration,
 desktop/app dotfiles, setup notes, local Codex agent profiles, and local agent
-skills. It does not contain the Homebase source code. Homebase ships only its
-global platform-selection default and never seeds or refreshes this repository's
-platform TOML files.
+skills. It does not contain the Homebase source code. Homebase never seeds or
+refreshes this repository's runtime TOML files.
 
 Homebase runtime paths:
 
@@ -82,15 +81,13 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `README.md` documents the operator workflow.
 - `doc/` contains setup and maintenance notes. Some notes may predate
   Homebase; prefer current `hb` commands when instructions conflict.
-- `.config/homebase/config.toml` selects the active platform. Current value:
-  `[platform] active = "auto"`.
-- `.config/homebase/platforms/archlinux/config.toml` defines the dotfiles repo,
-  package managers, branch, and bootstrap packages.
-- `.config/homebase/platforms/archlinux/install.d/` defines install groups.
-- `.config/homebase/platforms/archlinux/cleanup.toml` defines cleanup tasks.
-- `.config/homebase/platforms/archlinux/setup.toml` defines ordered setup hooks,
+- `.config/homebase/config.toml` selects the active platform and defines the
+  dotfiles repo, package managers, branch, and bootstrap packages.
+- `.config/homebase/install.d/` defines install groups.
+- `.config/homebase/cleanup.toml` defines cleanup tasks.
+- `.config/homebase/setup.toml` defines ordered setup hooks,
   prerequisites, automatic triggers, and dotfiles-owned commands.
-- `.config/homebase/platforms/archlinux/sync.toml` is the sync source of truth.
+- `.config/homebase/sync.toml` is the sync source of truth.
 - `.local/libexec/homebase/setup/` contains idempotent setup executables and a
   fake-command test harness. Homebase executes these commands but does not own
   their workstation policy.
@@ -111,7 +108,7 @@ Before running `hb sync`, review both the sync configuration and the bare repo
 status:
 
 ```bash
-sed -n '1,220p' ~/.config/homebase/platforms/archlinux/sync.toml
+sed -n '1,220p' ~/.config/homebase/sync.toml
 git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME status --short
 ```
 

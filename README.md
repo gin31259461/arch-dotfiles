@@ -18,7 +18,7 @@ notes.
 
 ## What It Manages
 
-- **Homebase platform config** in `.config/homebase/`, owned here and selected
+- **Homebase runtime config** in `.config/homebase/`, owned here and selected
   automatically for Arch and Manjaro hosts.
 - **Package groups** for Hyprland, shell tools, desktop apps, theming, fonts,
   input methods, AMD GPU support, Docker, Razer/MSI hardware, and development
@@ -97,7 +97,7 @@ For unattended runs, pass `--yes` with an explicit `--group`, `--task`, or
 
 > [!IMPORTANT]
 > `hb sync` stages every path configured in
-> `.config/homebase/platforms/archlinux/sync.toml`, including deletions. Review
+> `.config/homebase/sync.toml`, including deletions. Review
 > the bare-repo status before syncing.
 
 ## Graphical Session Startup

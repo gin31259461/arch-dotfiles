@@ -6,9 +6,11 @@ This is a personal Arch Linux dotfiles repository for a Hyprland desktop.
 It uses a bare Git repository: `$HOME` is the work tree and `~/.dotfiles/` is
 the Git directory.
 
-The repo stores Homebase runtime configuration, desktop/app dotfiles, setup
-notes, local Codex agent profiles, and local agent skills. It does not contain
-the Homebase source code.
+The repo stores the sole copy of Homebase platform runtime configuration,
+desktop/app dotfiles, setup notes, local Codex agent profiles, and local agent
+skills. It does not contain the Homebase source code. Homebase ships only its
+global platform-selection default and never seeds or refreshes this repository's
+platform TOML files.
 
 Homebase runtime paths:
 
@@ -92,8 +94,9 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `.config/homebase/platforms/archlinux/sync.toml` is the sync source of truth.
 - `.config/systemd/user/` contains tracked graphical-session units and
   selected service overrides; enablement is repaired through Homebase setup.
-- Package-provided units are not tracked here. Inventory data lives in the
-  Homebase runtime config; reconciliation policy lives in Homebase Arch code.
+- Package-provided units are not tracked here. Inventory data lives in this
+  repository's Homebase runtime config; reconciliation policy lives in
+  Homebase Arch code.
 - `.config/hypr` and `.config/nvim` are Git submodules.
 - `.agents/skills` and `.codex/agents` are tracked local agent configuration.
 
@@ -190,8 +193,9 @@ dirty submodule or worktree changes untouched.
   commands.
 - Follow `.editorconfig`: UTF-8, LF, final newline, two-space defaults for
   Markdown/TOML/JSON/YAML, and tabs for Go and Make recipes where configured.
-- Prefer Homebase platform TOML files over hardcoded scripts when changing
-  packages, cleanup tasks, or sync paths.
+- Prefer this repository's Homebase platform TOML files over hardcoded scripts
+  when changing packages, cleanup tasks, or sync paths. Do not mirror those
+  files into the Homebase source repository.
 - Add or rename graphical-session applications in `desktop-session.toml`; do
   not hardcode workstation unit names in Homebase Go code.
 - Keep secrets and generated files out of tracked path groups.

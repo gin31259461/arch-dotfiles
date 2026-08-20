@@ -2,7 +2,8 @@
 
 Personal Arch Linux dotfiles for a Hyprland desktop, managed with
 [Homebase](https://github.com/gin31259461/homebase) configuration in a bare Git
-repository.
+repository. This repository is the sole source of Homebase's platform TOML;
+Homebase does not ship or refresh a second copy.
 
 ![Desktop preview](assets/preview.png)
 
@@ -17,7 +18,7 @@ notes.
 
 ## What It Manages
 
-- **Homebase platform config** in `.config/homebase/`, with `archlinux` selected
+- **Homebase platform config** in `.config/homebase/`, owned here and selected
   automatically for Arch and Manjaro hosts.
 - **Package groups** for Hyprland, shell tools, desktop apps, theming, fonts,
   input methods, AMD GPU support, Docker, Razer/MSI hardware, and development

@@ -90,17 +90,15 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `.config/homebase/platforms/archlinux/cleanup.toml` defines cleanup tasks.
 - `.config/homebase/platforms/archlinux/setup.toml` defines ordered setup hooks,
   prerequisites, automatic triggers, and dotfiles-owned commands.
-- `.config/homebase/platforms/archlinux/desktop-session.toml` is the active,
-  versioned graphical-session inventory and setup-key mapping.
 - `.config/homebase/platforms/archlinux/sync.toml` is the sync source of truth.
 - `.local/libexec/homebase/setup/` contains idempotent setup executables and a
   fake-command test harness. Homebase executes these commands but does not own
   their workstation policy.
 - `.config/systemd/user/` contains tracked graphical-session units and
   selected service overrides; enablement is repaired through Homebase setup.
-- Package-provided units are not tracked here. Inventory data lives in this
-  repository's Homebase runtime config; reconciliation policy lives in
-  Homebase Arch code.
+- Package-provided units are not tracked here. The dotfiles-owned
+  `desktop-session.sh` executable owns the service inventory and reconciliation
+  policy; `setup.toml` owns its Homebase hook metadata and triggers.
 - `.config/hypr` and `.config/nvim` are Git submodules.
 - `.agents/skills` and `.codex/agents` are tracked local agent configuration.
 
@@ -130,10 +128,10 @@ enablement links.
 ## Graphical Session Ownership
 
 - `.zprofile` starts Hyprland through UWSM.
-- This repository owns the active systemd user service inventory through
-  `.config/homebase/platforms/archlinux/desktop-session.toml`.
-- Homebase owns inventory validation, setup registry construction, and the
-  enable/start reconciliation policy.
+- This repository owns the active systemd user service inventory and its
+  enable/start policy in `.local/libexec/homebase/setup/desktop-session.sh`.
+- Homebase validates the generic setup schema and dispatches configured
+  commands; it does not know workstation unit names or reconciliation policy.
 - This repository owns the custom units for KeePassXC, Noctalia, Quickshell
   Overview, Polychromatic, Remmina, Tailscale systray, and Vesktop.
 - `keepassxc.service` starts KeePassXC minimized, opens
@@ -200,8 +198,9 @@ dirty submodule or worktree changes untouched.
 - Prefer this repository's Homebase platform TOML files over hardcoded scripts
   when changing packages, cleanup tasks, or sync paths. Do not mirror those
   files into the Homebase source repository.
-- Add or rename graphical-session applications in `desktop-session.toml`; do
-  not hardcode workstation unit names in Homebase Go code.
+- Add or rename graphical-session applications in the dotfiles-owned
+  `desktop-session.sh`; do not hardcode workstation unit names in Homebase Go
+  code.
 - Keep secrets and generated files out of tracked path groups.
 
 ## Verification

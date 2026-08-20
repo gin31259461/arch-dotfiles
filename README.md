@@ -114,12 +114,13 @@ duplicate processes:
 | Hyprland autostart | Rainbow border runtime effect only |
 
 `hb setup --hook desktop-session --yes` reloads the systemd user manager and
-reconciles the versioned inventory in
-`.config/homebase/platforms/archlinux/desktop-session.toml`. Required units
-must exist. When the graphical target is already active, Vicinae and
-hyprpolkitagent also start immediately and must become active. From a TTY they
-wait for the next graphical login; the tracked custom units are enable-only and
-join the next graphical session.
+executes the dotfiles-owned
+`.local/libexec/homebase/setup/desktop-session.sh`. That script owns the service
+inventory and reconciliation policy. Required units must exist. When the
+graphical target is already active, Vicinae and hyprpolkitagent also start
+immediately and must become active. From a TTY they wait for the next graphical
+login; the tracked custom units are enable-only and join the next graphical
+session.
 
 Vicinae is the launcher, clipboard history, window switcher, file search, emoji
 picker, and dmenu frontend. This repository no longer manages a Rofi package,
@@ -203,6 +204,7 @@ hb sync -m "Update local config" --no-push
 | Path | Purpose |
 | --- | --- |
 | `.config/homebase/` | Homebase platform and workflow configuration |
+| `.local/libexec/homebase/setup/` | Setup policy and test harness |
 | `.config/hypr` | Hyprland submodule |
 | `.config/nvim` | Neovim submodule |
 | `.config/quickshell/` | Shell and overview configuration |

@@ -33,7 +33,7 @@ command = ["bash", "~/.local/libexec/homebase/setup/desktop-session.sh"]
 key = "shell"
 label = "Zsh command completion"
 description = "Install generated hb completion for Zsh"
-prerequisites = ["package:zsh", "command:hb"]
+prerequisites = ["package:zsh", "command:git", "command:hb"]
 triggers = ["bootstrap", "group:shell", "package:zsh"]
 
 [[hooks.steps]]

@@ -1,27 +1,106 @@
-[pacman-cache]
+schema_version = 1
+
+[[tasks]]
+key = "pacman-cache"
 label = "Pacman package cache"
-description = "paccache -r - keeps last 3 versions per package"
+description = "Keep the last three package versions with paccache"
 requires_elevation = true
+prerequisites = ["command:paccache", "command:sudo"]
 
-[yay-cache]
+[tasks.scanner]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/pacman-cache.sh",
+  "scan",
+]
+
+[[tasks.steps]]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/pacman-cache.sh",
+  "run",
+]
+
+[[tasks]]
+key = "yay-cache"
 label = "AUR build cache"
-description = "removes ~/.cache/yay - build dirs and tarballs"
+description = "Remove yay build directories and downloaded tarballs"
 
-[orphans]
+[tasks.scanner]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/directory.sh",
+  "scan",
+  "~/.cache/yay",
+  "AUR build cache",
+]
+
+[[tasks.steps]]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/directory.sh",
+  "run",
+  "~/.cache/yay",
+  "AUR build cache",
+]
+
+[[tasks]]
+key = "orphans"
 label = "Orphaned packages"
-description = "review, then pacman -Rns - packages no longer required by any dep"
+description = "Review and remove packages no longer required by dependencies"
 requires_elevation = true
+prerequisites = ["command:pacman", "command:sudo"]
 
-[journal]
+[tasks.scanner]
+command = ["bash", "~/.local/libexec/homebase/cleanup/orphans.sh", "scan"]
+
+[[tasks.steps]]
+command = ["bash", "~/.local/libexec/homebase/cleanup/orphans.sh", "run"]
+
+[[tasks]]
+key = "journal"
 label = "Systemd journal"
-description = "journalctl --vacuum-size=100M - keeps journal under 100 MiB"
+description = "Vacuum archived journal data to a 100 MiB target"
 requires_elevation = true
+prerequisites = ["command:journalctl", "command:sudo"]
 
-[npm-cache]
+[tasks.scanner]
+command = ["bash", "~/.local/libexec/homebase/cleanup/journal.sh", "scan"]
+
+[[tasks.steps]]
+command = ["bash", "~/.local/libexec/homebase/cleanup/journal.sh", "run"]
+
+[[tasks]]
+key = "npm-cache"
 label = "npm cache"
-description = "npm cache clean --force - npm _cacache"
-requires_command = "npm"
+description = "Clean npm's content-addressable cache"
+prerequisites = ["command:npm"]
 
-[thumbnails]
+[tasks.scanner]
+command = ["bash", "~/.local/libexec/homebase/cleanup/npm-cache.sh", "scan"]
+
+[[tasks.steps]]
+command = ["bash", "~/.local/libexec/homebase/cleanup/npm-cache.sh", "run"]
+
+[[tasks]]
+key = "thumbnails"
 label = "Thumbnail cache"
-description = "rm -rf ~/.cache/thumbnails - safe, rebuilds on demand"
+description = "Remove generated thumbnails; applications rebuild them on demand"
+
+[tasks.scanner]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/directory.sh",
+  "scan",
+  "~/.cache/thumbnails",
+  "Thumbnail cache",
+]
+
+[[tasks.steps]]
+command = [
+  "bash",
+  "~/.local/libexec/homebase/cleanup/directory.sh",
+  "run",
+  "~/.cache/thumbnails",
+  "Thumbnail cache",
+]

@@ -16,6 +16,7 @@ paths = [
 [homebase]
 paths = [
   ".config/homebase",
+  ".local/libexec/homebase",
 ]
 
 [zsh]

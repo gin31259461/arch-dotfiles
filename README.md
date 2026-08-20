@@ -1,52 +1,39 @@
 # Arch Hyprland Dotfiles
 
-Personal Arch Linux dotfiles for a Hyprland desktop, managed with
-[Homebase](https://github.com/gin31259461/homebase) configuration in a bare Git
-repository. This repository is the sole source of Homebase's platform TOML;
+Personal Arch Linux dotfiles for a Hyprland desktop, managed through
+[Homebase](https://github.com/gin31259461/homebase) and a bare Git repository.
+This repository is the sole source of its Homebase runtime configuration;
 Homebase does not ship or refresh a second copy.
 
 ![Desktop preview](assets/preview.png)
 
-This repository tracks the user-facing configuration needed to rebuild and
-maintain the workstation: shell startup, desktop theming, Hyprland/Neovim
-submodules, app settings, Homebase install groups, cleanup tasks, and setup
-notes.
-
-> [!NOTE]
-> `$HOME` is the work tree and `~/.dotfiles/` is the Git directory. Use the
-> `dot` alias from `.zshrc`, or pass `--git-dir` and `--work-tree` explicitly.
+`$HOME` is the work tree and `~/.dotfiles/` is the Git directory. Use the `dot`
+alias after `.zshrc` loads, or pass `--git-dir` and `--work-tree` explicitly.
 
 ## What It Manages
 
-- **Homebase runtime config** in `.config/homebase/`, owned here and selected
-  automatically for Arch and Manjaro hosts.
-- **Package groups** for Hyprland, shell tools, desktop apps, theming, fonts,
-  input methods, AMD GPU support, Docker, Razer/MSI hardware, and development
-  tooling.
-- **Desktop configuration** for Kitty, Ghostty, GTK, Qt, Kvantum, Vicinae,
-  Quickshell, Noctalia, Cava, btop, Fastfetch, Swappy, Vesktop, Sunshine, and
-  related app settings.
-- **Graphical-session services** under `.config/systemd/user/`, with enablement
-  and conditional startup repaired through Homebase.
-- **Shell setup** for Zsh, Oh My Zsh, Powerlevel10k, fzf, `lsd`, and a `dot`
-  helper alias for the bare repository.
-- **Submodules** for `.config/hypr` and `.config/nvim`.
-- **Agent configuration** under `.agents/skills` and `.codex/agents`.
+- Homebase runtime configuration under `.config/homebase/`.
+- Package groups and dotfiles-owned setup and cleanup executables.
+- Hyprland desktop, terminal, shell, theming, and application configuration.
+- Custom graphical-session user units and selected service overrides.
+- Hyprland and Neovim as Git submodules.
+
+Homebase owns the reusable engine and platform mechanisms. This repository owns
+package inventory, setup/cleanup policy, service identities, shell policy, and
+sync paths.
 
 ## Requirements
 
-- Arch Linux or Manjaro
-- `git`, `rsync`, `base-devel`, `go`, `ca-certificates`, `lsd`, `zsh`, and
-  `openssh` for initial bootstrap
-- `~/.local/bin/hb`, installed from the Homebase bootstrap flow
+- Arch Linux or Manjaro.
+- A network connection and a user able to run the Homebase bootstrap.
 
-The Homebase platform file defines `pacman` as the official package manager and
-`yay` for AUR packages.
+The remote bootstrap installs the tools needed to build Homebase. Subsequent
+bootstrap and package requirements come from `.config/homebase/config.toml` and
+`install.d`; those files are the source of truth rather than this README.
 
 ## Get Started
 
-On a fresh Arch-family machine, install Homebase and bootstrap this dotfiles
-repo:
+Bootstrap Homebase and deploy this repository on a fresh Arch-family machine:
 
 ```bash
 url=https://raw.githubusercontent.com/gin31259461/homebase/main/bootstrap
@@ -54,7 +41,7 @@ curl -fsSL "$url/archlinux.sh" | \
   bash -s -- --repo gin31259461/dotfiles-arch
 ```
 
-Bootstrap and install every configured package group:
+To install every non-explicit package group after bootstrap:
 
 ```bash
 url=https://raw.githubusercontent.com/gin31259461/homebase/main/bootstrap
@@ -62,177 +49,113 @@ curl -fsSL "$url/archlinux.sh" | \
   bash -s -- --repo gin31259461/dotfiles-arch --yes --install
 ```
 
-Once `hb` is installed, bootstrap directly:
-
-```bash
-hb bootstrap
-```
-
-Validate the complete runtime configuration without running workstation
-changes:
+Validate the complete runtime configuration without changing the workstation:
 
 ```bash
 hb validate
 ```
 
-Install configured packages:
+Common operations:
 
 ```bash
-hb install --all
+hb install
+hb setup
+hb cleanup
+hb sync -m "Update dotfiles"
 ```
 
-Repair graphical-session service enablement:
+For unattended runs, combine `--yes` with an explicit `--group`, `--hook`, or
+`--task`, or use `--all` after reviewing the active configuration.
+
+> [!IMPORTANT]
+> `hb sync` stages every configured path, including deletions. Review
+> `.config/homebase/sync.toml` and the bare-repository status before syncing.
+
+## Configuration
+
+The flat Homebase runtime tree is owned here:
+
+```text
+.config/homebase/
+|-- config.toml
+|-- install.d/*.toml
+|-- setup.toml
+|-- cleanup.toml
+`-- sync.toml
+```
+
+Complex setup and cleanup policy lives under `.local/libexec/homebase/` and is
+called by direct command vectors from the catalogs. The shell setup executable
+owns Oh My Zsh, plugins, theme, and generated `hb` completion; Homebase does not
+edit shell profiles.
+
+Run `hb validate` after changing any runtime TOML. The
+[Homebase README](https://github.com/gin31259461/homebase) documents the current
+schema.
+
+## Graphical Session
+
+UWSM starts Hyprland from `.zprofile` and exposes
+`graphical-session.target`. Startup is split by owner to prevent duplicate
+processes:
+
+| Owner | Responsibility |
+| --- | --- |
+| Package user units | Package-provided session services |
+| Tracked user units | Dotfiles-owned desktop and tray applications |
+| System XDG autostart | System-provided desktop applets and input method |
+| Hyprland autostart | Compositor-local runtime effects only |
+
+`.local/libexec/homebase/setup/desktop-session.sh` is the authoritative service
+inventory and reconciliation policy. Do not duplicate that inventory in
+Homebase or documentation.
+
+The KeePassXC, Noctalia, tray-registration, and Secret Service startup model is
+documented in [doc/graphical-session.md](doc/graphical-session.md).
+
+Repair configured session enablement only when workstation changes are
+intended:
 
 ```bash
 hb setup --hook desktop-session --yes
 ```
 
-Review and run cleanup tasks:
-
-```bash
-hb cleanup
-```
-
-Sync tracked dotfiles:
-
-```bash
-hb sync -m "Update dotfiles"
-```
-
-For unattended runs, pass `--yes` with an explicit `--group`, `--task`, or
-`--all` selection.
-
-> [!IMPORTANT]
-> `hb sync` stages every path configured in
-> `.config/homebase/sync.toml`, including deletions. Review
-> the bare-repo status before syncing.
-
-## Graphical Session Startup
-
-UWSM starts Hyprland from `.zprofile` and exposes
-`graphical-session.target`. Application startup is split by owner to avoid
-duplicate processes:
-
-| Owner | Managed applications |
-| --- | --- |
-| Package user units | Vicinae and hyprpolkitagent |
-| Tracked user units | KeePassXC, desktop shells, tray apps, and Vesktop |
-| System XDG autostart | NetworkManager applet, Blueman applet, and fcitx5 |
-| Hyprland autostart | Rainbow border runtime effect only |
-
-`hb setup --hook desktop-session --yes` reloads the systemd user manager and
-executes the dotfiles-owned
-`.local/libexec/homebase/setup/desktop-session.sh`. That script owns the service
-inventory and reconciliation policy. Required units must exist. When the
-graphical target is already active, Vicinae and hyprpolkitagent also start
-immediately and must become active. From a TTY they wait for the next graphical
-login; the tracked custom units are enable-only and join the next graphical
-session.
-
-Vicinae is the launcher, clipboard history, window switcher, file search, emoji
-picker, and dmenu frontend. This repository no longer manages a Rofi package,
-configuration, keybind, or Noctalia-to-Rasi theme conversion.
-
-KeePassXC provides the FreeDesktop Secret Service for Remmina, Noctalia, and
-other desktop clients. Its service starts minimized, opens
-`~/.local/share/keepassxc/credentials.kdbx`, unlocks it with the untracked
-systemd encrypted credential
-`~/.local/share/keepassxc/keepassxc-password.cred`, and waits for the
-`credentials` collection to report unlocked. Noctalia starts only after that
-readiness check. Once Noctalia's StatusNotifierWatcher is available, a one-shot
-helper restarts KeePassXC so its tray icon registers without racing the initial
-database unlock.
-
-The database, encrypted credential, and `.config/keepassxc/keepassxc.ini` are
-machine-local. Unattended Secret Service access requires
-`FdoSecrets/ConfirmAccessItem=false`; this removes KeePassXC's per-item access
-prompt, so expose only the database group that desktop clients need.
-
-Noctalia uses the default Secret Service storage key. Its clipboard history is
-disabled because Vicinae owns clipboard history. The retired, untracked
-`~/.local/share/noctalia/storage-key` may still be needed to recover data
-encrypted under the former file-key configuration and remains outside the
-repository.
-
-Remmina's tracked XDG desktop entry is marked hidden. This keeps Remmina from
-recreating a second XDG autostart path while `remmina-applet.service` owns its
-tray process.
-
-Inspect the resulting user services with:
-
-```bash
-systemctl --user is-enabled \
-  vicinae.service hyprpolkitagent.service keepassxc.service noctalia.service \
-  quickshell-overview.service polychromatic-tray.service \
-  remmina-applet.service tailscale-systray.service vesktop.service
-systemctl --user --failed
-```
-
 ## Daily Workflow
 
-Check repository state:
-
 ```bash
+# Inspect repository state.
 git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME status --short
+
+# Install a real configured group.
+hb install --group cli-tools
+
+# Run one configured cleanup task.
+hb cleanup --task journal
+
+# Sync without pushing.
+hb sync -m "Update local config" --no-push
 ```
 
-Use the shell alias after loading `.zshrc`:
+The `dot` alias provides the same bare-repository Git context after `.zshrc`
+loads:
 
 ```bash
 dot status --short
-```
-
-Inspect Homebase commands:
-
-```bash
-hb --help
-```
-
-Install one package group:
-
-```bash
-hb install --group apps
-```
-
-Run one cleanup task:
-
-```bash
-hb cleanup --task journal
-```
-
-Sync without pushing:
-
-```bash
-hb sync -m "Update local config" --no-push
 ```
 
 ## Repository Layout
 
 | Path | Purpose |
 | --- | --- |
-| `.config/homebase/` | Homebase platform and workflow configuration |
-| `.local/libexec/homebase/setup/` | Setup policy and test harness |
-| `.local/libexec/homebase/cleanup/` | Cleanup policy and test harness |
-| `.config/hypr` | Hyprland submodule |
-| `.config/nvim` | Neovim submodule |
-| `.config/quickshell/` | Shell and overview configuration |
-| `.local/state/noctalia/settings.toml` | Tracked Noctalia settings |
-| `.config/kitty/`, `.config/ghostty/` | Terminal configuration |
+| `.config/homebase/` | Runtime configuration owned by this repository |
+| `.local/libexec/homebase/` | Setup/cleanup policy and fake-command tests |
 | `.config/systemd/user/` | Custom session units and selected overrides |
-| `.agents/`, `.codex/agents/` | Local agent skills and Codex agent profiles |
-| `doc/` | Arch install, maintenance, networking, VM, GPU, and disk notes |
-| `assets/` | README preview assets |
+| `.config/hypr`, `.config/nvim` | Git submodules |
+| `.config/quickshell/` | Desktop shell and overview configuration |
+| `.config/kitty/`, `.config/ghostty/` | Terminal configuration |
+| `doc/` | Workstation architecture, setup, and maintenance notes |
 
-## Notes
-
-- Homebase runtime files live outside this repo at `~/.local/bin/hb` and
-  `~/.local/lib/homebase/`.
-- The current workflow is `hb bootstrap`, `hb install`, `hb setup`,
-  `hb cleanup`, `hb sync`, and read-only `hb validate`.
-- The shell setup executable owns Oh My Zsh, its plugins/theme, and generated
-  `hb` completion; Homebase does not edit shell profiles or duplicate those
-  choices.
-- Older notes may mention previous helper scripts; prefer the current `hb`
-  commands when workflows conflict.
-- Keep secrets, generated state, caches, and account-specific tokens out of the
-  tracked sync groups unless intentionally adding them.
+Older notes may describe retired workflows. Prefer current `hb` commands and
+the runtime configuration when instructions conflict. Keep credentials,
+tokens, generated caches, and machine-local application state outside tracked
+sync groups.

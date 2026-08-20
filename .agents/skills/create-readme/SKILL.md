@@ -86,6 +86,8 @@ project.
   platforms, or build status. Preserve useful existing badges.
 - Keep badges few, visually consistent, and maintainable. Omit decorative,
   redundant, stale, or unverifiable badges.
+- Link each badge to the most relevant authoritative website, project
+  documentation, or README section instead of leaving it as an image only.
 - Avoid marketing copy, generic claims, excessive headings, and emoji.
 - Use a logo or screenshot only when it already exists, is meant for public
   use, and materially improves identification or understanding.

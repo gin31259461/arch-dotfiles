@@ -118,8 +118,9 @@ inspect only required keys and never print the whole file.
 - Use `rg` for searches and `apply_patch` for manual edits.
 - Follow `.editorconfig`: UTF-8, LF, final newline, two-space defaults for
   Markdown, TOML, JSON, and YAML, with tabs where configured.
-- Keep badges compact and verified. Avoid decorative badges, marketing copy,
-  fake links, unsupported commands, and duplicated inventories.
+- Keep badges compact and verified, and link them to authoritative sites or
+  relevant documentation. Avoid decorative badges, marketing copy, fake
+  links, unsupported commands, and duplicated inventories.
 - Keep current operator behavior in `README.md`, agent decisions here, and
   non-trivial session relationships in `doc/graphical-session.md`.
 - Update source/config first, then update only the documentation whose public

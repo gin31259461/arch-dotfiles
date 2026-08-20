@@ -1,8 +1,8 @@
 # Arch Hyprland Dotfiles
 
-![Platform](https://img.shields.io/badge/platform-Arch%20Linux-1793D1?style=flat-square&logo=archlinux&logoColor=white)
-![Desktop](https://img.shields.io/badge/desktop-Hyprland-58E1FF?style=flat-square)
-![Homebase config](https://img.shields.io/badge/Homebase%20config-v1-222?style=flat-square)
+[![Platform](https://img.shields.io/badge/platform-Arch%20Linux-1793D1?style=flat-square&logo=archlinux&logoColor=white)](https://archlinux.org/)
+[![Desktop](https://img.shields.io/badge/desktop-Hyprland-58E1FF?style=flat-square&logo=hyprland&logoColor=white)](https://wiki.hypr.land/)
+[![Homebase config](https://img.shields.io/badge/Homebase%20config-v1-222?style=flat-square)](https://github.com/gin31259461/homebase#configuration-ownership)
 
 Personal Arch Linux dotfiles for a Hyprland desktop. A bare Git repository
 manages `$HOME` as its worktree and supplies the complete runtime policy for

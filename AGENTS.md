@@ -94,6 +94,9 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `.local/libexec/homebase/setup/` contains idempotent setup executables and a
   fake-command test harness. Homebase executes these commands but does not own
   their workstation policy.
+- `.local/libexec/homebase/cleanup/` contains cleanup scanners, destructive
+  executables, their shared helpers, and a fake-command test harness. Homebase
+  executes these commands but does not own their paths or package policy.
 - `.config/systemd/user/` contains tracked graphical-session units and
   selected service overrides; enablement is repaired through Homebase setup.
 - Package-provided units are not tracked here. The dotfiles-owned
@@ -195,9 +198,9 @@ dirty submodule or worktree changes untouched.
   commands.
 - Follow `.editorconfig`: UTF-8, LF, final newline, two-space defaults for
   Markdown/TOML/JSON/YAML, and tabs for Go and Make recipes where configured.
-- Prefer this repository's Homebase platform TOML files over hardcoded scripts
-  when changing packages, cleanup tasks, or sync paths. Do not mirror those
-  files into the Homebase source repository.
+- Keep cleanup task metadata and command wiring in `cleanup.toml`, with complex
+  scanner and deletion policy in `.local/libexec/homebase/cleanup/`. Do not
+  mirror either into the Homebase source repository.
 - Add or rename graphical-session applications in the dotfiles-owned
   `desktop-session.sh`; do not hardcode workstation unit names in Homebase Go
   code.
@@ -248,10 +251,11 @@ make check && make build
 Add `make lint` for Markdown changes and `make smoke` when command routing
 changes.
 
-For dotfiles-owned setup executables:
+For dotfiles-owned setup and cleanup executables:
 
 ```bash
 bash ~/.local/libexec/homebase/setup/test.sh
+bash ~/.local/libexec/homebase/cleanup/test.sh
 ```
 
 ## Agent skills

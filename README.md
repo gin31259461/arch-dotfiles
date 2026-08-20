@@ -205,6 +205,7 @@ hb sync -m "Update local config" --no-push
 | --- | --- |
 | `.config/homebase/` | Homebase platform and workflow configuration |
 | `.local/libexec/homebase/setup/` | Setup policy and test harness |
+| `.local/libexec/homebase/cleanup/` | Cleanup policy and test harness |
 | `.config/hypr` | Hyprland submodule |
 | `.config/nvim` | Neovim submodule |
 | `.config/quickshell/` | Shell and overview configuration |

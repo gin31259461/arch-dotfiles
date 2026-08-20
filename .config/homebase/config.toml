@@ -8,8 +8,8 @@ arch = "archlinux"
 manjaro = "archlinux"
 
 [dotfiles]
-ssh_url = "git@github.com:gin31259461/dotfiles-arch.git"
-https_url = "https://github.com/gin31259461/dotfiles-arch.git"
+repo = "git@github.com:gin31259461/dotfiles-arch.git"
+fallback_repo = "https://github.com/gin31259461/dotfiles-arch.git"
 git_dir = "~/.dotfiles"
 branch = "main"
 state_file = "~/.dotfiles-repo"

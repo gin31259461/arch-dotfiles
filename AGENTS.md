@@ -136,8 +136,9 @@ submodule or worktree changes untouched.
 - Use `rg` for searches and `apply_patch` for manual edits.
 - Follow `.editorconfig`: UTF-8, LF, final newline, two-space defaults for
   Markdown/TOML/JSON/YAML, and tabs where configured.
-- Keep documentation concise and factual. Do not add badges, marketing copy,
-  fake links, or unsupported commands.
+- Keep documentation concise and factual. Use only compact, verified badges;
+  do not add decorative badges, marketing copy, fake links, or unsupported
+  commands.
 - Keep cleanup metadata and command wiring in `cleanup.toml`; keep target and
   deletion policy in `.local/libexec/homebase/cleanup/`.
 - Change graphical-session inventory only in `desktop-session.sh`; update unit

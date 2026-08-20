@@ -88,9 +88,14 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
   package managers, branch, and bootstrap packages.
 - `.config/homebase/platforms/archlinux/install.d/` defines install groups.
 - `.config/homebase/platforms/archlinux/cleanup.toml` defines cleanup tasks.
+- `.config/homebase/platforms/archlinux/setup.toml` defines ordered setup hooks,
+  prerequisites, automatic triggers, and dotfiles-owned commands.
 - `.config/homebase/platforms/archlinux/desktop-session.toml` is the active,
   versioned graphical-session inventory and setup-key mapping.
 - `.config/homebase/platforms/archlinux/sync.toml` is the sync source of truth.
+- `.local/libexec/homebase/setup/` contains idempotent setup executables and a
+  fake-command test harness. Homebase executes these commands but does not own
+  their workstation policy.
 - `.config/systemd/user/` contains tracked graphical-session units and
   selected service overrides; enablement is repaired through Homebase setup.
 - Package-provided units are not tracked here. Inventory data lives in this
@@ -243,6 +248,12 @@ make check && make build
 
 Add `make lint` for Markdown changes and `make smoke` when command routing
 changes.
+
+For dotfiles-owned setup executables:
+
+```bash
+bash ~/.local/libexec/homebase/setup/test.sh
+```
 
 ## Agent skills
 

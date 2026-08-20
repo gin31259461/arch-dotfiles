@@ -1,0 +1,108 @@
+schema_version = 1
+
+[[hooks]]
+key = "system"
+label = "System and mkinitcpio"
+description = "Configure the initramfs module list for the active AMD GPU"
+triggers = ["install"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/system.sh"]
+
+[[hooks]]
+key = "desktop-session"
+label = "Graphical session services"
+description = "Reconcile the dotfiles-owned systemd user service inventory"
+prerequisites = ["command:systemctl"]
+triggers = [
+  "group:communication",
+  "group:core",
+  "group:credentials",
+  "group:quickshell",
+  "group:razer",
+  "group:remote-desktop",
+  "group:vpn",
+  "package:hyprpolkitagent",
+  "package:vicinae-bin",
+]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/desktop-session.sh"]
+
+[[hooks]]
+key = "shell"
+label = "Zsh command completion"
+description = "Install generated hb completion for Zsh"
+prerequisites = ["package:zsh", "command:hb"]
+triggers = ["bootstrap", "group:shell", "package:zsh"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/shell.sh"]
+
+[[hooks]]
+key = "network"
+label = "NetworkManager"
+description = "Configure NetworkManager, forwarding, and the local hotspot"
+prerequisites = ["package:networkmanager", "command:nmcli"]
+triggers = ["group:network", "package:networkmanager"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/network.sh"]
+
+[[hooks]]
+key = "docker"
+label = "Docker service and group"
+prerequisites = ["package:docker"]
+triggers = ["group:docker", "package:docker"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/docker.sh"]
+
+[[hooks]]
+key = "realtime"
+label = "Realtime process privileges"
+prerequisites = ["package:realtime-privileges"]
+triggers = ["group:realtime"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/realtime.sh"]
+
+[[hooks]]
+key = "razer"
+label = "OpenRazer"
+prerequisites = ["package:openrazer-daemon"]
+triggers = ["group:razer", "package:openrazer-daemon"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/razer.sh"]
+
+[[hooks]]
+key = "sunshine"
+label = "Sunshine service and capabilities"
+prerequisites = ["package:sunshine"]
+triggers = ["package:sunshine"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/sunshine.sh"]
+
+[[hooks]]
+key = "autologin"
+label = "TTY1 autologin"
+description = "Configure the current user for tty1 autologin"
+triggers = ["install"]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/autologin.sh"]
+
+[[hooks]]
+key = "git-credentials"
+label = "Git Credential Manager (GPG/pass)"
+prerequisites = [
+  "package:git",
+  "package:git-credential-manager-bin",
+  "package:gnupg",
+  "package:pass",
+]
+
+[[hooks.steps]]
+command = ["bash", "~/.local/libexec/homebase/setup/git-credentials.sh"]

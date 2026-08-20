@@ -1,16 +1,16 @@
 [dotfiles]
-ssh_repo = "git@github.com:gin31259461/dotfiles-arch.git"
-https_repo = "https://github.com/gin31259461/dotfiles-arch.git"
-dir = "~/.dotfiles"
+ssh_url = "git@github.com:gin31259461/dotfiles-arch.git"
+https_url = "https://github.com/gin31259461/dotfiles-arch.git"
+git_dir = "~/.dotfiles"
 branch = "main"
-memory_file = "~/.dotfiles-repo"
+state_file = "~/.dotfiles-repo"
 
-[package_manager]
-official = "pacman"
-aur = "yay"
+[packages]
+official_manager = "pacman"
+aur_helper = "yay"
 
 [bootstrap]
-basics = [
+packages = [
   "git",
   "rsync",
   "base-devel",

@@ -1,5 +1,0 @@
-active_platform = "auto"
-
-[platform_aliases]
-arch = "archlinux"
-manjaro = "archlinux"

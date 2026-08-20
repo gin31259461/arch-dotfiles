@@ -12,7 +12,7 @@ aur = [
 
 [docker]
 label = "Docker"
-manual = true
+explicit_only = true
 pacman = [
   "docker",
   "docker-compose",

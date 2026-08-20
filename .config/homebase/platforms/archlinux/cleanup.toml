@@ -1,27 +1,27 @@
 [pacman-cache]
 label = "Pacman package cache"
-detail = "paccache -r - keeps last 3 versions per package"
-sudo = true
+description = "paccache -r - keeps last 3 versions per package"
+requires_elevation = true
 
 [yay-cache]
 label = "AUR build cache"
-detail = "removes ~/.cache/yay - build dirs and tarballs"
+description = "removes ~/.cache/yay - build dirs and tarballs"
 
 [orphans]
 label = "Orphaned packages"
-detail = "review, then pacman -Rns - packages no longer required by any dep"
-sudo = true
+description = "review, then pacman -Rns - packages no longer required by any dep"
+requires_elevation = true
 
 [journal]
 label = "Systemd journal"
-detail = "journalctl --vacuum-size=100M - keeps journal under 100 MiB"
-sudo = true
+description = "journalctl --vacuum-size=100M - keeps journal under 100 MiB"
+requires_elevation = true
 
 [npm-cache]
 label = "npm cache"
-detail = "npm cache clean --force - npm _cacache"
-requires = "npm"
+description = "npm cache clean --force - npm _cacache"
+requires_command = "npm"
 
 [thumbnails]
 label = "Thumbnail cache"
-detail = "rm -rf ~/.cache/thumbnails - safe, rebuilds on demand"
+description = "rm -rf ~/.cache/thumbnails - safe, rebuilds on demand"

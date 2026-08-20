@@ -12,7 +12,7 @@ pacman = [
 
 [asus]
 label = "ASUS ROG Devices"
-manual = true
+explicit_only = true
 aur = [
   "asusctl",
   "rog-control-center",
@@ -27,7 +27,7 @@ aur = [
 
 [msi]
 label = "MSI Devices"
-manual = true
+explicit_only = true
 aur = [
   "msi-ec-git",
   "mcontrolcenter-bin",

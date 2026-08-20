@@ -82,12 +82,11 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `README.md` documents the operator workflow.
 - `doc/` contains setup and maintenance notes. Some notes may predate
   Homebase; prefer current `hb` commands when instructions conflict.
-- `.config/homebase/homebase.toml` selects the active platform. Current value:
-  `active_platform = "auto"`.
+- `.config/homebase/config.toml` selects the active platform. Current value:
+  `[platform] active = "auto"`.
 - `.config/homebase/platforms/archlinux/config.toml` defines the dotfiles repo,
-  package managers, branch, and bootstrap basics.
-- `.config/homebase/platforms/archlinux/packages.d/` defines installable
-  package groups.
+  package managers, branch, and bootstrap packages.
+- `.config/homebase/platforms/archlinux/install.d/` defines install groups.
 - `.config/homebase/platforms/archlinux/cleanup.toml` defines cleanup tasks.
 - `.config/homebase/platforms/archlinux/desktop-session.toml` is the active,
   versioned graphical-session inventory and setup-key mapping.

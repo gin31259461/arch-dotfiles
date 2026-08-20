@@ -384,7 +384,7 @@ curl -fsSL "$url/archlinux.sh" | \
   bash -s -- --repo gin31259461/dotfiles-arch
 ```
 
-After the bootstrap finishes, install all configured package groups:
+After the bootstrap finishes, install all configured install groups:
 
 ```bash
 hb install --all

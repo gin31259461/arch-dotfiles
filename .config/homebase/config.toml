@@ -1,0 +1,6 @@
+[platform]
+active = "auto"
+
+[platform.aliases]
+arch = "archlinux"
+manjaro = "archlinux"

@@ -9,7 +9,7 @@ Homebase does not ship or refresh a second copy.
 
 This repository tracks the user-facing configuration needed to rebuild and
 maintain the workstation: shell startup, desktop theming, Hyprland/Neovim
-submodules, app settings, Homebase package groups, cleanup tasks, and setup
+submodules, app settings, Homebase install groups, cleanup tasks, and setup
 notes.
 
 > [!NOTE]

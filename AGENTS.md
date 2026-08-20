@@ -60,6 +60,7 @@ hb install
 hb setup
 hb cleanup
 hb sync
+hb validate
 ```
 
 Automation should pass `--yes` with explicit selections:
@@ -91,6 +92,9 @@ needed, keep it as a small wrapper around the Homebase remote bootstrap.
 - `.local/libexec/homebase/setup/` contains idempotent setup executables and a
   fake-command test harness. Homebase executes these commands but does not own
   their workstation policy.
+- `.local/libexec/homebase/setup/shell.sh` owns Oh My Zsh, shell plugin/theme,
+  and `hb` completion installation. Homebase must not mirror that policy or
+  edit `.zshrc`.
 - `.local/libexec/homebase/cleanup/` contains cleanup scanners, destructive
   executables, their shared helpers, and a fake-command test harness. Homebase
   executes these commands but does not own their paths or package policy.
@@ -253,6 +257,12 @@ For dotfiles-owned setup and cleanup executables:
 ```bash
 bash ~/.local/libexec/homebase/setup/test.sh
 bash ~/.local/libexec/homebase/cleanup/test.sh
+```
+
+After changing any Homebase runtime TOML, also run:
+
+```bash
+hb validate
 ```
 
 ## Agent skills

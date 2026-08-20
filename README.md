@@ -68,6 +68,13 @@ Once `hb` is installed, bootstrap directly:
 hb bootstrap
 ```
 
+Validate the complete runtime configuration without running workstation
+changes:
+
+```bash
+hb validate
+```
+
 Install configured packages:
 
 ```bash
@@ -221,7 +228,10 @@ hb sync -m "Update local config" --no-push
 - Homebase runtime files live outside this repo at `~/.local/bin/hb` and
   `~/.local/lib/homebase/`.
 - The current workflow is `hb bootstrap`, `hb install`, `hb setup`,
-  `hb cleanup`, and `hb sync`.
+  `hb cleanup`, `hb sync`, and read-only `hb validate`.
+- The shell setup executable owns Oh My Zsh, its plugins/theme, and generated
+  `hb` completion; Homebase does not edit shell profiles or duplicate those
+  choices.
 - Older notes may mention previous helper scripts; prefer the current `hb`
   commands when workflows conflict.
 - Keep secrets, generated state, caches, and account-specific tokens out of the

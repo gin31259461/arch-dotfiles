@@ -81,7 +81,12 @@ project.
 - Use plain, factual language and compact paragraphs.
 - Prefer small code blocks and tables only when they clarify exact mappings.
 - Use GitHub-flavored Markdown and admonitions only for material warnings.
-- Avoid marketing copy, generic claims, excessive headings, badges, and emoji.
+- Consider a compact badge row below the title when it quickly communicates
+  verified facts such as toolchain versions, executable names, supported
+  platforms, or build status. Preserve useful existing badges.
+- Keep badges few, visually consistent, and maintainable. Omit decorative,
+  redundant, stale, or unverifiable badges.
+- Avoid marketing copy, generic claims, excessive headings, and emoji.
 - Use a logo or screenshot only when it already exists, is meant for public
   use, and materially improves identification or understanding.
 - Do not add `License`, `Contributing`, or `Changelog` sections when dedicated

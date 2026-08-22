@@ -1,6 +1,6 @@
 ---
 name: create-readme
-description: Create, rewrite, restructure, or audit a repository README.md as concise, evidence-backed documentation for users and developers. Use when a project needs a new README, a substantial README refresh, factual command and configuration documentation, or clearer separation from AGENTS.md, domain documentation, and migration guides.
+description: Create, rewrite, restructure, refresh, or audit a repository README.md as concise, evidence-backed documentation for users and developers. When the user explicitly asks to rewrite, regenerate, rebuild, or restructure a README, rebuild the document as a coherent new README from repository evidence instead of merely polishing or preserving the existing README structure.
 ---
 
 # Create a repository README
@@ -8,6 +8,30 @@ description: Create, rewrite, restructure, or audit a repository README.md as co
 Produce a concise entry point that explains the project's current purpose,
 first successful workflow, public interface, and relevant development path.
 Derive every claim from repository evidence.
+
+## Determine the requested mode
+
+Classify the task before editing. The user's explicit wording controls the mode.
+
+- **Create**: no useful README exists. Build one from repository evidence.
+- **Rewrite**: the user says `rewrite`, `regenerate`, `rebuild`, `restructure`, or
+  otherwise explicitly asks for a substantial replacement. Recompose the README
+  as a new document. Preserve verified facts, not the old document's wording,
+  headings, ordering, or layout.
+- **Refresh**: the user asks to update, improve, clean up, or modernize the README
+  without explicitly requesting a rewrite. Preserve useful structure when it
+  still serves the reader, but fix stale or weak content.
+- **Audit**: inspect and report issues without changing the README unless the user
+  also asks for edits.
+
+When the task is in **Rewrite** mode, do not reduce it to a sequence of local
+edits. Build a target outline from this skill and current repository evidence,
+then replace the README body with a coherent document that follows that outline.
+The existing README is an information source, not the structural template.
+
+Do not keep an existing heading, section order, paragraph, example, or layout
+merely because it already exists. Keep it only when current evidence and the
+reader's needs independently justify it.
 
 ## Discover the project
 
@@ -19,6 +43,8 @@ Derive every claim from repository evidence.
 5. Classify the repository by its actual role, such as CLI, library,
    application, infrastructure, dotfiles, internal tool, or monorepo.
 6. Identify the intended readers and the shortest path to a useful result.
+7. In **Rewrite** mode, derive the target README outline from repository evidence
+   and this skill before reusing any existing section structure.
 
 Prefer executable source and current configuration over historical prose. When
 documents conflict, resolve the claim from source or report the uncertainty;
@@ -45,7 +71,10 @@ user requested it or the repository clearly needs the split.
 
 ## Preserve current truth
 
-- Preserve accurate, project-specific material from an existing README.
+- Preserve accurate, project-specific facts from an existing README.
+- In **Rewrite** mode, preserve facts rather than prose or placement. Rewrite
+  accurate material as needed so the final README reads as one intentionally
+  designed document.
 - Remove retired workflows, stale examples, duplicated inventories, and
   implementation history that no longer helps the reader.
 - Document the system as it works now. Put unfinished transitions in a
@@ -62,6 +91,7 @@ user requested it or the repository clearly needs the split.
 Use the project name as the top-level heading. Select only sections that serve
 the identified readers. Common candidates include:
 
+- a compact badge row with useful verified facts;
 - a one-paragraph outcome and ownership summary;
 - supported environments when support is intentionally bounded;
 - installation or first-run instructions;
@@ -75,19 +105,31 @@ Omit empty, speculative, or inapplicable sections. Do not force deployment,
 database, API, coverage, pull-request, or troubleshooting content into every
 project.
 
+In **Rewrite** mode, choose the final section set and ordering from current
+reader needs and repository evidence. Do not use the old README's outline as the
+default starting point.
+
 ## Write in the Homebase style
 
 - Lead with outcomes, then provide the shortest verified path to use them.
 - Use plain, factual language and compact paragraphs.
 - Prefer small code blocks and tables only when they clarify exact mappings.
 - Use GitHub-flavored Markdown and admonitions only for material warnings.
-- Consider a compact badge row below the title when it quickly communicates
-  verified facts such as toolchain versions, executable names, supported
-  platforms, or build status. Preserve useful existing badges.
+- Actively inspect CI configuration, manifests, runtime or toolchain
+  declarations, package metadata, executable names, and supported-platform
+  configuration for stable badge candidates.
+- Add a compact badge row immediately below the title when at least one stable,
+  verifiable, user-useful fact is suitable for a badge. The absence of badges in
+  the existing README is never a reason to omit them.
+- Prefer badges for facts such as build status, primary runtime or toolchain,
+  package or executable identity, released package version, or intentionally
+  bounded platform support.
+- Preserve useful existing badges only when they remain verified and relevant.
 - Keep badges few, visually consistent, and maintainable. Omit decorative,
-  redundant, stale, or unverifiable badges.
+  redundant, stale, unverifiable, or high-maintenance badges.
 - Link each badge to the most relevant authoritative website, project
-  documentation, or README section instead of leaving it as an image only.
+  documentation, CI page, package page, or README section instead of leaving it
+  as an image only.
 - Avoid marketing copy, generic claims, excessive headings, and emoji.
 - Use a logo or screenshot only when it already exists, is meant for public
   use, and materially improves identification or understanding.
@@ -108,6 +150,14 @@ project.
 6. Run `git diff --check`.
 7. Re-read the finished README for duplicated companion content, stale
    inventory, invented behavior, and unnecessary sections.
+8. Re-check the finished README against every applicable rule in this skill.
+9. In **Rewrite** mode, confirm that the final structure was re-derived from
+   repository evidence instead of mechanically inherited from the previous
+   README, and that the result is a coherent replacement rather than a patched
+   version of the old document.
+10. If stable badge-worthy facts exist, confirm that an appropriate badge row is
+    present. If badges are omitted, the repository must lack a reliable,
+    user-useful badge candidate under the rules above.
 
 Finish with a concise summary of what changed, what was validated, and any
 claim that could not be verified.

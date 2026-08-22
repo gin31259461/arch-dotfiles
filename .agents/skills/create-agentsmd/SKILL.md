@@ -9,6 +9,35 @@ Produce a compact operational contract that helps coding agents change the
 repository safely and correctly without repeating its user documentation.
 Include only instructions that affect agent decisions.
 
+## Choose the operation mode
+
+Interpret the user's requested operation before editing:
+
+- **Create**: build a new `AGENTS.md` from repository evidence.
+- **Rewrite**: replace the existing instruction set with a newly derived,
+  coherent `AGENTS.md`. Treat the existing file as evidence, not as the default
+  structural template.
+- **Refresh**: preserve the existing structure when it remains effective, while
+  correcting stale, incomplete, or unclear instructions.
+- **Audit**: inspect and report issues unless the user also asks for edits.
+
+Treat explicit verbs such as `rewrite`, `regenerate`, `rebuild`, or
+`restructure` as **Rewrite** mode. Do not downgrade them to a conservative
+refresh.
+
+In **Rewrite** mode:
+
+1. Derive the target scope, instruction categories, and ordering from current
+   repository evidence and this skill before composing the new file.
+2. Preserve verified project-specific rules, but do not preserve wording,
+   headings, section order, or layout merely because they already exist.
+3. Remove obsolete, duplicated, generic, or misplaced instructions rather than
+   editing around them.
+4. Produce a coherent replacement document instead of a sequence of local
+   patches to the previous file.
+5. Respect all applicable parent `AGENTS.md` instructions and retain
+   repository-specific constraints that are still valid.
+
 ## Determine scope first
 
 1. Read all `AGENTS.md` files that apply from the filesystem or repository root
@@ -20,11 +49,18 @@ Include only instructions that affect agent decisions.
 4. Determine the repository's architecture, ownership seams, side effects, and
    supported workflows from evidence.
 5. Preserve accurate project-specific rules from an existing `AGENTS.md`.
+   In Rewrite mode, preserve the verified rules themselves, not the old file's
+   structure, wording, headings, or ordering.
 
 Create a root `AGENTS.md` by default. Add or rewrite a nested file only when a
 subtree has materially different commands, ownership, safety constraints, or
 language conventions. Do not create nested files merely because the repository
 is a monorepo.
+
+When rewriting an existing scoped `AGENTS.md`, first determine which rules
+belong in that scope versus a parent or nested file. Move, remove, or condense
+instructions when the current placement is wrong. Do not retain a section in
+the target file solely because it existed there before.
 
 ## Keep companion documents distinct
 
@@ -46,7 +82,8 @@ long tutorial, architecture narrative, migration sequence, or inventory.
 
 Use `# AGENTS Instructions` as the root title unless an established repository
 convention explicitly requires another title. Select only sections justified by
-the repository. Common candidates are:
+the repository. In Rewrite mode, derive the section set and ordering anew; the
+previous file's headings are not defaults. Common candidates are:
 
 - project overview;
 - ownership seam;
@@ -135,6 +172,12 @@ than retaining parallel coverage at both owners.
 5. Confirm no unrelated or sensitive file was staged.
 6. Re-read the README and AGENTS files together: keep only purposeful overlap
    and ensure each remains usable for its intended audience.
+7. Re-check the finished file against every applicable rule in this skill.
+8. In Rewrite mode, confirm the result is a coherent replacement derived from
+   current repository evidence, not a patched version of the previous
+   `AGENTS.md`.
+9. In Rewrite mode, confirm headings, ordering, and scope placement were chosen
+   intentionally rather than inherited mechanically from the old file.
 
 Finish with a concise summary of the scope, important guardrails, validation
 performed, and any unresolved repository fact.
